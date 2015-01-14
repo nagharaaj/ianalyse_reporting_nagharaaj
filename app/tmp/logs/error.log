@@ -1,0 +1,711 @@
+2013-08-16 11:01:36 Error: [MissingControllerException] Controller class Index.phpController could not be found.
+#0 C:\wamp\www\cakephp_blog\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 C:\wamp\www\cakephp_blog\index.php(40): require('C:\wamp\www\cak...')
+#2 {main}
+2013-08-16 11:02:31 Error: [MissingControllerException] Controller class Index.phpController could not be found.
+#0 C:\wamp\www\cakephp_blog\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 C:\wamp\www\cakephp_blog\index.php(40): require('C:\wamp\www\cak...')
+#2 {main}
+2014-12-24 10:06:03 Error: [MissingTableException] Database table posts for model Post was not found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(3265): Model->setSource('posts')
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(2483): Model->getDataSource()
+#2 C:\xampp\htdocs\ianalyse_reporting\app\Controller\PostsController.php(6): Model->find('all')
+#3 [internal function]: PostsController->index()
+#4 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(PostsController), Array)
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(PostsController), Object(CakeRequest), Object(CakeResponse))
+#7 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#8 {main}
+2014-12-24 10:43:16 Error: [MissingTableException] Database table posts for model Post was not found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(3265): Model->setSource('posts')
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(2483): Model->getDataSource()
+#2 C:\xampp\htdocs\ianalyse_reporting\app\Controller\PostsController.php(6): Model->find('all')
+#3 [internal function]: PostsController->index()
+#4 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(PostsController), Array)
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(PostsController), Object(CakeRequest), Object(CakeResponse))
+#7 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#8 {main}
+2014-12-29 06:52:40 Error: [MissingTableException] Database table posts for model Post was not found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(3265): Model->setSource('posts')
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(2483): Model->getDataSource()
+#2 C:\xampp\htdocs\ianalyse_reporting\app\Controller\PostsController.php(6): Model->find('all')
+#3 [internal function]: PostsController->index()
+#4 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(PostsController), Array)
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(PostsController), Object(CakeRequest), Object(CakeResponse))
+#7 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#8 {main}
+2014-12-29 07:47:10 Error: [MissingViewException] View file "C:\xampp\htdocs\ianalyse_reporting\app\View\Reports\index.ctp" is missing.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\View\View.php(360): View->_getViewFileName(NULL)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(900): View->render(NULL, NULL)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(111): Controller->render()
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#4 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2014-12-29 12:02:13 Error: [MissingControllerException] Controller class IanalyseReportingController could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2014-12-29 12:02:20 Error: [MissingControllerException] Controller class IanalyseReportingController could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-01-06 06:46:29 Error: [MissingActionException] Action UsersController::WEB_ROOTgoogle-login-button.png() could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-01-06 06:46:29 Error: [MissingActionException] Action UsersController::WEB_ROOTgoogle-login-button.png() could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-01-06 06:49:33 Error: [MissingActionException] Action UsersController::webrootimg() could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-01-06 06:49:40 Error: [MissingActionException] Action UsersController::webrootimg() could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-01-06 06:49:47 Error: [MissingActionException] Action UsersController::webroot() could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-01-06 06:49:51 Error: [MissingActionException] Action UsersController::webroot() could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-01-06 06:49:52 Error: [MissingActionException] Action UsersController::webroot() could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-01-06 06:50:41 Error: [MissingActionException] Action UsersController::webrootgoogle-login-button.png() could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#2 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#3 {main}
+2015-01-06 06:55:30 Error: [MissingControllerException] Controller class Webrootgoogle-login-button.pngController could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-01-06 06:55:33 Error: [MissingControllerException] Controller class Webrootgoogle-login-button.pngController could not be found.
+#0 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-01-06 13:56:22 Error: [Google_IOException] HTTP Error: (0) SSL certificate problem: unable to get local issuer certificate
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\auth\Google_OAuth2.php(101): Google_CurlIO->makeRequest(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\Google_Client.php(131): Google_OAuth2->authenticate(Array, '4/HvFceHVU19RPr...')
+#2 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(41): Google_Client->authenticate('4/HvFceHVU19RPr...')
+#3 [internal function]: UsersController->login()
+#4 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#7 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#8 {main}
+2015-01-06 13:59:07 Error: [Google_IOException] HTTP Error: (0) SSL certificate problem: unable to get local issuer certificate
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\auth\Google_OAuth2.php(101): Google_CurlIO->makeRequest(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\Google_Client.php(131): Google_OAuth2->authenticate(Array, '4/RlA1J5nIo1aLd...')
+#2 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(41): Google_Client->authenticate('4/RlA1J5nIo1aLd...')
+#3 [internal function]: UsersController->login()
+#4 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#7 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#8 {main}
+2015-01-07 07:59:11 Warning: Warning (2): json_decode() expects parameter 1 to be string, array given in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 51]
+Trace:
+json_decode - [internal], line ??
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 51
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 07:59:11 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 07:59:45 Warning: Warning (2): json_decode() expects parameter 1 to be string, array given in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 51]
+Trace:
+json_decode - [internal], line ??
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 51
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 07:59:45 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(135): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 08:00:16 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 08:04:06 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 08:04:33 Warning: Warning (2): json_decode() expects parameter 1 to be string, array given in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 51]
+Trace:
+json_decode - [internal], line ??
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 51
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:33 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 08:04:57 Warning: Warning (2): json_decode() expects parameter 1 to be string, array given in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 51]
+Trace:
+json_decode - [internal], line ??
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 51
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:58 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 08:05:36 Warning: Warning (2): json_decode() expects parameter 1 to be string, array given in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 51]
+Trace:
+json_decode - [internal], line ??
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 51
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:05:36 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 10:38:32 Warning: Warning (2): json_decode() expects parameter 1 to be string, array given in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 51]
+Trace:
+json_decode - [internal], line ??
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 51
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:38:32 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 10:38:32 Warning: Warning (2): json_decode() expects parameter 1 to be string, array given in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 51]
+Trace:
+json_decode - [internal], line ??
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 51
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:38:32 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 10:40:59 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 10:41:14 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 10:41:35 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(134): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 10:42:12 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_name' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(135): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 10:43:43 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'category_id' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(138): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 10:45:40 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_since_month' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(138): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 10:46:21 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'estimated_revenue' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(138): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 10:46:21 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'estimated_revenue' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(138): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 12:22:46 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'country_id' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(138): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-07 12:25:21 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'country_id' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(138): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-12 06:13:33 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'market_id' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(145): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-12 06:13:56 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'market_id' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(145): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-12 06:16:39 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'market_id' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(145): Model->save(Array)
+#5 [internal function]: ReportsController->save_data()
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-12 06:17:18 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'market_id' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(145): Model->save(Array)
+#5 [internal function]: ReportsController->save_data('India')
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-12 06:17:51 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'client_since_year' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(145): Model->save(Array)
+#5 [internal function]: ReportsController->save_data('India')
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-12 06:18:58 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'estimated_revenue' cannot be null
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO `cl...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(967): DboSource->execute('INSERT INTO `cl...')
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(1646): DboSource->create(Object(ClientRevenueByService), Array, Array)
+#4 C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php(145): Model->save(Array)
+#5 [internal function]: ReportsController->save_data('India')
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#9 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#10 {main}
+2015-01-12 07:06:20 Error: [MissingViewException] View file "C:\xampp\htdocs\ianalyse_reporting\app\View\Reports\export_data.ctp" is missing.
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\View\View.php(360): View->_getViewFileName(NULL)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(900): View->render(NULL, NULL)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(111): Controller->render()
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#4 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2015-01-12 12:11:30 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '114202232086562072220' for key 'PRIMARY'
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO goo...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(647): DboSource->execute('INSERT INTO goo...', Array, Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(515): DboSource->fetchAll('INSERT INTO goo...')
+#4 [internal function]: DboSource->query('INSERT INTO goo...')
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(2878): call_user_func_array(Array, Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(102): Model->query('INSERT INTO goo...')
+#7 [internal function]: UsersController->login()
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#9 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#10 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#11 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2015-01-12 13:20:02 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '114202232086562072220' for key 'PRIMARY'
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO goo...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(647): DboSource->execute('INSERT INTO goo...', Array, Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(515): DboSource->fetchAll('INSERT INTO goo...')
+#4 [internal function]: DboSource->query('INSERT INTO goo...')
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(2878): call_user_func_array(Array, Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(102): Model->query('INSERT INTO goo...')
+#7 [internal function]: UsersController->login()
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#9 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#10 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#11 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2015-01-12 13:22:36 Error: [PDOException] SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '114202232086562072220' for key 'PRIMARY'
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(436): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(403): DboSource->_execute('INSERT INTO goo...', Array)
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(647): DboSource->execute('INSERT INTO goo...', Array, Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Datasource\DboSource.php(515): DboSource->fetchAll('INSERT INTO goo...')
+#4 [internal function]: DboSource->query('INSERT INTO goo...')
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Model\Model.php(2878): call_user_func_array(Array, Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(102): Model->query('INSERT INTO goo...')
+#7 [internal function]: UsersController->login()
+#8 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#9 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#10 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#11 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}
+2015-01-12 13:35:19 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(57): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:36:13 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(57): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:36:31 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(57): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:36:55 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(57): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:37:29 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(57): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:37:33 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(57): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:40:39 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(56): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:40:52 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(56): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:41:20 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(56): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:41:25 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(56): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:42:05 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(56): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:42:16 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(56): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-12 13:42:18 Error: [Google_ServiceException] Error calling GET https://www.googleapis.com/oauth2/v2/userinfo?key=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: (401) Invalid Credentials
+#0 C:\xampp\htdocs\ianalyse_reporting\lib\src\io\Google_REST.php(36): Google_REST::decodeHttpResponse(Object(Google_HttpRequest))
+#1 C:\xampp\htdocs\ianalyse_reporting\lib\src\service\Google_ServiceResource.php(177): Google_REST::execute(Object(Google_HttpRequest))
+#2 C:\xampp\htdocs\ianalyse_reporting\lib\src\contrib\Google_Oauth2Service.php(37): Google_ServiceResource->__call('get', Array)
+#3 C:\xampp\htdocs\ianalyse_reporting\app\Controller\UsersController.php(56): Google_UserinfoServiceResource->get()
+#4 [internal function]: UsersController->login()
+#5 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Controller\Controller.php(473): ReflectionMethod->invokeArgs(Object(UsersController), Array)
+#6 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#7 C:\xampp\htdocs\ianalyse_reporting\lib\Cake\Routing\Dispatcher.php(86): Dispatcher->_invoke(Object(UsersController), Object(CakeRequest), Object(CakeResponse))
+#8 C:\xampp\htdocs\ianalyse_reporting\app\webroot\index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2015-01-13 23:58:12 Error: [MissingControllerException] Controller class IanalyseReportingController could not be found.
+#0 /var/www/ianalyse_reporting/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-01-14 00:03:44 Error: [MissingControllerException] Controller class IanalyseReportingController could not be found.
+#0 /var/www/ianalyse_reporting/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-01-14 00:15:06 Error: [MissingControllerException] Controller class IanalyseReportingController could not be found.
+#0 /var/www/ianalyse_reporting/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-01-14 00:26:21 Error: [MissingControllerException] Controller class IanalyseReportingController could not be found.
+#0 /var/www/ianalyse_reporting/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-01-14 00:26:31 Error: [MissingControllerException] Controller class IanalyseReportingController could not be found.
+#0 /var/www/ianalyse_reporting/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-01-14 00:26:46 Error: [MissingControllerException] Controller class IanalyseController could not be found.
+#0 /var/www/ianalyse_reporting/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 {main}
+2015-01-14 00:26:57 Error: [MissingConnectionException] Database connection "SQLSTATE[28000] [1045] Access denied for user 'root'@'localhost' (using password: NO)" is missing, or could not be created.
+#0 /var/www/ianalyse_reporting/lib/Cake/Model/Datasource/DboSource.php(244): Mysql->connect()
+#1 /var/www/ianalyse_reporting/lib/Cake/Model/ConnectionManager.php(101): DboSource->__construct(Array)
+#2 /var/www/ianalyse_reporting/lib/Cake/Model/Model.php(3241): ConnectionManager::getDataSource('default')
+#3 /var/www/ianalyse_reporting/lib/Cake/Model/Model.php(1030): Model->setDataSource('default')
+#4 /var/www/ianalyse_reporting/lib/Cake/Model/Model.php(3265): Model->setSource('cities')
+#5 /var/www/ianalyse_reporting/lib/Cake/Model/Model.php(2483): Model->getDataSource()
+#6 /var/www/ianalyse_reporting/app/Controller/ReportsController.php(23): Model->find('list', Array)
+#7 [internal function]: ReportsController->index()
+#8 /var/www/ianalyse_reporting/lib/Cake/Controller/Controller.php(473): ReflectionMethod->invokeArgs(Object(ReportsController), Array)
+#9 /var/www/ianalyse_reporting/lib/Cake/Routing/Dispatcher.php(104): Controller->invokeAction(Object(CakeRequest))
+#10 /var/www/ianalyse_reporting/lib/Cake/Routing/Dispatcher.php(86): Dispatcher->_invoke(Object(ReportsController), Object(CakeRequest), Object(CakeResponse))
+#11 /var/www/ianalyse_reporting/app/webroot/index.php(96): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#12 {main}

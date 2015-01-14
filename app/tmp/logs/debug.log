@@ -1,0 +1,360 @@
+2015-01-07 07:11:51 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 50]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 50
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: ClientCategory in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 53]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 53
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: Country in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 54]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 54
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: City in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 55]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 55
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: LeadAgency in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 56]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 56
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: Currency in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 57]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 57
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: Service in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 58]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 58
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: ClientMonth in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 90]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 90
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: ClientYear in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 91]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 91
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: ActiveMarkets in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 92]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 92
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: ParentCompany in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 93]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 93
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: ClientName in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 94]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 94
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: EstimatedRevenue in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 95]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 95
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:00:16 Debug: Notice (8): Undefined index: ActualRevenue in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 96]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 96
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: ClientCategory in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 53]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 53
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: Country in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 54]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 54
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: City in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 55]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 55
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: LeadAgency in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 56]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 56
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: Currency in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 57]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 57
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: Service in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 58]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 58
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: ClientMonth in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 90]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 90
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: ClientYear in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 91]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 91
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: ActiveMarkets in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 92]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 92
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: ParentCompany in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 93]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 93
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: ClientName in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 94]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 94
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: EstimatedRevenue in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 95]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 95
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 08:04:06 Debug: Notice (8): Undefined index: ActualRevenue in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 96]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 96
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 53]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 53
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 54]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 54
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 55]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 55
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 56]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 56
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 57]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 57
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 58]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 58
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 90]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 90
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 91]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 91
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 92]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 92
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 93]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 93
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 94]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 94
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 95]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 95
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+
+2015-01-07 10:40:59 Debug: Notice (8): Undefined variable: data in [C:\xampp\htdocs\ianalyse_reporting\app\Controller\ReportsController.php, line 96]
+Trace:
+ReportsController::save_data() - APP\Controller\ReportsController.php, line 96
+ReflectionMethod::invokeArgs() - [internal], line ??
+Controller::invokeAction() - CORE\Cake\Controller\Controller.php, line 473
+Dispatcher::_invoke() - CORE\Cake\Routing\Dispatcher.php, line 104
+Dispatcher::dispatch() - CORE\Cake\Routing\Dispatcher.php, line 86
+[main] - APP\webroot\index.php, line 96
+

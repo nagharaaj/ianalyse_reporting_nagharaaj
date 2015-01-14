@@ -1,0 +1,34 @@
+/* 
+    Document   : style
+    Created on : Jan 5, 2015, 2:19:42 PM
+    Author     : siddharthk
+    Description:
+        Purpose of the stylesheet follows.
+*/
+div#header
+{
+	background-color: #455560;
+}
+
+div#header-copy
+{
+        margin: 0px auto 0px auto;
+}
+
+div#header h1
+{
+	width: 138px;
+	padding: 5px 10px 3px 9px;
+}
+
+div#header h1 a
+{
+        background-image: url('../img/layout/header-logo.png');
+	background-repeat: no-repeat;
+	display: block;
+	height: 39px;
+        overflow: auto;
+	text-indent: -5000px;
+}
+
+

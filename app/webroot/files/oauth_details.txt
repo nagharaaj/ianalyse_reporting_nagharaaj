@@ -1,0 +1,6 @@
+client id -
+514535783917-b043bcai6a7cj5ksim7r99qg0q1uhun7.apps.googleusercontent.com
+
+client secret -
+22qyRz_pTSmWNHBU99uoo8F6
+
