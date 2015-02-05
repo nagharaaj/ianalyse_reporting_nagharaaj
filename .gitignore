@@ -12,7 +12,6 @@ app/[Cc]onfig/database.php
 app/webroot/files/*
 /.htaccess
 /.htpasswd
-app/webroot/img/awards/*
 /*.sql
 *.old
 *.back
