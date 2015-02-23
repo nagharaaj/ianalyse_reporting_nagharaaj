@@ -5,6 +5,12 @@
     Description:
         Purpose of the stylesheet follows.
 */
+
+*
+{
+	font-family: Calibri, Verdana, Tahoma, Arial, sans-serif;
+}
+
 div#header
 {
 	background-color: #455560;
@@ -24,11 +30,368 @@ div#header h1
 div#header h1 a
 {
         background-image: url('../img/layout/header-logo.png');
+        /*background-position: -25px -1px;*/
 	background-repeat: no-repeat;
 	display: block;
-	height: 39px;
+	height: 41px;
         overflow: auto;
 	text-indent: -5000px;
 }
 
+#header #lnk-logout {
+         color: #fff;
+        float: right;
+        font-weight: bold;
+        margin-right: 10px;
+        margin-top: -54px;
+        text-align: right;
+        width: 400px;
+}
 
+#lnk-logout a {
+        color: #fff;
+        text-decoration: none;
+}
+
+h2 {
+    margin: 10px 0 0;
+    padding: 0;
+    width: @body_width;
+    /*background-color: #82C342;*/
+    text-transform: uppercase;
+    /*color: #FFFFFF;*/
+    font-weight: bold;
+    font-size: 28px;
+    border-bottom: 1px solid #000000;
+    border-top: 1px solid #000000;
+}
+
+h2 span {
+    display: block;
+    /*float: left;*/
+    padding: 5px 0 5px 10px;
+    height: 34px;
+}
+
+#dataTable div.jqx-checkbox {
+        margin: 12px 13px !important;
+}
+
+#uploadForm .submit {
+    margin-top: 10px;
+    text-align: center;
+}
+
+#uploadForm .submit input {
+    font-size: 14px;
+    padding: 5px;
+    float: none;
+}
+
+#uploadForm {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    width: 700px;
+}
+
+#uploadForm div.input {
+    padding-top: 10px;
+}
+
+#uploadForm label {
+    display: block;
+    float: left;
+    width: 300px;
+    text-align: right;
+    padding-right: 7px;
+}
+
+.stage-won {
+        background-color: #a2d108 !important;
+        /*color: #444e53 !important;*/
+}
+
+.stage-live {
+        background-color: #f27c0d !important;
+        /*color: #444e53 !important;*/
+}
+
+.stage-lost {
+        background-color: #bf1527 !important;
+        color: #fff !important;
+}
+
+.empty-cell {
+        background-color: #d1d1d1 !important;
+}
+
+#nav-menu div {
+        font-size: 20px;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 26px;
+        display: inline-block;
+        margin-right: 5px;
+}
+
+#nav-menu div.green a {
+        font-family: AvenirHeavy, Verdana, Tahoma, Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        font-style: normal;
+        color: #a2d108;
+        text-decoration: none;
+        line-height: 22px;
+        text-align: center;
+        padding: 16px 30px 15px;
+        border-width: 3px;
+        border-color: #a2d108;
+        border-style: solid;
+        display: inline-block;
+        position:relative; z-index:1;
+}
+
+#nav-menu div.green a:after {
+        background-color: #a2d108;
+        content: "";
+        position:absolute;
+        bottom:0; left:0;
+        width:100%; height:0px;
+        z-index:-1;
+        transition: height 0.2s;
+}
+
+#nav-menu div.green a:hover:after { 
+        height:100%;
+}
+
+#nav-menu div.green a:hover { 
+        color: #fefefe;
+}
+
+#nav-menu div.green.selected a {
+        color: #fefefe !important;
+        background-color: #a2d108;
+}
+
+#nav-menu div.grey a {
+        font-family: AvenirHeavy, Verdana, Tahoma, Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        font-style: normal;
+        color: #fefefe;
+        background-color: #444e53;
+        text-decoration: none;
+        line-height: 22px;
+        text-align: center;
+        padding: 16px 30px 15px;
+        border-width: 3px;
+        border-color: #444e53;
+        border-style: solid;
+        display: inline-block;
+        position:relative; z-index:1;
+}
+
+#nav-menu div.grey a:after {
+        background-color: #fefefe;
+        content: "";
+        position:absolute;
+        bottom:0; left:0;
+        width:100%; height:0px;
+        z-index:-1;
+        transition: height 0.2s;
+}
+
+#nav-menu div.grey a:hover:after { 
+        height:100%;
+}
+
+#nav-menu div.grey a:hover { 
+        color: #444e53;
+}
+
+#nav-menu div.grey.selected a {
+        color: #444e53 !important;
+        background-color: #fefefe;
+}
+
+
+#tab-menu div {
+        font-size: 20px;
+        font-weight: 400;
+        font-style: normal;
+        line-height: 26px;
+        display: inline-block;
+        margin-right: 5px;
+        margin-top: 10px;
+        margin-bottom: 5px;
+}
+
+#tab-menu div.light-grey a {
+        font-family: AvenirHeavy, Verdana, Tahoma, Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        font-style: normal;
+        color: #9ca0a3;
+        background-color: #fefefe;
+        text-decoration: none;
+        line-height: 22px;
+        text-align: center;
+        padding: 16px 30px 15px;
+        border-width: 3px;
+        border-color: #9ca0a3;
+        border-style: solid;
+        display: inline-block;
+        position:relative; z-index:1;
+}
+
+#tab-menu div.light-grey a:after {
+        background-color: #9ca0a3;
+        content: "";
+        position:absolute;
+        bottom:0; left:0;
+        width:100%; height:0px;
+        z-index:-1;
+        transition: height 0.2s;
+}
+
+#tab-menu div.light-grey a:hover:after { 
+        height:100%;
+}
+
+#tab-menu div.light-grey a:hover { 
+        color: #fefefe;
+}
+
+#tab-menu div.selected a {
+        color: #fefefe !important;
+        background-color: #9ca0a3;
+}
+
+button#createNew, button#CancelNew, button#SaveNew, button#SaveNewUser, button#UpdateClient, button#CancelUpdate, button#clearfilteringbutton, button#exporttoexcelbutton {
+        border: 1px solid #9ca0a3; 
+        background-color: #fefefe; 
+        color: #9ca0a3;
+        border-radius: 0px;
+        padding: 2px 10px;
+        font-weight: 500;
+}
+
+button#createNew {
+        min-width: 160px;
+}
+
+button#CancelNew, button#CancelUpdate {
+        min-width: 80px;
+}
+
+button#SaveNew, button#UpdateClient {
+        min-width: 200px;
+}
+
+button#SaveNewUser {
+        min-width: 100px;
+}
+
+button#clearfilteringbutton {
+        min-width: 105px;
+}
+
+button#exporttoexcelbutton {
+        min-width: 140px;
+}
+
+button#createNew:hover, button#CancelNew:hover, button#SaveNew:hover, button#SaveNewUser:hover, button#CancelUpdate:hover, button#UpdateClient:hover, button#clearfilteringbutton:hover, button#exporttoexcelbutton:hover {
+        font-weight: 600;
+}
+
+button.editButtons {
+        border: 1px solid #9ca0a3; 
+        background-color: #fefefe; 
+        color: #9ca0a3;
+        border-radius: 0px;
+        padding: 2px 10px;
+        font-weight: 500;
+        min-width: 65px;
+}
+
+button.editButtons:hover {
+        font-weight: 600;
+}
+
+button.cancelButtons {
+        border: 1px solid #9ca0a3; 
+        background-color: #fefefe; 
+        color: #9ca0a3;
+        border-radius: 0px;
+        padding: 2px 5px;
+        font-weight: 500;
+        min-width: 70px;
+}
+
+button.cancelButtons:hover {
+        font-weight: 600;
+}
+
+button.deleteButtons {
+        border: 1px solid #9ca0a3; 
+        background-color: #fefefe; 
+        color: #9ca0a3;
+        border-radius: 0px;
+        padding: 2px 5px;
+        font-weight: 500;
+        min-width: 65px;
+}
+
+button.deleteButtons:hover {
+        font-weight: 600;
+}
+
+.success {
+    margin: 10px;
+    border: 1px solid darkgreen;
+    padding: 10px;
+    background-color: lightgreen;
+    color: darkgreen;
+}
+
+.success h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.failure {
+    margin: 10px;
+    border: 1px solid darkred;
+    padding: 10px;
+    background-color: pink;
+    color: darkred;
+}
+
+.failure p, .failure span {
+    margin: 0px;
+    padding: 0px;
+}
+
+.analysis {
+    margin: 10px;
+    border: 1px solid brown;
+    padding: 10px;
+    background-color: lightyellow;
+    color: brown;
+}
+
+.analysis p {
+    margin: 0px;
+    padding: 0px;
+}
+
+.grid-cell-highlight {
+    border-width: 2px !important;
+}
+
+.readonly {
+    color: #000; 
+    opacity: 0.55;
+}

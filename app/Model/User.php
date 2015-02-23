@@ -1,7 +1,16 @@
 <?php
-class User extends AppModel
-{
-        var $name = 'User';
-        var $useTable = 'google_users';
+App::uses('AppModel', 'Model');
+
+class User extends AppModel {
+
+    public $displayField = 'display_name';
+    
+    public $validate = array(
+        'username' => array(
+            'required' => array(
+                'rule' => array('notEmpty'),
+                'message' => 'A username is required'
+            )
+        )
+    );
 }
-?>

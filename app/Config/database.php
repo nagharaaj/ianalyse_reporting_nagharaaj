@@ -64,10 +64,10 @@ class DATABASE_CONFIG {
 		'persistent' => false,
 		'host' => 'localhost',
 		'login' => 'root',
-		'password' => '',
+		'password' => '@wardW1nning!',
 		'database' => 'ianalyse_reporting',
 		'prefix' => '',
-		//'encoding' => 'utf8',
+		'encoding' => 'utf8',
 	);
 
 	public $test = array(
@@ -81,18 +81,4 @@ class DATABASE_CONFIG {
 		//'encoding' => 'utf8',
 	);
         
-        var $gsheet = array(
-                'datasource' => 'Gsheet.Gsheet',
-                'user' => 'iprospectawards@gmail.com',
-                'psw' => 'awards2014',
-                'spreadsheet' => 'yourspreadsheetname'
-        );
-
-        // if you want tests
-        var $testgsheet = array(
-                'datasource' => 'Gsheet.Gsheet',
-                'user' => 'iprospectawards@gmail.com',
-                'psw' => 'awards2014',
-                'spreadsheet' => 'CakeTest'
-        );
 }

@@ -28,10 +28,6 @@
 	//Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
         Router::connect('/', array('controller' => 'users', 'action' => 'login'));
         
-        if (!defined('WEB_ROOT'))
-        {
-                define('WEB_ROOT', "http://".$_SERVER['HTTP_HOST']."/ianalyse_reporting/img/");
-        }
 /**
  * ...and connect the rest of 'Pages' controller's urls.
  */

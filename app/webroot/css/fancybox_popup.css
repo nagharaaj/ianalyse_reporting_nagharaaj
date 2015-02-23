@@ -1,0 +1,245 @@
+
+h2.popup {
+    font-size: 12px;
+    line-height: 26px;
+    margin: 0;
+    padding: 0 0 10px;
+    vertical-align: middle;
+}
+
+h2.popup .service:after {
+    content: " ";
+}
+h2.popup .service {
+    color: #455560;
+    font-size: 24px;
+    vertical-align: bottom;
+}
+
+
+h2.popup .country:before {
+    content: " ";
+}
+h2.popup .country {
+    font-size: 24px;
+    vertical-align: bottom;
+}
+
+
+#popup-left-side {
+    float: left;
+    height: 550px;
+    width: 175px;
+}
+
+#popup-left-side h4, #popup-middle h4, #popup-right h4, #statistics h4 {
+    color: #455560;
+    font-size: 20px;
+    margin: 0;
+    padding: 0 0 5px 20px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#popup-left-side .container {
+    border: 1px solid #4C4C4C;
+    float: left;
+    max-height: 550px;
+    padding: 10px;
+    width: 175px;
+}
+
+
+#popup-client-list {
+    list-style-type: none;
+    margin: 0;
+    max-height: 465px;
+    overflow: auto;
+    padding: 0;
+    width: 175px;
+}
+
+
+#popup-client-list li {
+    font-weight: bold;
+    list-style-type: none;
+}
+
+
+#popup-client-list li a {
+    color: #000000;
+    display: block;
+    padding: 2px;
+    text-decoration: none;
+}
+
+
+#client-list-count {
+    border-top: 1px dotted #455560;
+    color: #455560;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px auto 0;
+    padding-top: 5px;
+    text-align: center;
+}
+
+
+#popup-middle {
+    float: left;
+    margin: 0 20px 0 60px;
+    max-height: 550px;
+    overflow: auto;
+    width: 475px;
+}
+
+
+p.center {
+    text-align: center;
+}
+p.image {
+    border: 0 none;
+    margin: 0;
+}
+
+#popup-middle h4, #popup-right h4, #statistics h4 {
+    padding: 10px 0 5px;
+    text-align: left;
+}
+
+#popup-middle #popup-strategists, #popup-middle #popup-tools {
+    width: 438px;
+}
+#popup-middle .table {
+    border-collapse: collapse;
+    display: table;
+    font-size: 11px;
+}
+
+#popup-middle .row {
+    border: 1px solid #000000;
+    display: table-row;
+}
+
+#popup-client-list li a:hover, #popup-middle .table .row.header .cell {
+    background-color: #455560;
+}
+#popup-middle .row.header .cell {
+    color: #FFFFFF;
+    font-weight: bold;
+    padding: 5px;
+    text-transform: uppercase;
+}
+#popup-middle .cell {
+    border: 1px solid #000000;
+    display: table-cell;
+    padding: 5px;
+}
+
+#popup-middle .table a, #popup-right a {
+    color: #000000;
+    text-decoration: none;
+}
+
+#popup-right {
+    float: left;
+    max-height: 550px;
+    overflow: auto;
+    width: 325px;
+}
+
+#popup-right .container {
+    max-height: 490px;
+    width: 303px;
+}
+
+#popup-right h4, #statistics h4 {
+    border-bottom: 1px dotted #000000;
+    font-size: 16px;
+    padding-bottom: 0;
+}
+
+#popup-right .section p {
+    margin: 0;
+    padding: 2px 0 0;
+}
+
+#statistics h5 {
+    margin: 0;
+    padding: 3px 0 0;
+    text-transform: uppercase;
+}
+
+body.display div.jvectormap-label, body.video div.jvectormap-label, body.display div#content #secondary-nav-container, body.video div#content #secondary-nav-container, body.conversion div#content p#next, body.feeds div#content p#next, body.mobile div#content p#previous, body.affiliates div#content p#previous, body.display div#content div#datagrid > div > ul li a:hover, body.video div#content div#datagrid > div > ul li a:hover, body.display div#content div#datagrid > div > table tbody tr:hover td, body.video div#content div#datagrid > div > table tbody tr:hover td, body.display div#content ul#countries, body.video div#content ul#countries, body.display #popup-client-list li a:hover, body.video #popup-client-list li a:hover, body.display #popup-middle .table .row.header .cell, body.video #popup-middle .table .row.header .cell, #statistics p.bar-graph.number-1 {
+    background-color: #009BC9;
+}
+body.analytics div.jvectormap-label, body.seo div.jvectormap-label, body.analytics div#content #secondary-nav-container, body.seo div#content #secondary-nav-container, body.affiliates div#content p#next, body.search div#content p#next, body.content div#content p#previous, body.social div#content p#previous, body.analytics div#content div#datagrid > div > ul li a:hover, body.seo div#content div#datagrid > div > ul li a:hover, body.analytics div#content div#datagrid > div > table tbody tr:hover td, body.seo div#content div#datagrid > div > table tbody tr:hover td, body.analytics div#content ul#countries, body.seo div#content ul#countries, body.analytics #popup-client-list li a:hover, body.seo #popup-client-list li a:hover, body.analytics #popup-middle .table .row.header .cell, body.seo #popup-middle .table .row.header .cell, #statistics p.bar-graph.number-2 {
+    background-color: #F58026;
+}
+body.mobile div.jvectormap-label, body.mobile div#content #secondary-nav-container, body.display div#content p#next, body.search div#content p#previous, body.mobile div#content div#datagrid > div > ul li a:hover, body.mobile div#content div#datagrid > div > table tbody tr:hover td, body.mobile div#content ul#countries, body.mobile #popup-client-list li a:hover, body.mobile #popup-middle .table .row.header .cell, #statistics p.bar-graph.number-3 {
+    background-color: #959CA1;
+}
+body.content div.jvectormap-label, body.social div.jvectormap-label, body.content div#content #secondary-nav-container, body.social div#content #secondary-nav-container, body.analytics div#content p#next, body.seo div#content p#next, body.conversion div#content p#previous, body.feeds div#content p#previous, body.content div#content div#datagrid > div > ul li a:hover, body.social div#content div#datagrid > div > ul li a:hover, body.content div#content div#datagrid > div > table tbody tr:hover td, body.social div#content div#datagrid > div > table tbody tr:hover td, body.content div#content ul#countries, body.social div#content ul#countries body.content #popup-client-list li a:hover, body.social #popup-client-list li a:hover, body.content #popup-middle .table .row.header .cell, body.social #popup-middle .table .row.header .cell, #statistics p.bar-graph.number-4 {
+    background-color: #0055A5;
+}
+body.affiliates div.jvectormap-label, body.search div.jvectormap-label, body.affiliates div#content #secondary-nav-container, body.search div#content #secondary-nav-container, body.mobile div#content p#next, body.video div#content p#next, body.analytics div#content p#previous, body.seo div#content p#previous, body.affiliates div#content div#datagrid > div > ul li a:hover, body.search div#content div#datagrid > div > ul li a:hover, body.affiliates div#content div#datagrid > div > table tbody tr:hover td, body.search div#content div#datagrid > div > table tbody tr:hover td, body.affiliates div#content ul#countries, body.search div#content ul#countries, body.affiliates #popup-client-list li a:hover, body.search #popup-client-list li a:hover, body.affiliates #popup-middle .table .row.header .cell, body.search #popup-middle .table .row.header .cell, #statistics p.bar-graph.number-5 {
+    background-color: #8DC63F;
+}
+#statistics p.bar-graph {
+    color: #FFFFFF;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+}
+
+p.avg-services {
+    font-size: 24px;
+    margin: 0;
+    padding: 5px 0;
+    text-align: center;
+}
+
+p.avg-services-subtext {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+#popup-right #city-list, #popup-right #city-list li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#popup-right #city-list li {
+    padding-top: 2px;
+}
+#popup-right #city-list, #popup-right #city-list li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.qtip-p {
+  margin: 0px;
+  padding: 0px;
+}
+
+.qtip-default {
+  border-width: 2px;
+  border-style: solid;
+  border-color: #8DC63F;
+  background-color: #fff;
+  color: #000
+}
+
+.qtip, .qtip {
+  max-width: 300px;
+  min-width: 50px;
+}
+
+.qtip-link {
+  text-decoration: none;
+  color: #000;
+}
