@@ -389,6 +389,7 @@
                                 rules.push(validator.pitchleader);
                         }*/
                         $("#update_pitchstage").jqxDropDownList({ source: stages }).val(pitchstage);
+                        $("#update_pitchstage").jqxDropDownList('disableItem',"Current client");
                         rules.push(validator.pitchstage);
                         if(clientsincemonth != '' && clientsincemonth != null) {
                                 if(pitchstage.match(/Live/g)) {
