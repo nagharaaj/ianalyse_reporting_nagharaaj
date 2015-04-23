@@ -56,7 +56,7 @@ div#header h1 a
 h2 {
     margin: 10px 0 0;
     padding: 0;
-    width: @body_width;
+    width: 100%;
     /*background-color: #82C342;*/
     text-transform: uppercase;
     /*color: #FFFFFF;*/
@@ -135,25 +135,29 @@ h2 span {
         margin-right: 5px;
 }
 
-#nav-menu div.green a {
-        font-family: AvenirHeavy, Verdana, Tahoma, Arial, sans-serif;
-        font-size: 18px;
+#nav-menu div a {
+        font-family: Calibri, Verdana, Tahoma, Arial, sans-serif;
+        font-size: 25px;
         font-weight: 400;
         font-style: normal;
-        color: #a2d108;
         text-decoration: none;
         line-height: 22px;
         text-align: center;
         padding: 16px 30px 15px;
         border-width: 3px;
-        border-color: #a2d108;
         border-style: solid;
         display: inline-block;
         position:relative; z-index:1;
 }
 
-#nav-menu div.green a:after {
+#nav-menu div.green a {
+        color: #fefefe;
+        border-color: #a2d108;
         background-color: #a2d108;
+}
+
+#nav-menu div.green a:after {
+        background-color: #fefefe;
         content: "";
         position:absolute;
         bottom:0; left:0;
@@ -167,30 +171,18 @@ h2 span {
 }
 
 #nav-menu div.green a:hover { 
-        color: #fefefe;
+        color: #a2d108;
 }
 
 #nav-menu div.green.selected a {
-        color: #fefefe !important;
-        background-color: #a2d108;
+        color: #a2d108 !important;
+        background-color: #fefefe;
 }
 
 #nav-menu div.grey a {
-        font-family: AvenirHeavy, Verdana, Tahoma, Arial, sans-serif;
-        font-size: 18px;
-        font-weight: 400;
-        font-style: normal;
         color: #fefefe;
-        background-color: #444e53;
-        text-decoration: none;
-        line-height: 22px;
-        text-align: center;
-        padding: 16px 30px 15px;
-        border-width: 3px;
         border-color: #444e53;
-        border-style: solid;
-        display: inline-block;
-        position:relative; z-index:1;
+        background-color: #444e53;
 }
 
 #nav-menu div.grey a:after {
@@ -216,9 +208,95 @@ h2 span {
         background-color: #fefefe;
 }
 
+#nav-menu div.orange a {
+        color: #fefefe;
+        border-color: #f27c0d;
+        background-color: #f27c0d;
+}
+
+#nav-menu div.orange a:after {
+        background-color: #fefefe;
+        content: "";
+        position:absolute;
+        bottom:0; left:0;
+        width:100%; height:0px;
+        z-index:-1;
+        transition: height 0.2s;
+}
+
+#nav-menu div.orange a:hover:after { 
+        height:100%;
+}
+
+#nav-menu div.orange a:hover { 
+        color: #f27c0d;
+}
+
+#nav-menu div.orange.selected a {
+        color: #f27c0d !important;
+        background-color: #fefefe;
+}
+
+#nav-menu div.blue a {
+        color: #fefefe;
+        border-color: #1150a2;
+        background-color: #1150a2;
+}
+
+#nav-menu div.blue a:after {
+        background-color: #fefefe;
+        content: "";
+        position:absolute;
+        bottom:0; left:0;
+        width:100%; height:0px;
+        z-index:-1;
+        transition: height 0.2s;
+}
+
+#nav-menu div.blue a:hover:after { 
+        height:100%;
+}
+
+#nav-menu div.blue a:hover { 
+        color: #1150a2;
+}
+
+#nav-menu div.blue.selected a {
+        color: #1150a2 !important;
+        background-color: #fefefe;
+}
+
+#nav-menu div.red a {
+        color: #fefefe;
+        border-color: #bf1527;
+        background-color: #bf1527;
+}
+
+#nav-menu div.red a:after {
+        background-color: #fefefe;
+        content: "";
+        position:absolute;
+        bottom:0; left:0;
+        width:100%; height:0px;
+        z-index:-1;
+        transition: height 0.2s;
+}
+
+#nav-menu div.red a:hover:after { 
+        height:100%;
+}
+
+#nav-menu div.red a:hover { 
+        color: #bf1527;
+}
+
+#nav-menu div.red.selected a {
+        color: #bf1527 !important;
+        background-color: #fefefe;
+}
 
 #tab-menu div {
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 400;
         font-style: normal;
         line-height: 26px;
@@ -229,12 +307,12 @@ h2 span {
 }
 
 #tab-menu div.light-grey a {
-        font-family: AvenirHeavy, Verdana, Tahoma, Arial, sans-serif;
-        font-size: 18px;
+        font-family: Calibri, Verdana, Tahoma, Arial, sans-serif;
+        font-size: 20px;
         font-weight: 400;
         font-style: normal;
-        color: #9ca0a3;
-        background-color: #fefefe;
+        color: #fefefe;
+        background-color: #9ca0a3;
         text-decoration: none;
         line-height: 22px;
         text-align: center;
@@ -247,7 +325,7 @@ h2 span {
 }
 
 #tab-menu div.light-grey a:after {
-        background-color: #9ca0a3;
+        background-color: #fefefe;
         content: "";
         position:absolute;
         bottom:0; left:0;
@@ -261,33 +339,39 @@ h2 span {
 }
 
 #tab-menu div.light-grey a:hover { 
-        color: #fefefe;
+        color: #9ca0a3;
 }
 
 #tab-menu div.selected a {
-        color: #fefefe !important;
-        background-color: #9ca0a3;
+        color: #9ca0a3 !important;
+        background-color: #fefefe;
 }
 
-button#createNew, button#CancelNew, button#SaveNew, button#SaveNewUser, button#UpdateClient, button#CancelUpdate, button#clearfilteringbutton, button#exporttoexcelbutton {
-        border: 1px solid #9ca0a3; 
-        background-color: #fefefe; 
+button#createNew, button#CancelNew, button#SaveNew, button#SaveNewUser, button#UpdateClient, button#CancelUpdate,
+button#clearfilteringbutton, button#exporttoexcelbutton, button#exportButton, button#cancelExportButton,
+button#CancelNewChapter, button#CancelNewQuestion, button#SaveNewChapter, button#SaveNewQuestion
+{
+        border: 1px solid #9ca0a3;
+        background-color: #fefefe;
         color: #9ca0a3;
         border-radius: 0px;
         padding: 2px 10px;
         font-weight: 500;
+        min-height: 24px;
 }
 
 button#createNew {
-        min-width: 160px;
+        min-width: 180px;
 }
 
-button#CancelNew, button#CancelUpdate {
-        min-width: 80px;
+button#CancelNew, button#CancelUpdate, button#exportButton, button#cancelExportButton,
+button#CancelNewChapter, button#CancelNewQuestion, button#SaveNewChapter, button#SaveNewQuestion
+{
+        min-width: 85px;
 }
 
 button#SaveNew, button#UpdateClient {
-        min-width: 200px;
+        min-width: 230px;
 }
 
 button#SaveNewUser {
@@ -299,11 +383,19 @@ button#clearfilteringbutton {
 }
 
 button#exporttoexcelbutton {
-        min-width: 140px;
+        min-width: 120px;
 }
 
-button#createNew:hover, button#CancelNew:hover, button#SaveNew:hover, button#SaveNewUser:hover, button#CancelUpdate:hover, button#UpdateClient:hover, button#clearfilteringbutton:hover, button#exporttoexcelbutton:hover {
+button#createNew:hover, button#CancelNew:hover, button#SaveNew:hover, button#SaveNewUser:hover, button#CancelUpdate:hover,
+button#UpdateClient:hover, button#clearfilteringbutton:hover, button#exporttoexcelbutton:hover, button#exportButton:hover, button#cancelExportButton:hover,
+button#CancelNewChapter:hover, button#CancelNewQuestion:hover, button#SaveNewChapter:hover, button#SaveNewQuestion:hover
+{
+        font-size: 12px;
         font-weight: 600;
+        color: #9ca0a3;
+        background-color: #EAE9E9;
+        border-color: #EAE9E9;
+        line-height: 16px;
 }
 
 button.editButtons {
@@ -313,11 +405,16 @@ button.editButtons {
         border-radius: 0px;
         padding: 2px 10px;
         font-weight: 500;
-        min-width: 65px;
+        min-width: 70px;
+        min-height: 24px;
 }
 
 button.editButtons:hover {
+        font-size: 12px;
         font-weight: 600;
+        color: #9ca0a3;
+        background-color: #EAE9E9;
+        border: none;
 }
 
 button.cancelButtons {
@@ -328,10 +425,15 @@ button.cancelButtons {
         padding: 2px 5px;
         font-weight: 500;
         min-width: 70px;
+        min-height: 24px;
 }
 
 button.cancelButtons:hover {
+        font-size: 12px;
         font-weight: 600;
+        color: #9ca0a3;
+        background-color: #EAE9E9;
+        border: none;
 }
 
 button.deleteButtons {
@@ -341,11 +443,16 @@ button.deleteButtons {
         border-radius: 0px;
         padding: 2px 5px;
         font-weight: 500;
-        min-width: 65px;
+        min-width: 70px;
+        min-height: 24px;
 }
 
 button.deleteButtons:hover {
+        font-size: 12px;
         font-weight: 600;
+        color: #9ca0a3;
+        background-color: #EAE9E9;
+        border: none;
 }
 
 .success {
@@ -395,3 +502,117 @@ button.deleteButtons:hover {
     color: #000; 
     opacity: 0.55;
 }
+
+.help-section {
+    width: 95%;
+    margin: auto;
+    padding-bottom: 50px;
+}
+
+.chapter {
+    padding-bottom: 25px;
+}
+
+.chapter-head {
+    font-size: 24px;
+    border: 1px solid #9ca0a3;
+    height: 30px;
+    display: inline-block;
+    padding: 7px 15px 5px;
+    line-height: 30px;
+    border-bottom: none;
+    font-weight: bold;
+    /*min-width: 20%;*/
+}
+
+.que-and-ans {
+    border: 1px solid #9ca0a3;
+    padding: 5px 10px;
+}
+
+.question {
+    font-size: 20px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+}
+
+.answer {
+    font-size: 16px;
+    padding-bottom: 10px;
+    padding-left: 25px;
+}
+
+.answer > div {
+    display: inline;
+}
+
+.ask-question input.inp-new-question {
+    width: 99%;
+    height: 25px;
+    margin-bottom: 7px !important;
+    padding-left: 7px !important;
+}
+
+.ask-question input.inp-user-name {
+    width: 25%;
+    height: 25px;
+    padding-left: 7px !important;
+}
+
+.ask-question button.btn-submit-question {
+    width: 75px;
+    height: 25px;
+    float: right;
+    border: 1px solid #9ca0a3; 
+    background-color: #fefefe; 
+    color: #9ca0a3;
+    border-radius: 0px;
+    padding: 2px 10px;
+    font-weight: 500;
+    min-height: 24px;
+}
+
+.ask-question button.btn-submit-question:hover {
+    font-size: 12px;
+    font-weight: 600;
+    color: #9ca0a3;
+    background-color: #EAE9E9;
+    border-color: #EAE9E9;
+    line-height: 16px;
+}
+
+button.btn-create-chapter, button.btn-create-question {
+    width: 150px;
+    height: 25px;
+    border: 1px solid #9ca0a3; 
+    background-color: #fefefe; 
+    color: #9ca0a3;
+    border-radius: 0px;
+    padding: 2px 10px;
+    margin-right: 10px;
+    font-weight: 500;
+    min-height: 24px;
+}
+
+button.btn-list-questions {
+    width: 250px;
+    height: 25px;
+    border: 1px solid #9ca0a3; 
+    background-color: #fefefe; 
+    color: #9ca0a3;
+    border-radius: 0px;
+    padding: 2px 10px;
+    margin-right: 10px;
+    font-weight: 500;
+    min-height: 24px;
+}
+
+button.btn-create-chapter:hover, button.btn-create-question:hover, button.btn-list-questions:hover {
+    font-size: 12px;
+    font-weight: 600;
+    color: #9ca0a3;
+    background-color: #EAE9E9;
+    border-color: #EAE9E9;
+    line-height: 16px;
+}
+

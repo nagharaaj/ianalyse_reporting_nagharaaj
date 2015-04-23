@@ -140,8 +140,11 @@ $config['rules'] = array(
                 'controllers/help/*' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer',
                 'controllers/reports/client_report' => 'Role/Viewer',
                 'controllers/reports/get_client_data' => 'Role/Viewer',
+                'controllers/reports/get_client_report_data' => 'Role/Viewer',
                 'controllers/reports/export_client_data' => 'Role/Viewer',
                 'controllers/reports/office_data' => 'Role/Viewer',
+                'controllers/reports/get_office_data' => 'Role/Viewer',
+                'controllers/reports/export_office_data' => 'Role/Viewer',
         ),
         'deny' => array(
                 'controllers/users/user_permissions' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer',

@@ -8,8 +8,7 @@ class ExcelReaderComponent extends Component {
         private $dataArray;
         private $excel;
 
-        public function initialize($controller)
-        {
+        public function initialize($controller) {
                 parent::initialize($controller);
                 App::import('Vendor', 'PHPExcel', array('file' => 'PhpExcel/PHPExcel.php'));
                 if (!class_exists('PHPExcel')) {
@@ -18,17 +17,15 @@ class ExcelReaderComponent extends Component {
                 $this->dataArray = array();
         }
 
-        private function loadExcelFile($filename, $sheetName, $ignoreFormatting = true)
-        {
+        private function loadExcelFile($filename, $sheetName, $ignoreFormatting = true) {
                 $this->PHPExcelReader = PHPExcel_IOFactory::createReaderForFile($filename);
                 $this->PHPExcelLoaded = true;
                 $this->PHPExcelReader->setReadDataOnly($ignoreFormatting);
                 $this->PHPExcelReader->setLoadSheetsOnly($sheetName);
                 $this->excel = $this->PHPExcelReader->load($filename);
         }
-        
-        public function readExcelSheet($filename, $sheetName, $formatData = false)
-        {
+
+        public function readExcelSheet($filename, $sheetName, $formatData = false) {
                 $sheetData = array();
                 $this->loadExcelFile($filename, $sheetName, !($formatData));
                 if($this->PHPExcelLoaded) {
@@ -37,9 +34,13 @@ class ExcelReaderComponent extends Component {
                 $this->dataArray = $sheetData;
                 return $this->dataArray;
         }
+        
+        public function readDateFromExcel($date, $format = 'm/d/Y') {
+                $date = PHPExcel_Shared_Date::ExcelToPHP($date);
+                return date($format, $date);
+        }
 
-        public function excel_array_search($needle, $haystack, &$searchResult = array())
-        {
+        public function excel_array_search($needle, $haystack, &$searchResult = array()) {
             $row = null;
             $cell = null;
             foreach($haystack as $rowKey=>$rowValue) {

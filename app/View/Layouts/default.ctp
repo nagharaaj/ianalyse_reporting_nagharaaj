@@ -13,6 +13,8 @@
                 echo $this->Html->css('jqwidgets/styles/jqx.base');
 
                 echo $this->Html->script('jquery-1.11.1.min.js');
+                echo $this->Html->script('google-analytics');
+                echo $this->Html->script('jstz.min.js');
                 echo $this->Html->script('jqwidgets/jqxcore.js');
                 echo $this->Html->script('jqwidgets/jqxmenu.js');
                 echo $this->Html->script('jqwidgets/jqxdata.js');
@@ -33,6 +35,7 @@
                 echo $this->Html->script('jqwidgets/jqxdatetimeinput.js');
                 echo $this->Html->script('jqwidgets/jqxvalidator.js');
                 echo $this->Html->script('jqwidgets/jqxpanel.js');
+                echo $this->Html->script('jqwidgets/jqxeditor.js');
                 echo $this->Html->script('jqwidgets/jqxgrid.edit.js');
                 echo $this->Html->script('jqwidgets/jqxgrid.selection.js');
                 echo $this->Html->script('jqwidgets/jqxgrid.filter.js');
@@ -67,8 +70,19 @@
                                 {
                                         foreach($admNavLinks as $navHead => $arrLinks)
                                         {
+                                                if($navHead == 'CLIENT & NEW BUSINESS DATA') {
+                                                        $className = 'grey';
+                                                } else if ($navHead == 'OFFICE DATA') {
+                                                        $className = 'orange';
+                                                } else if ($navHead == 'PERMISSIONS') {
+                                                        $className = 'blue';
+                                                } else if ($navHead == 'HELP') {
+                                                        $className = 'red';
+                                                } else {
+                                                        $className = 'green';
+                                                }
                                 ?>
-                        <div id="<?php echo str_replace("/", "-", $arrLinks); ?>" class="<?php echo ($navHead == "Help") ? "grey" : "green"; ?>">
+                        <div id="<?php echo str_replace("/", "-", $arrLinks); ?>" class="<?php echo $className; ?>">
                                 <?php
                                                 echo $this->Html->link
                                                 (

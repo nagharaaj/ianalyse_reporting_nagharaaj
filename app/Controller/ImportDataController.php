@@ -1,9 +1,9 @@
 <?php
 class ImportDataController extends AppController {
 	public $helpers = array('Html', 'Form');
-        
+
         public $components = array('RequestHandler');
-        
+
         public $uses = array(
             'City',
             'ClientCategory',
@@ -28,7 +28,7 @@ class ImportDataController extends AppController {
         public $servicesMap = array();
         public $unknownServices = array();
         public $arrClient = array();
-        
+
         public function beforeFilter() {
 
                 $this->Auth->loginAction = array(
@@ -52,7 +52,7 @@ class ImportDataController extends AppController {
         public function client_import() {
 		set_time_limit(0);
                 ini_set('memory_limit', '-1');
-                
+
 		$this->City->Behaviors->attach('Containable');
 		$this->Country->Behaviors->attach('Containable');
 		$this->ClientRevenueByService->Behaviors->attach('Containable');
@@ -90,7 +90,7 @@ class ImportDataController extends AppController {
                                 }
                         } else if($status == 'analyse') {
                                 $status = 'import';
-                                
+
                                 if(isset($this->request->data['ClientAnalyse']['analyse_service'])) {
                                         $excelFile = $this->request->data['ClientAnalyse']['excel_file'];
 
@@ -114,9 +114,8 @@ class ImportDataController extends AppController {
 		}
                 $this->set('status', $status);
         }
-        
-        protected function read_excel($file, $status, $sheetNames, $dataType = 'client')
-        {
+
+        protected function read_excel($file, $status, $sheetNames, $dataType = 'client') {
                 $this->ExcelReader = $this->Components->load('ExcelReader');
                 $this->ExcelReader->initialize($this);
                 $this->set('filename', $file);
@@ -140,43 +139,42 @@ class ImportDataController extends AppController {
                         exit;
                 }
         }
-        
-        protected function parse_client_list($dataClientList = array(), $status = null)
-        {
+
+        protected function parse_client_list($dataClientList = array(), $status = null) {
                 $arrClient = array();
                 $arrServices = $this->Service->find('list', array('fields' => array('Service.id', 'Service.service_name'), 'order' => 'Service.service_name Asc'));
                 $fiscalYr = date('Y');
-                
+
                 if(!empty($dataClientList)) {
-                        
+
                         $opportunities = $this->LeadAgency->find('list', array('fields' => array('LeadAgency.id', 'LeadAgency.agency'), 'order' => 'LeadAgency.agency Asc'));
                         $currencies = $this->Currency->find('list', array('fields' => array('Currency.id', 'Currency.currency'), 'order' => 'Currency.currency Asc'));
-                        
+
                         $arrCnt = count($dataClientList);
-                        if(count($dataClientList[1]) == 13) {
+                        if(count($dataClientList[1]) >= 17) {
                                 $searchRow = 2;
                                 $endOfList = 0;
                                 for($i = $searchRow; $i <= $arrCnt; $i++) {
-                                        if(!empty($dataClientList[$i]['A'])) {
+                                        if(!empty($dataClientList[$i]['B'])) {
                                                 $endOfList = 0;
-                                                if(!array_search(trim(str_replace('&', 'and', $dataClientList[$i]['J'])), $arrServices)) {
-                                                        if(!in_array(trim(str_replace('&', 'and', $dataClientList[$i]['J'])), $this->unknownServices)) {
-                                                                $this->unknownServices[] = trim($dataClientList[$i]['J']);
+                                                if(!array_search(trim(str_replace('&', 'and', $dataClientList[$i]['K'])), $arrServices)) {
+                                                        if(!in_array(trim(str_replace('&', 'and', $dataClientList[$i]['K'])), $this->unknownServices)) {
+                                                                $this->unknownServices[] = trim($dataClientList[$i]['K']);
                                                         }
                                                 }
 
-                                                $vertical = $this->ClientCategory->findByCategory(trim(str_replace('&', 'and', $dataClientList[$i]['C'])));
-                                                $country = $this->Market->findAllByMarket(trim($dataClientList[$i]['G']));
-                                                $managedCity = $this->City->findByCity(trim($dataClientList[$i]['H']));
+                                                $vertical = $this->ClientCategory->findByCategory(trim(str_replace('&', 'and', $dataClientList[$i]['D'])));
+                                                $country = $this->Market->findAllByMarket(trim($dataClientList[$i]['H']));
+                                                $managedCity = $this->City->findByCity(trim($dataClientList[$i]['I']));
 
-                                                if(array_search(trim(str_replace('&', 'and', $dataClientList[$i]['F'])), $opportunities)) {
-                                                        $agencyOpportunity = array_search(trim(str_replace('&', 'and', $dataClientList[$i]['F'])), $opportunities);
+                                                if(array_search(trim(str_replace('&', 'and', $dataClientList[$i]['G'])), $opportunities)) {
+                                                        $agencyOpportunity = array_search(trim(str_replace('&', 'and', $dataClientList[$i]['G'])), $opportunities);
                                                 } else {
                                                         $agencyOpportunity = null;
                                                 }
 
-                                                if(array_search(trim($dataClientList[$i]['K']), $currencies)) {
-                                                        $currency = array_search(trim($dataClientList[$i]['K']), $currencies);
+                                                if(array_search(trim($dataClientList[$i]['L']), $currencies)) {
+                                                        $currency = array_search(trim($dataClientList[$i]['L']), $currencies);
                                                 } else {
                                                         $currency = null;
                                                 }
@@ -186,11 +184,11 @@ class ImportDataController extends AppController {
                                                 } else {
                                                         $verticalId = null;
                                                 }
-                                                if(array_search(trim(str_replace('&', 'and', $dataClientList[$i]['J'])), $arrServices)) {
-                                                        $serviceId = array_search(trim(str_replace('&', 'and', $dataClientList[$i]['J'])), $arrServices);
+                                                if(array_search(trim(str_replace('&', 'and', $dataClientList[$i]['K'])), $arrServices)) {
+                                                        $serviceId = array_search(trim(str_replace('&', 'and', $dataClientList[$i]['K'])), $arrServices);
                                                 } else {
-                                                        if(isset($this->unknownServices[trim(str_replace('&', 'and', $dataClientList[$i]['J']))])) {
-                                                                $serviceId = $this->unknownServices[trim(str_replace('&', 'and', $dataClientList[$i]['J']))];
+                                                        if(isset($this->unknownServices[trim(str_replace('&', 'and', $dataClientList[$i]['K']))])) {
+                                                                $serviceId = $this->unknownServices[trim(str_replace('&', 'and', $dataClientList[$i]['K']))];
                                                         } else {
                                                                 $serviceId = 0;
                                                         }
@@ -209,15 +207,38 @@ class ImportDataController extends AppController {
                                                 } else {
                                                         $managedCityId =null;
                                                 }
-                                                $month = array_search(trim($dataClientList[$i]['D']), $this->months);
-                                                $year = trim($dataClientList[$i]['E']);
-                                                $companyName = trim($dataClientList[$i]['B']);
-                                                $clientName = trim($dataClientList[$i]['A']);
-                                                $activeMarkets = trim($dataClientList[$i]['I']);
-                                                $revenue = $dataClientList[$i]['M'];
-                                                $revenueForecast = $dataClientList[$i]['L'];
-                                                $pitchStage = 'Won - retained';
-                                                
+                                                //$month = array_search(trim($dataClientList[$i]['E']), $this->months);
+                                                $month = trim($dataClientList[$i]['E']);
+                                                $year = trim($dataClientList[$i]['F']);
+                                                $companyName = trim($dataClientList[$i]['C']);
+                                                $clientName = trim($dataClientList[$i]['B']);
+                                                $activeMarkets = trim($dataClientList[$i]['J']);
+                                                $revenue = $dataClientList[$i]['N'];
+                                                $revenueForecast = $dataClientList[$i]['M'];
+                                                if(!empty($dataClientList[$i]['P'])) {
+                                                        $pitchStage = trim($dataClientList[$i]['P']);
+                                                        if(!empty($dataClientList[$i]['O'])) {
+                                                                $arrPitchDate = explode('/', $this->ExcelReader->readDateFromExcel((trim($dataClientList[$i]['O'])+1)));
+                                                                $pitchDate = $arrPitchDate[2].'-'.$arrPitchDate[0].'-'.$arrPitchDate[1];
+                                                        } else {
+                                                                $pitchDate = '0000-00-00';
+                                                        }
+                                                } else {
+                                                        $pitchStage = 'Current client';
+                                                        $pitchDate = '0000-00-00';
+                                                }
+                                                if(!empty($dataClientList[$i]['R']) && $dataClientList[$i]['R'] != '-') {
+                                                        $arrLostDate = explode('/', $this->ExcelReader->readDateFromExcel((trim($dataClientList[$i]['R'])+1)));
+                                                        $lostDate = $arrLostDate[2].'-'.$arrLostDate[0].'-'.$arrLostDate[1];
+                                                } else {
+                                                        $lostDate = '0000-00-00';
+                                                }
+                                                if(!empty($dataClientList[$i]['Q'])) {
+                                                        $notes = trim($dataClientList[$i]['Q']);
+                                                } else {
+                                                        $notes = null;
+                                                }
+
                                                 if($countryId != null) {
                                                         $arrClient[] = array(
                                                             'clientName' => $clientName, 
@@ -236,7 +257,10 @@ class ImportDataController extends AppController {
                                                             'agencyOpportunity' => $agencyOpportunity, 
                                                             'currency' => $currency, 
                                                             'revenueForecast' => $revenueForecast, 
-                                                            'pitchStage' => $pitchStage
+                                                            'pitchStage' => $pitchStage,
+                                                            'pitchDate' => $pitchDate,
+                                                            'lostDate' => $lostDate,
+                                                            'comments' => $notes
                                                         );
                                                 }
                                         } else {
@@ -247,6 +271,7 @@ class ImportDataController extends AppController {
                                                 break;
                                         }
                                 }
+
                                 if($status == 'analyse') {
                                         $this->set('clientDetails', $arrClient);
                                         $this->set('unknownServices', $this->unknownServices);
@@ -274,7 +299,9 @@ class ImportDataController extends AppController {
                                                                         'client_since_month' => $client['clientSinceMonth'],
                                                                         'client_since_year' => $client['clientSinceYear'],
                                                                         'pitch_stage' => $client['pitchStage'],
-                                                                        'pitch_date' => $client['pitchStart']
+                                                                        'pitch_date' => $client['pitchDate'],
+                                                                        'lost_date' => $client['lostDate'],
+                                                                        'comments' => $client['comments']
                                                                 )
                                                         )
                                                 );
@@ -284,11 +311,11 @@ class ImportDataController extends AppController {
                         $dataClientList = NULL;
                 }
         }
-        
+
         public function office_import() {
 		set_time_limit(0);
                 ini_set('memory_limit', '-1');
-                
+
 		$this->City->Behaviors->attach('Containable');
 		$this->Country->Behaviors->attach('Containable');
 		$this->Office->Behaviors->attach('Containable');
@@ -323,7 +350,7 @@ class ImportDataController extends AppController {
                                 }
                         } else if($status == 'analyse') {
                                 $status = 'import';
-                                
+
                                 if(isset($this->request->data['ClientAnalyse']['analyse_service'])) {
                                         $excelFile = $this->request->data['ClientAnalyse']['excel_file'];
 
@@ -347,9 +374,8 @@ class ImportDataController extends AppController {
 		}
                 $this->set('status', $status);
         }
-        
-        protected function parse_office_list($dataOfficeList = array(), $status = null)
-        {
+
+        protected function parse_office_list($dataOfficeList = array(), $status = null) {
                 $arrOffice = array();
                 $arrKeyDepts = array('executive', 'finance_head', 'product_head', 'strategy_head', 'client_head', 'business_head', 'marketing_head');
                 $arrServices = $this->Service->find('list', array('fields' => array('Service.id', 'Service.service_name'), 'order' => 'Service.service_name Asc'));
@@ -357,10 +383,9 @@ class ImportDataController extends AppController {
                 $arrCountries = $this->Market->find('list', array('fields' => array('Market.country_id', 'Market.market'), 'order' => 'Market.market Asc'));
                 $arrCities = $this->City->find('list', array('fields' => array('City.id', 'City.city'), 'order' => 'City.city Asc'));
                 $arrLanguages = $this->Language->find('list', array('fields' => array('Language.id', 'Language.language'), 'order' => 'Language.language Asc'));
-                
+
                 if(!empty($dataOfficeList)) {
-                        //echo '<pre>'; print_r($dataOfficeList);
-                        
+
                         $searchRow = 3;
                         $endOfList = 0;
                         $arrCnt = count($dataOfficeList);
@@ -372,16 +397,16 @@ class ImportDataController extends AppController {
                                         $cityId = array_search(trim($dataOfficeList[$i]['C']), $arrCities);
                                         $countryId = array_search(trim($dataOfficeList[$i]['B']), $arrCountries);
                                         $regionId = array_search(trim($dataOfficeList[$i]['A']), $arrRegions);
-                                        
+
                                         $yearEstablished = trim($dataOfficeList[$i]['D']);
                                         $employeeCount = trim($dataOfficeList[$i]['E']);
                                         $address = trim($dataOfficeList[$i]['F']);
-                                        
+
                                         $arrTelephones = explode("\n", trim($dataOfficeList[$i]['G']));
                                         $arrContactEmails = explode("\n", trim($dataOfficeList[$i]['H']));
                                         $arrWebsites = explode("\n", trim($dataOfficeList[$i]['I']));
                                         $arrSocialAccounts = explode("\n", trim($dataOfficeList[$i]['J']));
-                                        
+
                                         $arrKeyContacts = array();
 
                                         $arrKeyContacts['executive'] = explode("\n", trim($dataOfficeList[$i]['K']));
@@ -391,9 +416,9 @@ class ImportDataController extends AppController {
                                         $arrKeyContacts['client_head'] = explode("\n", trim($dataOfficeList[$i]['S']));
                                         $arrKeyContacts['business_head'] = explode("\n", trim($dataOfficeList[$i]['U']));
                                         $arrKeyContacts['marketing_head'] = explode("\n", trim($dataOfficeList[$i]['W']));
-                                        
+
                                         $arrServiceContacts = array();
-                                        
+
                                         $arrServiceContacts['Affiliates'] = explode("\n", trim($dataOfficeList[$i]['Z']));
                                         $arrServiceContacts['Content'] = explode("\n", trim($dataOfficeList[$i]['AB']));
                                         $arrServiceContacts['Conversion Opt.'] = explode("\n", trim($dataOfficeList[$i]['AD']));
@@ -411,9 +436,9 @@ class ImportDataController extends AppController {
                                         $arrServiceContacts['Strategy'] = explode("\n", trim($dataOfficeList[$i]['BB']));
                                         $arrServiceContacts['Technology'] = explode("\n", trim($dataOfficeList[$i]['BD']));
                                         $arrServiceContacts['Video'] = explode("\n", trim($dataOfficeList[$i]['BF']));
-                                        
+
                                         $arrDepartmentEmployeeCount = array();
-                                        
+
                                         $arrDepartmentEmployeeCount['executive'] = trim($dataOfficeList[$i]['L']);
                                         $arrDepartmentEmployeeCount['finance_head'] = trim($dataOfficeList[$i]['N']);
                                         $arrDepartmentEmployeeCount['product_head'] = trim($dataOfficeList[$i]['P']);
@@ -439,12 +464,12 @@ class ImportDataController extends AppController {
                                         $arrDepartmentEmployeeCount['Strategy'] = trim($dataOfficeList[$i]['BC']);
                                         $arrDepartmentEmployeeCount['Technology'] = trim($dataOfficeList[$i]['BE']);
                                         $arrDepartmentEmployeeCount['Video'] = trim($dataOfficeList[$i]['BG']);
-                                        
+
                                         $arrSupportedLanguages = explode(",", trim($dataOfficeList[$i]['BJ']));
-                                        
+
                                         $awards = trim($dataOfficeList[$i]['BK']);
                                         $news = trim($dataOfficeList[$i]['BL']);
-                                        
+
                                         if($cityId != null) {
                                                 $arrOffice[] = array(
                                                         'cityId' => $cityId,
@@ -473,7 +498,6 @@ class ImportDataController extends AppController {
                                         break;
                                 }
                         }
-                        //echo '<pre>'; print_r($arrOffice);
                         if($status == 'analyse') {
                                 $this->set('officeDetails', $arrOffice);
                                 $this->set('regions', $arrRegions);
@@ -498,7 +522,7 @@ class ImportDataController extends AppController {
                                                 )
                                         );
                                         $officeId = $this->Office->getLastInsertId();
-                                        
+
                                         foreach($office['telephones'] as $telephone) {
                                                 if(!empty($telephone)) {
                                                         $this->OfficeAttribute->create();
@@ -555,7 +579,7 @@ class ImportDataController extends AppController {
                                                         );
                                                 }
                                         }
-                                        
+
                                         foreach($office['keyContacts'] as $keyDept => $deptContacts) {
                                                 foreach($deptContacts as $deptContact) {
                                                         if(!empty($deptContact)) {
@@ -586,7 +610,7 @@ class ImportDataController extends AppController {
                                                         }
                                                 }
                                         }
-                                        
+
                                         foreach($office['servicesContacts'] as $service => $serviceContacts) {
                                                 $serviceId = array_search(trim($service), $arrServices);
                                                 foreach($serviceContacts as $serviceContact) {
@@ -618,7 +642,7 @@ class ImportDataController extends AppController {
                                                         }
                                                 }
                                         }
-                                        
+
                                         foreach($arrKeyDepts as $keyDept) {
                                                 $deptEmpCount = $office['deptEmpCount'][$keyDept];
                                                 if(!empty($deptEmpCount)) {
@@ -666,7 +690,7 @@ class ImportDataController extends AppController {
                                                         }
                                                 }
                                         }
-                                        
+
                                         foreach($office['supportedLanguages'] as $supportedLanguage) {
                                                 $languageId = array_search(trim($supportedLanguage), $arrLanguages);
                                                 if(!empty($languageId)) {

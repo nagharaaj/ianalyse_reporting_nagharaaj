@@ -60,13 +60,14 @@
             var entityEditor;
             $("#dataTable").jqxDataTable(
             {
-                width: 1250,
+                width: (parseInt(screen.availWidth) - 30),
                 source: dataAdapter,
                 pageable: false,
                 sortable: false,
                 altrows: true,
                 editable: true,
-                autoRowHeight: false,
+                autoRowHeight: true,
+                enableHover: false,
                 editSettings: { saveOnPageChange: true, saveOnBlur: false, saveOnSelectionChange: false, cancelOnEsc: true, saveOnEnter: true, editOnDoubleClick: false, editOnF2: false },
                 // called when jqxDataTable is going to be rendered.
                 rendering: function()
@@ -94,14 +95,14 @@
                             if (isNaN(rowIndex)) {
                                 return;
                             }
-                            if (value == "Edit") {
+                            if (value == "EDIT") {
                                 if(target.parent().parent().parent().find('.cancelButtons:visible').length > 0) {
                                         return false;
                                 }
                                 // begin edit.
                                 $("#dataTable").jqxDataTable('beginRowEdit', rowIndex);
                                 target.parent().find('.cancelButtons').show();
-                                target.val("Save");
+                                target.val("SAVE");
                             } else {
                                 rowEdit = $("#dataTable").jqxDataTable('endRowEdit', rowIndex);
                                 if(target.parent().parent().find('.jqx-grid-validation-label').length > 0) {
@@ -165,11 +166,11 @@
                           return true;
                       }
                   },
-                  { text: 'Title', dataField: 'title', width: 150, align: 'center' },
-                  { text: 'Location', dataField: 'location', width: 150, align: 'center' },
-                  { text: 'Email', dataField: 'email', editable: false, width: 200, align: 'center' },
+                  { text: 'Title', dataField: 'title', width: 200, align: 'center' },
+                  { text: 'Location', dataField: 'location', width: 120, align: 'center' },
+                  { text: 'Email', dataField: 'email', editable: false, width: 230, align: 'center' },
                   {
-                      text: 'Permission', dataField: 'permission', width: 150, align: 'center',
+                      text: 'Permission', dataField: 'permission', width: 90, align: 'center',
                       columnType: 'template',
                       createEditor: function (row, cellvalue, editor, cellText, width, height) {
                           editor.jqxDropDownList({ autoDropDownHeight: true, source: permissions, width: width });
@@ -241,7 +242,7 @@
                           return true;
                       }
                   },
-                  { text: 'Active', datafield: 'active', columntype: 'template', width: 50, align: 'center',
+                  { text: 'Active', datafield: 'active', columntype: 'template', width: 50, align: 'center', cellsalign: 'center',
                         cellsrenderer: function (row, columnfield, cellvalue) {
                                 if(cellvalue == 0) {
                                         return "No";
@@ -254,9 +255,9 @@
                         }
                   },
                   {
-                      text: 'Edit', cellsAlign: 'center', align: "center", columnType: 'none', width: 150, editable: false, sortable: false, dataField: null, cellsRenderer: function (row, column, value) {
+                      text: 'Edit', cellsAlign: 'center', align: "center", columnType: 'none', width: 160, editable: false, sortable: false, dataField: null, cellsRenderer: function (row, column, value) {
                           // render custom column.
-                          return "<button data-row='" + row + "' class='editButtons'>Edit</button><button style='display: none; margin-left: 5px;' data-row='" + row + "' class='cancelButtons'>Cancel</button>";
+                          return "<button data-row='" + row + "' class='editButtons'>EDIT</button><button style='display: none; margin-left: 5px;' data-row='" + row + "' class='cancelButtons'>CANCEL</button>";
                       }
                   }
                 ]
@@ -417,8 +418,8 @@
     <div id='jqxWidget'>
         <div id="dataTable"></div>
             <div style='margin-top: 20px;'>
-            <div style='float: right; padding-right: 15px;'>
-                    <button value="Create New User" id='createNew'>Create New User</button>
+            <div style='float: right; padding-right: 15px; padding-bottom: 30px;'>
+                    <button value="Create New User" id='createNew'>CREATE NEW USER</button>
             </div>
         </div>
     </div>
@@ -426,7 +427,7 @@
     <div id="popupWindow">
         <div>Create New User</div>
         <div style="overflow: hidden;">
-        <div style="padding-bottom: 10px;" align="right"><button style="margin-right: 15px;" id="CancelNew" value="Cancel">Cancel</button></div>
+        <div style="padding-bottom: 10px;" align="right"><button style="margin-right: 15px;" id="CancelNew" value="Cancel">CANCEL</button></div>
         <form id="testForm" action="./">
             <table>
                 <tr style="height: 25px; border-color: #aaa; background: none repeat scroll 0 0 #e8e8e8; border-style: solid; border-width: 0 1px 0 0; font-family: Verdana,Arial,sans-serif; font-size: 13px; font-style: normal;">
@@ -451,6 +452,6 @@
                 </tr>
             </table>
         </form>
-        <div style="padding-top: 10px;" align="right"><button style="margin-right: 15px;" id="SaveNewUser" value="Add user">Add user</button></div>
+        <div style="padding-top: 10px;" align="right"><button style="margin-right: 15px;" id="SaveNewUser" value="Add user">ADD USER</button></div>
         </div>
    </div>

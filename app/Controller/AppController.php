@@ -32,7 +32,7 @@ App::uses('Controller', 'Controller');
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-    
+
     public $components = array(
         'Acl',
         'Auth' => array(
@@ -44,20 +44,18 @@ class AppController extends Controller {
     );
 
     public $arrNav = array(
-        'Home' => '/dashboard/index',
-        'Client and New Business Data' => '/reports/client_report',
-        'Office Data' => '/reports/office_data',
-        'Permissions' => '/users/user_permissions',
-        'Help' => '/help/index'
+        'HOME' => '/dashboard/index',
+        'CLIENT & NEW BUSINESS DATA' => '/reports/client_report',
+        'OFFICE DATA' => '/reports/office_data',
+        'PERMISSIONS' => '/users/user_permissions',
+        'HELP' => '/help/index'
     );
-    
-    function beforeFilter()
-    {
+
+    function beforeFilter() {
         $this->Auth->allow();
     } 
-    
-    public function generateNav($arrNav, $user)
-    {
+
+    public function generateNav($arrNav, $user) {
         $arrAuthNav = array();
             
         foreach($arrNav as $linkName => $linkUrl) {
@@ -70,10 +68,8 @@ class AppController extends Controller {
         return $arrAuthNav;
         print_r($arrAuthNav);
     }
-    
-    //public $layout = 'ip';
-    public function parseRequestVars()
-    {
+
+    public function parseRequestVars() {
         $requestVars = array();
 
         if (isset($this->params['pass']) && !empty($this->params['pass']))
@@ -86,13 +82,13 @@ class AppController extends Controller {
 
         return $requestVars;
     }
-    
+
     public $uses = array(
         'User',
         'LoginRole',
         'UserLoginRole'
     );
-    
+
     public function getUserRoles($userId) {
         $userLoginRoles = $this->UserLoginRole->find('all', array('conditions' => array('user_id' => $userId)));
         $userRoles = array();

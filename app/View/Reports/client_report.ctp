@@ -10,28 +10,42 @@
                  return '<div style="text-align: center; margin-top: 5px;">' + (1 + value) + '</div>';
              }
              var currencies = jQuery.parseJSON('<?php echo $currencies; ?>');
+             var currYear = '<?php echo $current_year; ?>';
+             var userRole = '<?php echo $userRole;?>';
              var arrCurrencies = new Array();
-             
+
              var calculateStats = function () {
                 var dataRows = $('#jqxgrid').jqxGrid('getrows');
                 var rowscount = dataRows.length;
                 $('#no_of_records span').text(rowscount);
                 var clientsCount = 0;
                 var pitchesCount = 0;
+                var wonCount = 0;
                 var lostCount = 0;
+                var cancelledCount = 0;
+                var lostCurrentYear = 0;
                 var sumEstRevenue = 0;
                 var sumActRevenue = 0;
                 var statsCurrency = $("#statscurrency option:selected").text();
                 var convert_ratio = $("#statscurrency").val();
                 for(var i = 0; i < rowscount; i++) {
-                        if(dataRows[i].PitchStage.match(/Won/g)) {
+                        if(dataRows[i].PitchStage.match(/Won/g) || dataRows[i].PitchStage == 'Current client') {
                                 clientsCount++;
                         }
-                        if(dataRows[i].PitchStage.match(/Won/g) || dataRows[i].PitchStage.match(/Live/g)) {
+                        if(dataRows[i].PitchStage.match(/Live/g)) {
                                 pitchesCount++;
+                        }
+                        if(dataRows[i].PitchStage.match(/Won/g)) {
+                                wonCount++;
                         }
                         if(dataRows[i].PitchStage.match(/Lost/g)) {
                                 lostCount++;
+                                if(parseInt(dataRows[i].Year) == parseInt(currYear)) {
+                                        lostCurrentYear++;
+                                }
+                        }
+                        if(dataRows[i].PitchStage == 'Cancelled') {
+                                cancelledCount++;
                         }
                         if(!isNaN(parseFloat(dataRows[i].EstimatedRevenue))) {
                                 if(dataRows[i].Currency == statsCurrency) {
@@ -71,8 +85,9 @@
                 $('#no_of_clients span').text(clientsCount);
                 $('#no_of_pitches span').text(pitchesCount);
                 $('#no_of_lost span').text(lostCount);
-                if(clientsCount > 0 || lostCount > 0) {
-                        var conversion_rate = (clientsCount/(clientsCount+lostCount))*100;
+                $('#no_of_cancelled span').text(cancelledCount);
+                if(wonCount > 0 || lostCurrentYear > 0) {
+                        var conversion_rate = (wonCount/(wonCount+lostCurrentYear))*100;
                 } else {
                         var conversion_rate = 0;
                 }
@@ -85,7 +100,7 @@
              {
                 dataType: "json",
                 id: 'id',
-                url: "/reports/get_client_data/",
+                url: "/reports/get_client_report_data/",
                 datafields: [
                     { name: 'RecordId', type: 'number' },
                     { name: 'Region', type: 'string' },
@@ -96,7 +111,7 @@
                     { name: 'ParentCompany', type: 'string' },
                     { name: 'ClientCategory', type: 'string' },
                     { name: 'PitchStart', type: 'date' },
-                    { name: 'PitchLeader', type: 'string' },
+                    /*{ name: 'PitchLeader', type: 'string' },*/
                     { name: 'PitchStage', type: 'string' },
                     { name: 'ClientSince', type: 'date' },
                     { name: 'Lost', type: 'date' },
@@ -105,7 +120,8 @@
                     { name: 'Currency', type: 'string' },
                     { name: 'EstimatedRevenue', type: 'number' },
                     { name: 'ActualRevenue', type: 'number' },
-                    { name: 'Comments', type: 'string' }
+                    { name: 'Comments', type: 'string' },
+                    { name: 'Year', type: 'number' }
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
@@ -127,12 +143,12 @@
                     commit(true);
                 }
              };
-             
+
              var dataAdapter = new $.jqx.dataAdapter(source);
              var cellclass = function (row, datafield, value, rowdata) {
                 //console.log(rowdata);
                 var stage = rowdata.PitchStage;
-                if(stage.match(/Won/g)) {
+                if(stage.match(/Won/g) || stage == 'Current client') {
                         return classWon;
                 } else if (stage.match(/Lost/g)) {
                         return classLost;
@@ -146,9 +162,10 @@
              // initialize jqxGrid
              $("#jqxgrid").jqxGrid(
              {
-                width: 1250,
+                width: (parseInt(screen.availWidth) - 30),
                 autoheight: true,
                 source: dataAdapter,
+                enablemousewheel: false,
                 pageable: true,
                 pageSize: 20,
                 pagerMode: 'simple',
@@ -157,61 +174,65 @@
                 showfilterrow: true,
                 editable: false,
                 autoRowHeight: true,
+                columnsresize: true,
+                showpinnedcolumnbackground: false,
+                enablehover: false,
                 columns: [
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
-                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Year', datafield: 'Year', hidden: true },
+                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true,
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 120 });
-                      } 
+                      }
                   },
-                  { text: 'Managing Entity', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Country', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true,
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
+                      }
                   },
-                  { text: 'Managing City', datafield: 'City', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'City', datafield: 'City', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true,
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
+                      }
                   },
-                  { text: 'Lead Agency', datafield: 'LeadAgency', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', 
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
-                  },
-                  { text: 'Client', columngroup: 'ClientName', datafield: 'ClientName', width: 250, cellClassName: cellclass },
+                  { text: 'Client', columngroup: 'ClientName', datafield: 'ClientName', width: 250, cellClassName: cellclass, pinned: true },
                   { text: 'Parent Company', columngroup: 'ParentCompany', datafield: 'ParentCompany', width: 250, cellClassName: cellclass },
-                  { text: 'Client Category', datafield: 'ClientCategory', width: 200, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Client Category', datafield: 'ClientCategory', width: 200, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 200 });
-                      } 
+                      }
                   },
-                  { text: 'Pitch Start', datafield: 'PitchStart', width: 100, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy' },
-                  { text: 'Pitch Leader', columngroup: 'PitchLeader', datafield: 'PitchLeader', width: 150, cellClassName: cellclass },
-                  { text: 'Stage', columntype: 'template', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Lead Agency', datafield: 'LeadAgency', width: 130, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
+                      }
+                  },
+                  { text: 'Status', columntype: 'template', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist',
+                      createfilterwidget: function (column, columnElement, widget) {
+                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
+                      }
+                  },
+                  { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist',
+                      createfilterwidget: function (column, columnElement, widget) {
+                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
+                      }
                   },
                   { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 125, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy' },
-                  { text: 'Lost (M-Y)', datafield: 'Lost', width: 100, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy' },
-                  { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', 
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
-                  },
-                  { text: 'Active Markets', columngroup: 'ActiveMarkets', datafield: 'ActiveMarkets', width: 200, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 100, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy' },
+                  { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 100, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy' },
+                  /*{ text: 'Pitch Leader', columngroup: 'PitchLeader', datafield: 'PitchLeader', width: 150, cellClassName: cellclass },*/
+                  { text: 'Active Markets', columngroup: 'ActiveMarkets', datafield: 'ActiveMarkets', width: 200, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 200 });
-                      } 
+                      }
                   },
-                  { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', hidden: ((userRole == 'Viewer') ? true : false),
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 120 });
-                      } 
+                      }
                   },
-                  { text: 'iP estimated revenue', columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 120, align: 'right', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2' },
-                  { text: 'iP 2014 Actual revenue', columngroup: 'ActualRevenue', datafield: 'ActualRevenue', width: 120, align: 'right', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2' },
+                  { text: 'iP estimated revenue', columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 130, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
+                  { text: 'iP 2014 Actual revenue', columngroup: 'ActualRevenue', datafield: 'ActualRevenue', width: 150, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
                   { text: 'Comments', columngroup: 'Comments', datafield: 'Comments', width: 200, cellClassName: cellclass }
                 ],
                 ready: calculateStats
@@ -225,7 +246,7 @@
                         $('#pagerjqxgrid').show();
                     }
             });
-            $('#jqxgrid').jqxGrid({ rendered: function(){
+            $('#jqxgrid').jqxGrid({ rendered: function() {
                     var paginginfo = $("#jqxgrid").jqxGrid('getpaginginformation');
                     if(paginginfo.pagescount <= 1) {
                         $('#pagerjqxgrid').hide();
@@ -233,26 +254,68 @@
                         $('#pagerjqxgrid').show();
                     }
                 }
-            }); 
+            });
             $('#clearfilteringbutton').jqxButton({ theme: theme });
             $('#exporttoexcelbutton').jqxButton({ theme: theme });
+            $('#exportButton').jqxButton({ theme: theme });
+            $('#cancelExportButton').jqxButton({ theme: theme });
             // clear the filtering.
             $('#clearfilteringbutton').click(function () {
                 $("#jqxgrid").jqxGrid('clearfilters');
                 calculateStats();
             });
-            
+
+            $("#popupWindow").jqxWindow({
+                width: 300, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none' 
+            });
             $('#exporttoexcelbutton').click(function () {
+                if(userRole == 'Viewer') {
+                        $("#popupWindow").jqxWindow({ position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "100px", maxWidth: 400, isModal: true, draggable: false });
+                        $('#divSetting').hide();
+                        $('#divLoader').show();
+                        $("#popupWindow").jqxWindow('open');
+
+                        var rows = $("#jqxgrid").jqxGrid('getrows');
+                        var tz = jstz.determine(); // Determines the time zone of the browser client
+                        $.ajax({
+                            type: "POST",
+                            url: "/reports/export_client_data/",
+                            data: JSON.stringify({datarows: rows, timezone: tz.name(), currency: $("#exportcurrency option:selected").text()}),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success : function(result) {
+                                if(result.success == true) {
+                                    $("#popupWindow").jqxWindow('close');
+                                    window.open('/files/Client_Data_<?php echo date('m-d-Y'); ?>.xlsx');
+                                } else {
+                                    alert(result.errors);
+                                    return false;
+                                }
+                            }
+                        });
+                } else {
+                        $("#popupWindow").jqxWindow({ position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "100px", maxWidth: 400, isModal: true, draggable: false });
+                        $('#divSetting').show();
+                        $('#divLoader').hide();
+                        $("#popupWindow").jqxWindow('open');
+                }
+            });
+
+            $('#exportButton').click(function () {
+                $('#divSetting').hide();
+                $('#divLoader').show();
+
                 var rows = $("#jqxgrid").jqxGrid('getrows');
+                var tz = jstz.determine(); // Determines the time zone of the browser client
                 $.ajax({
                     type: "POST",
                     url: "/reports/export_client_data/",
-                    data: JSON.stringify(rows),
+                    data: JSON.stringify({datarows: rows, timezone: tz.name(), currency: $("#exportcurrency option:selected").text()}),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success : function(result) {
                         if(result.success == true) {
-                            //alert("Data saved successfully...");
+                            $("#popupWindow").jqxWindow('close');
                             window.open('/files/Client_Data_<?php echo date('m-d-Y'); ?>.xlsx');
                         } else {
                             alert(result.errors);
@@ -261,30 +324,31 @@
                     }
                 });
             });
-            
+
             var toAppend = '';
             $.each(currencies,function(value,symbol){
                 toAppend += '<option value="'+ value +'">'+ symbol +'</option>';
             });
             $('#statscurrency').append(toAppend);
+            $('#exportcurrency').append(toAppend);
             $('#statscurrency').on('change', function () {
                     calculateStats();
             });
         });
     </script>
     <div id="tab-menu" align="left">
-        <?php 
-                if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/client_report')) {
+        <?php
+                if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/client_report') && $loggedUser['role'] != 'Viewer') {
         ?>
             <div id="-reports-client-report" class="light-grey selected">
-                    <a href="/reports/client_report">Search</a>
+                    <a href="/reports/client_report">SEARCH</a>
             </div>
         <?php
                 }
                 if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/client_data')) {
         ?>
             <div id="-reports-client-data" class="light-grey">
-                    <a href="/reports/client_data">Create/Update your records</a>
+                    <a href="/reports/client_data">CREATE/UPDATE YOUR RECORDS</a>
             </div>
         <?php
                 }
@@ -298,12 +362,13 @@
 
 <div id='jqxWidget'>
         <div style="margin-right: 7px; margin-bottom: 5px" align="right">
-            <button value="Reset" id="clearfilteringbutton">Clear filter</button>
+            <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
+            <button style="margin-left: 5px" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
         </div>
         <div id="jqxgrid"></div>
             <div style='margin-top: 20px;'>
         </div>
-        
+
         <div style="margin-right: 5px; margin-top: 5px" align="right">
                 <fieldset style="width: 260px">
                         <legend>Quick stats</legend>
@@ -311,14 +376,30 @@
                         <div id="no_of_clients" style="padding-bottom: 5px">Clients <span style="display: inline-block; width: 110px;"></span></div>
                         <div id="no_of_pitches" style="padding-bottom: 5px">Pitches <span style="display: inline-block; width: 110px;"></span></div>
                         <div id="no_of_lost" style="padding-bottom: 5px">Lost <span style="display: inline-block; width: 110px;"></span></div>
-                        <div style="padding-bottom: 5px">Select stat currency <select id="statscurrency"></select></div>
-                        <div id="sum_est_revenue" style="padding-bottom: 5px">Sum of est revenue <span style="display: inline-block; width: 110px;"></span></div>
-                        <div id="sum_act_revenue" style="padding-bottom: 5px">Sum of actual revenue <span style="display: inline-block; width: 110px;"></span></div>
+                        <div id="no_of_cancelled" style="padding-bottom: 5px">Cancelled <span style="display: inline-block; width: 110px;"></span></div>
+                        <div style="padding-bottom: 5px; <?php if ($userRole == 'Viewer') { echo 'display: none;'; }?>">Select stat currency <select id="statscurrency"></select></div>
+                        <div id="sum_est_revenue" style="padding-bottom: 5px; <?php if ($userRole == 'Viewer') { echo 'display: none;'; }?>">Sum of est revenue <span style="display: inline-block; width: 110px;"></span></div>
+                        <div id="sum_act_revenue" style="padding-bottom: 5px; <?php if ($userRole == 'Viewer') { echo 'display: none;'; }?>">Sum of actual revenue <span style="display: inline-block; width: 110px;"></span></div>
                         <div id="conversion_rate">Conversion rate <span style="display: inline-block; width: 110px;"></span></div>
                 </fieldset>
         </div>
-        
-        <div style="margin-right: 7px; margin-top: 15px" align="right">
-                <button value="Export to Excel" id="exporttoexcelbutton">Export to Excel</button>
+
+        <div id="popupWindow">
+                <div>Export to excel</div>
+                <div style="overflow: hidden;">
+                        <div id="divSetting">
+                                Select currency:
+                                <select id="exportcurrency"><option value="default">Actual currencies</option></select>
+                                <div style="float: right; margin-top: 10px">
+                                    <button style="margin-bottom: 5px;" id="exportButton">EXPORT</button>
+                                    <button id="cancelExportButton">CANCEL</button>
+                                </div>
+                                <br />
+                        </div>
+                        <div id="divLoader" align="center" style="display: none; padding-top: 15px; padding-left: 90px;">
+                                <div class="jqx-grid-load" style="float: left; overflow: hidden; width: 32px; height: 32px;"></div>
+                                <span style="margin-top: 10px; float: left; display: block; margin-left: 5px;">Please wait...</span>
+                        </div>
+                </div>
         </div>
 </div>
