@@ -20,8 +20,10 @@
              var arrMarkets = $.map(markets, function(el) { return el; });
              var regions = jQuery.parseJSON('<?php echo $regions; ?>');
              var arrRegions = $.map(regions, function(el) { return el; });
-             var stages = ['Live - aggressive', 'Live - defensive', 'Lost - current client', 'Lost - new business', 'Won - new business', 'Won - retained', 'Current client', 'Cancelled'];
+             var stages = jQuery.parseJSON('<?php echo $stages; ?>');
              var arrStages = $.map(stages, function(el) { return el; });
+             var divisions = jQuery.parseJSON('<?php echo $divisions; ?>');
+             var arrDivisions = $.map(divisions, function(el) { return el; });
              var arrMonths = ['Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)'];
              
              var months = [
@@ -69,7 +71,7 @@
              var source =
              {
                 dataType: "json",
-                id: 'id',
+                id: 'RecordId',
                 url: "/reports/get_client_data/",
                 datafields: [
                     { name: 'RecordId', type: 'number' },
@@ -87,6 +89,7 @@
                     { name: 'ClientYear', type: 'number' },
                     { name: 'Lost', type: 'date' },
                     { name: 'Service', type: 'string' },
+                    { name: 'Division', type: 'string' },
                     { name: 'ActiveMarkets', type: 'string' },
                     { name: 'Currency', type: 'string' },
                     { name: 'EstimatedRevenue', type: 'float' },
@@ -193,6 +196,11 @@
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
                       } 
                   },
+                  { text: 'Division', datafield: 'Division', width: 150, cellClassName: cellclass, filtertype: 'checkedlist',
+                      createfilterwidget: function (column, columnElement, widget) {
+                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
+                      }
+                  },
                   { text: 'Client Since Month', datafield: 'ClientMonth', width: 120, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 120 });
@@ -285,6 +293,7 @@
                         var clientsinceyear = data.ClientYear;
                         var lostdate = data.Lost;
                         var service = data.Service;
+                        var division = data.Division;
                         var activemarkets = data.ActiveMarkets;
                         var currency = data.Currency;
                         var estimatedrevenue = data.EstimatedRevenue;
@@ -389,21 +398,26 @@
                                 rules.push(validator.pitchleader);
                         }*/
                         $("#update_pitchstage").jqxDropDownList({ source: stages }).val(pitchstage);
-                        $("#update_pitchstage").jqxDropDownList('disableItem',"Current client");
+                        if(pitchstage != 'Current client') {
+                                $("#update_pitchstage").jqxDropDownList('disableItem',"Current client");
+                        }
+                        if(!pitchstage.match(/Lost/g)) {
+                                $("#update_pitchstage").jqxDropDownList('disableItem',"Lost - archive");
+                        }
                         rules.push(validator.pitchstage);
                         if(clientsincemonth != '' && clientsincemonth != null) {
                                 if(pitchstage.match(/Live/g)) {
                                         $("#divClientMonth").html('');
                                         var inpClientMonth = $("<div id=\"update_clientsincemonth\"></div>");
                                         $("#divClientMonth").append(inpClientMonth);
-                                        $("#update_clientsincemonth").jqxDropDownList({ source: monthsAdapter, displayMember: 'label', valueMember: 'value', selectedIndex: -1  }).val(arrMonths.indexOf(clientsincemonth));
+                                        $("#update_clientsincemonth").jqxDropDownList({ source: monthsAdapter, displayMember: 'label', valueMember: 'value', selectedIndex: -1  }).val((arrMonths.indexOf(clientsincemonth)+1));
                                         //rules.push(validator.clientsincemonth);
                                 } else {
                                         //$("#divClientMonth").text(clientsincemonth);
                                         $("#divClientMonth").html('');
                                         var inpClientMonth = $("<div id=\"update_clientsincemonth\"></div>");
                                         $("#divClientMonth").append(inpClientMonth);
-                                        $("#update_clientsincemonth").jqxDropDownList({ source: monthsAdapter, displayMember: 'label', valueMember: 'value', selectedIndex: -1  });
+                                        $("#update_clientsincemonth").jqxDropDownList({ source: monthsAdapter, displayMember: 'label', valueMember: 'value', selectedIndex: -1  }).val((arrMonths.indexOf(clientsincemonth)+1));
                                 }
                         } else {
                                 if(pitchstage.match(/Lost/g)) {
@@ -465,6 +479,19 @@
                                 var inpService = $("<div id=\"update_service\"></div>");
                                 $("#divService").append(inpService);
                                 $("#update_service").jqxDropDownList({ source: services }).val(service);
+                        }
+                        if(division != null) {
+                                $("#divDivision").html('');
+                                var inpDivision = $("<div id=\"update_division\"></div>");
+                                $("#divDivision").append(inpDivision);
+                                $("#update_division").jqxDropDownList({ source: divisions }).val(division);
+                                rules.push(validator.division);
+                        } else {
+                                $("#divDivision").html('');
+                                var inpDivision = $("<div id=\"update_division\"></div>");
+                                $("#divDivision").append(inpDivision);
+                                $("#update_division").jqxDropDownList({ source: divisions }).val(division);
+                                rules.push(validator.division);
                         }
                         $("#update_activemarket").jqxDropDownList({ source: countries, checkboxes: true });
                         var entities = activemarkets.split(',');
@@ -638,6 +665,7 @@
                 $("#clientsinceyear").jqxDropDownList({ source: years, selectedIndex: -1  });
                 $("#lostdate").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                 $("#service").jqxDropDownList({ source: services, selectedIndex: -1 });
+                $("#division").jqxDropDownList({ source: divisions, selectedIndex: -1 });
                 $("#activemarket").jqxDropDownList({ source: countries, checkboxes: true, selectedIndex: -1 });
                 $("#currency").jqxDropDownList({ source: currencies, selectedIndex: -1 });
                 $("#estrevenue").jqxInput({ height: 25, width: 100, rtl:true }).val('');
@@ -737,6 +765,13 @@
                                 return false;
                             } 
                         },
+                        { input: '#division', message: 'Division is required!', action: 'change', rule: function (input) {
+                                if (input.val() != '') {
+                                        return true;
+                                }
+                                return false;
+                            } 
+                        },
                         { input: '#activemarket', message: 'Active Market is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
@@ -774,7 +809,7 @@
                     Country: $("#nameofentity").val(), City: $("#city").val(), LeadAgency: $("#agency").val(), ClientCategory: $("#category").val(), 
                     PitchStart: $("#pitchstart").val(), /*PitchLeader: $("#pitchleader").val(),*/ PitchStage: $("#pitchstage").val(),
                     ClientSinceMonth: $("#clientsincemonth").val(), ClientSinceYear: $("#clientsinceyear").val(), LostDate: $("#lostdate").val(),
-                    Service: $("#service").val(), ActiveMarkets: $("#activemarket").val(), Currency: $("#currency").val(),
+                    Service: $("#service").val(), Division: $("#division").val(), ActiveMarkets: $("#activemarket").val(), Currency: $("#currency").val(),
                     EstimatedRevenue: $("#estrevenue").val(), Comments: $("#notes").val()
                 };
                 $.ajax({
@@ -822,6 +857,14 @@
                             }
                             return false;
                         } 
+                },
+                division : {
+                        input: '#update_division', message: 'Division is required!', action: 'change', rule: function (input) {
+                            if (input.val() != '') {
+                                    return true;
+                            }
+                            return false;
+                        }
                 },
                 pitchstage : {
                         input: '#update_pitchstage', message: 'Stage is required!', action: 'change', rule: function (input) {
@@ -1019,6 +1062,11 @@
                 } else {
                         var service = $('#divService').text();
                 }
+                if($('#update_division').val()) {
+                        var division = $('#update_division').val();
+                } else {
+                        var division = $('#divDivision').text();
+                }
                 var activemarkets = $('#update_activemarket').val();
                 if($('#update_currency').val()) {
                         var currency = $('#update_currency').val();
@@ -1041,7 +1089,7 @@
                     Country: country, City: city, LeadAgency: leadagency, ClientCategory: clientcategory, 
                     PitchStart: pitchstart, /*PitchLeader: pitchleader,*/ PitchStage: pitchstage,
                     ClientSinceMonth: clientsincemonth, ClientSinceYear: clientsinceyear, LostDate: lostdate,
-                    Service: service, ActiveMarkets: activemarkets, Currency: currency,
+                    Service: service, Division: division, ActiveMarkets: activemarkets, Currency: currency,
                     EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments
                 };
                 $.ajax({
@@ -1135,6 +1183,11 @@
                 <tr>
                     <td align="right">Service</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="service"></div></td>
+                    <td style="width: 150px"></td>
+                </tr>
+                <tr>
+                    <td align="right">Division</td>
+                    <td align="left" style="padding-bottom: 5px;"><div id="division"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
                 <tr>
@@ -1239,6 +1292,11 @@
                 <tr>
                     <td align="right" style="padding-bottom: 5px; padding-right: 5px">Service</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="divService"></div></td>
+                    <td style="width: 150px"></td>
+                </tr>
+                <tr>
+                    <td align="right" style="padding-bottom: 5px; padding-right: 5px">Division</td>
+                    <td align="left" style="padding-bottom: 5px;"><div id="divDivision"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
                 <tr>

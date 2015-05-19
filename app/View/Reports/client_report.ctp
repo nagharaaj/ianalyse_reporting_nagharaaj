@@ -40,7 +40,7 @@
                         }
                         if(dataRows[i].PitchStage.match(/Lost/g)) {
                                 lostCount++;
-                                if(parseInt(dataRows[i].Year) == parseInt(currYear)) {
+                                if(dataRows[i].PitchStage != 'Lost - archive') {
                                         lostCurrentYear++;
                                 }
                         }
@@ -116,6 +116,7 @@
                     { name: 'ClientSince', type: 'date' },
                     { name: 'Lost', type: 'date' },
                     { name: 'Service', type: 'string' },
+                    { name: 'Division', type: 'string' },
                     { name: 'ActiveMarkets', type: 'string' },
                     { name: 'Currency', type: 'string' },
                     { name: 'EstimatedRevenue', type: 'number' },
@@ -213,6 +214,11 @@
                       }
                   },
                   { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist',
+                      createfilterwidget: function (column, columnElement, widget) {
+                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
+                      }
+                  },
+                  { text: 'Division', datafield: 'Division', width: 150, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
                       }
