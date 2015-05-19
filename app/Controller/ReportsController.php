@@ -230,7 +230,8 @@ class ReportsController extends AppController {
                                                 'division_id' => $divisionId,
                                                 'currency_id' => $currencyId,
                                                 'estimated_revenue' => $estimatedRevenue,
-                                                'year' => date('Y')
+                                                'year' => date('Y'),
+                                                'created' => date('Y-m-d H:i:s')
                                         )
                                 )
                         );
@@ -512,7 +513,11 @@ class ReportsController extends AppController {
                         $pitchStart = explode('/', trim($arrData['PitchStart']));
                         $pitchDate = $pitchStart[1] . '-' . $pitchStart[0] . '-01';
                         //$pitchLeader = trim($arrData['PitchLeader']);
-                        $clientMonth = array_search(trim($arrData['ClientSinceMonth']), $this->months);
+                        if(is_numeric(trim($arrData['ClientSinceMonth']))) {
+                                $clientMonth = trim($arrData['ClientSinceMonth']);
+                        } else {
+                                $clientMonth = array_search(trim($arrData['ClientSinceMonth']), $this->months);
+                        }
                         $clientYear = trim($arrData['ClientSinceYear']);
                         if(trim($arrData['LostDate']) != 'No' && trim($arrData['LostDate']) != '') {
                                 $lost = explode('/', trim($arrData['LostDate']));
@@ -552,7 +557,8 @@ class ReportsController extends AppController {
                                                 'currency_id' => $currencyId,
                                                 'estimated_revenue' => $estimatedRevenue,
                                                 'actual_revenue' => $actualRevenue,
-                                                'year' => date('Y')
+                                                'year' => date('Y'),
+                                                'modified' => date('Y-m-d H:i:s')
                                         )
                                 )
                         );
