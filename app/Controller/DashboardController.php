@@ -3,9 +3,9 @@
 class DashboardController extends AppController
 {
 	public $helpers = array('Html', 'Form');
-        
+
         public $components = array('RequestHandler');
-        
+
         public function beforeFilter() {
 
                 $this->Auth->loginAction = array(
@@ -25,7 +25,7 @@ class DashboardController extends AppController
                   'action' => 'login'
                 );
         }
-        
+
         public function beforeRender() {
                 if($this->Auth->user()) {
                         $this->set('admNavLinks', parent::generateNav($this->arrNav, $this->Auth->user()));
@@ -33,6 +33,14 @@ class DashboardController extends AppController
         }
 
         public function index() {
-                
+
+        }
+
+        public function global_growth() {
+
+        }
+
+        public function local_growth() {
+
         }
 }

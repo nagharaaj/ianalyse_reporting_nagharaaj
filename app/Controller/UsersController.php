@@ -38,8 +38,8 @@ class UsersController extends AppController
                   'action' => 'login'
                 );
                 $this->Auth->loginRedirect = array(
-                  'controller' => 'dashboard',
-                  'action' => 'index'
+                  'controller' => 'reports',
+                  'action' => 'client_report'
                 );
                 $this->Auth->authError = array(
                   'controller' => 'dashboard',

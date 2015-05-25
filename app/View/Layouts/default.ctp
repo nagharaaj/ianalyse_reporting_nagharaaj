@@ -78,6 +78,12 @@
                                                         $className = 'blue';
                                                 } else if ($navHead == 'HELP') {
                                                         $className = 'red';
+                                                } else if ($navHead == 'GLOBAL STRATEGY') {
+                                                        $className = 'light-grey';
+                                                } else if ($navHead == 'GLOBAL GROWTH') {
+                                                        $className = 'light-torquoise';
+                                                } else if ($navHead == 'LOCAL GROWTH') {
+                                                        $className = 'dark-torquoise';
                                                 } else {
                                                         $className = 'green';
                                                 }
@@ -110,8 +116,8 @@
 
 		</div>
 		<div id="footer">
-			
-		</div>
+
+                </div>
 	</div>
 	<?php echo $this->element('sql_dump'); ?>
 </body>
