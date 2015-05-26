@@ -25,7 +25,7 @@
              var divisions = jQuery.parseJSON('<?php echo $divisions; ?>');
              var arrDivisions = $.map(divisions, function(el) { return el; });
              var arrMonths = ['Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)'];
-             
+
              var months = [
                      {value: 1, label: "Jan (1)"}, 
                      {value: 2, label: "Feb (2)"}, 
@@ -94,7 +94,8 @@
                     { name: 'Currency', type: 'string' },
                     { name: 'EstimatedRevenue', type: 'float' },
                     { name: 'ActualRevenue', type: 'float' },
-                    { name: 'Comments', type: 'string' }
+                    { name: 'Comments', type: 'string' },
+                    { name: 'ParentId', type: 'number' }
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
@@ -152,49 +153,50 @@
                 enablehover: false,
                 columns: [
                   {
-                      text: '', cellsAlign: 'center', pinned: true, columntype: 'custom', width: 150, sortable: false, dataField: null, filterable: false,
+                      text: '', cellsAlign: 'center', pinned: true, columntype: 'custom', width: 255, sortable: false, dataField: null, filterable: false,
                       cellsRenderer: function (row, column, value) {
                           // render custom column.
-                          return "<div align='center'><button style='margin-right: 5px;' data-row='" + row + "' class='deleteButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='deleteClick(event)'>DELETE</button><button data-row='" + row + "' class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button></div>";
+                          return "<div align='center'><button style='margin-right: 5px;' data-row='" + row + "' class='deleteButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='deleteClick(event)'>DELETE</button><button style='margin-right: 5px;' data-row='" + row + "' class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='duplicateClick(event)'>DUPLICATE</button><button data-row='" + row + "' class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button></div>";
                       }
                   },
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
-                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true, 
+                  { text: 'ParentId', datafield: 'ParentId', hidden: true },
+                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true,
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 120 });
-                      } 
+                      }
                   },
-                  { text: 'Country', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true, 
+                  { text: 'Country', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true,
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
+                      }
                   },
-                  { text: 'City', datafield: 'City', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true, 
+                  { text: 'City', datafield: 'City', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true,
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
+                      }
                   },
                   { text: 'Client', datafield: 'ClientName', width: 250, cellClassName: cellclass, pinned: true },
                   { text: 'Parent Company', datafield: 'ParentCompany', width: 250, cellClassName: cellclass },
-                  { text: 'Client Category', datafield: 'ClientCategory', width: 200, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Client Category', datafield: 'ClientCategory', width: 200, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 200 });
-                      } 
+                      }
                   },
-                  { text: 'Lead Agency', datafield: 'LeadAgency', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Lead Agency', datafield: 'LeadAgency', width: 130, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
+                      }
                   },
-                  { text: 'Status', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Status', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
+                      }
                   },
-                  { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
+                      }
                   },
                   { text: 'Division', datafield: 'Division', width: 150, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
@@ -214,15 +216,15 @@
                   { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 100, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy' },
                   { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 100, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy' },
                   /*{ text: 'Pitch Leader', columngroup: 'PitchLeader', datafield: 'PitchLeader', width: 150, cellClassName: cellclass },*/
-                  { text: 'Active Markets', datafield: 'ActiveMarkets', width: 250, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Active Markets', datafield: 'ActiveMarkets', width: 250, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 200 });
-                      } 
+                      }
                   },
-                  { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', 
+                  { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist',
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 120 });
-                      } 
+                      }
                   },
                   { text: 'iP estimated revenue', datafield: 'EstimatedRevenue', width: 130, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2' },
                   { text: 'iP 2014 Actual revenue', datafield: 'ActualRevenue', width: 150, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2' },
@@ -236,7 +238,7 @@
                     } else {
                         $('#pagerjqxgrid').show();
                     }
-                    
+
                     if ($(".editButtons").length > 0) {
                         $( ".editButtons" ).each(function( i ) {
                                 $(this).parent().parent().css('line-height', $(this).parent().parent().css('height'));
@@ -257,7 +259,7 @@
                         });
                     }
                 }
-            }); 
+            });
             /*$("#jqxgrid").on("pagechanged", function (event) {
                     if ($(".editButtons").length > 0) {
                         $( ".editButtons" ).each(function( i ) {
@@ -279,6 +281,7 @@
                         var rules = new Array();
                         var data = $('#jqxgrid').jqxGrid('getrowdata', rowIndex);
                         var recordid = data.RecordId;
+                        var parentrecordid = data.ParentId;
                         var clientname = data.ClientName;
                         var parentcompany = data.ParentCompany;
                         var region = data.Region;
@@ -304,6 +307,7 @@
                         $("#updateWindow").jqxWindow({ position: { x: 'center', y: 'top' }, height: "750px", maxWidth: 700, isModal: true });
                         $("#updateWindow").attr('data-row', rowIndex);
                         $("#recordid").val(recordid);
+                        $("#update_parentrecordid").val(parentrecordid);
                         if(region != null) {
                                 $("#divRegion").text(region);
                         } else {
@@ -563,6 +567,111 @@
                         });
                         $('#updateForm').jqxValidator({ position: 'right', rules: rules});
                 }
+                duplicateClick = function(event) {
+                        var target = $(event.target);
+                        // get button's value.
+                        var value = target.val();
+                        // get clicked row.
+                        var rowIndex = parseInt(event.target.getAttribute('data-row'));
+                        if (isNaN(rowIndex)) {
+                            return;
+                        }
+                        // begin duplicate.
+                        var data = $('#jqxgrid').jqxGrid('getrowdata', rowIndex);
+                        var recordid = data.RecordId;
+                        var parentrecordid = data.ParentId;
+                        var clientname = data.ClientName;
+                        var parentcompany = data.ParentCompany;
+                        var region = data.Region;
+                        var country = data.Country;
+                        var city = data.City;
+                        var leadagency = data.LeadAgency;
+                        var clientcategory = data.ClientCategory;
+                        var pitchstart = data.PitchStart;
+                        /*var pitchleader = data.PitchLeader;*/
+                        var pitchstage = data.PitchStage;
+                        var clientsincemonth = data.ClientMonth;
+                        var clientsinceyear = data.ClientYear;
+                        var lostdate = data.Lost;
+                        var division = data.Division;
+                        var activemarkets = data.ActiveMarkets;
+                        var currency = data.Currency;
+                        var comments = data.Comments;
+
+                        var offset = $("#jqxgrid").offset();
+                        $("#popupWindow").jqxWindow({ position: { x: 'center', y: 'top' }, height: "750px", maxWidth: 700, isModal: true });
+                        if(parentrecordid == 0 || parentrecordid == null) {
+                                $("#parentrecordid").val(recordid);
+                        } else {
+                                $("#parentrecordid").val(parentrecordid);
+                        }
+                        $("#region").jqxDropDownList({ source: regions }).val(region);
+                        arrRegionCountries = markets[region];
+                        $("#nameofentity").jqxDropDownList({ source: arrRegionCountries }).val(country);
+                        if(country == "Global") {
+                                $("#city").jqxDropDownList({ source: ['Global'], checkboxes: false, selectedIndex: 0 });
+                        } else if(country.match(/Regional/g)) {
+                                $("#city").jqxDropDownList({ source: [country], checkboxes: false, selectedIndex: 0 });
+                        } else {
+                                arrCities = cities[country];
+                                $("#city").jqxDropDownList({ source: arrCities, checkboxes: false, selectedIndex: -1 });
+                        }
+                        $("#city").val(city);
+                        $("#agency").jqxDropDownList({ source: agencies }).val(leadagency);
+                        $("#advertisername").jqxInput({ height: 25, width: 200 }).val(clientname);
+                        $("#parentcompany").jqxInput({ height: 25, width: 175 }).val(parentcompany);
+                        $("#category").jqxDropDownList({ source: categories }).val(clientcategory);
+                        $("#pitchstart").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
+                        $("#pitchstage").jqxDropDownList({ source: stages }).val(pitchstage);
+                        if(pitchstage != 'Current client') {
+                                $("#update_pitchstage").jqxDropDownList('disableItem',"Current client");
+                        }
+                        if(!pitchstage.match(/Lost/g)) {
+                                $("#update_pitchstage").jqxDropDownList('disableItem',"Lost - archive");
+                        }
+                        $("#clientsincemonth").jqxDropDownList({ source: monthsAdapter, displayMember: 'label', valueMember: 'value', selectedIndex: -1  }).val((arrMonths.indexOf(clientsincemonth)+1));
+                        $("#clientsinceyear").jqxDropDownList({ source: years, selectedIndex: -1  }).val(clientsinceyear);
+                        $("#lostdate").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
+                        var lostDate = new Date(lostdate);
+                        $("#lostdate").val(lostDate);
+                        $("#service").jqxDropDownList({ source: services, selectedIndex: -1 });
+                        $("#division").jqxDropDownList({ source: divisions, selectedIndex: -1 }).val(division);
+                        $("#activemarket").jqxDropDownList({ source: countries, checkboxes: true });
+                        var entities = activemarkets.split(',');
+                        for(key in entities) {
+                                if(arrCountries.indexOf(entities[key]) != -1) {
+                                       index = arrCountries.indexOf(entities[key]);
+                                       $("#activemarket").jqxDropDownList('checkIndex', index);
+                                }
+                        }
+                        $("#currency").jqxDropDownList({ source: currencies }).val(currency);
+                        $("#estrevenue").jqxInput({ height: 25, width: 100, rtl:true }).val('');
+                        $("#notes").jqxInput({ height: 25, width: 200 }).val(comments);
+                        // show the popup window.
+                        $("#popupWindow").jqxWindow('open');
+                        $("#region").bind('select', function (event) {
+                            var args = event.args;
+                            var item = $('#region').jqxDropDownList('getItem', args.index);
+                            if(item != null) {
+                                arrRegionCountries = markets[item.label];
+                                $("#nameofentity").jqxDropDownList({ source: arrRegionCountries, checkboxes: false, selectedIndex: -1 });
+                            }
+                        });
+                        $("#nameofentity").bind('select', function (event) {
+                            var args = event.args;
+                            var item = $('#nameofentity').jqxDropDownList('getItem', args.index);
+                            if(item != null) {
+                                /*if(item.label == "Global") {
+                                        $("#city").jqxDropDownList({ source: ['Global'], checkboxes: false, selectedIndex: 0 });
+                                } else if(item.label.match(/Regional/g)) {
+                                        $("#city").jqxDropDownList({ source: [item.label], checkboxes: false, selectedIndex: 0 });
+                                } else {*/
+                                        arrCities = cities[item.label];
+                                        $("#city").jqxDropDownList({ source: arrCities, checkboxes: false, selectedIndex: -1 });
+                                /*}*/
+                            }
+                        });
+                }
                 deleteClick = function (event) {
                     var target = $(event.target);
                     // get button's value.
@@ -593,6 +702,26 @@
                         });
                     }
                 }
+                /*applyFilters = function (filterGroups) {
+                    for (var i = 0; i < filterGroups.length; i++) {
+                        var filterGroup = filterGroups[i];
+                        var filters = filterGroup.filter.getfilters();
+                        for (var j = 0; j < filters.length; j++) {
+                            var filtergroup = new $.jqx.filter();
+                            var filter_or_operator = filters[j].operator;
+                            var filtervalue = filters[j].value;
+                            var filtercondition = filters[j].condition;
+                            if(filterGroup.filtercolumn == 'PitchStart' || filterGroup.filtercolumn == 'Lost') {
+                                var filter = filtergroup.createfilter('datefilter', filtervalue, filtercondition);
+                            } else {
+                                var filter = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
+                            }
+                            filtergroup.addfilter(filter_or_operator, filter);
+                        }
+                        $("#jqxgrid").jqxGrid('addfilter', filterGroup.filtercolumn, filtergroup);
+                    }
+                    $("#jqxgrid").jqxGrid('applyfilters');
+                }*/
 
             $("#popupWindow").jqxWindow({
                 width: 600, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelNew"), maxWidth: 700, maxHeight: 750, showCloseButton: false 
@@ -604,11 +733,12 @@
             $("#createNew").click(function () {
                 var offset = $("#jqxgrid").offset();
                 $("#popupWindow").jqxWindow({ position: { x: 'center', y: 'top' }, height: "750px", maxWidth: 700, isModal: true });
+                $("#parentrecordid").val('');
                 $("#region").jqxDropDownList({ source: regions, selectedIndex: -1 });
                 $("#nameofentity").jqxDropDownList();
                 $("#city").jqxDropDownList();
                 $("#agency").jqxDropDownList({ source: agencies, selectedIndex: -1 });
-                $("#advertisername").jqxInput({ placeHolder: "Enter a Name", height: 25, width: 200, minLength: 1, 
+                $("#advertisername").jqxInput({ placeHolder: "Enter a Name", height: 25, width: 200, minLength: 1,
                         source: function (query, response) {
                                 var dataAdapter = new $.jqx.dataAdapter
                                 (
@@ -695,7 +825,7 @@
                     }
                 });
             });
-            
+
             $('#testForm').jqxValidator({ position: 'right', rules: [
                         { input: '#advertisername', message: 'Advertiser name is required!', action: 'keyup, blur', rule: 'required' },
                         { input: '#parentcompany', message: 'Parent company is required!', action: 'keyup, blur', rule: 'required' },
@@ -796,7 +926,7 @@
                         }
                 ]
             });
-            
+
             $("#CancelNew").jqxButton({ theme: theme });
             $("#SaveNew").jqxButton({ theme: theme });
             // update the edited row when the user clicks the 'Save' button.
@@ -810,7 +940,7 @@
                     PitchStart: $("#pitchstart").val(), /*PitchLeader: $("#pitchleader").val(),*/ PitchStage: $("#pitchstage").val(),
                     ClientSinceMonth: $("#clientsincemonth").val(), ClientSinceYear: $("#clientsinceyear").val(), LostDate: $("#lostdate").val(),
                     Service: $("#service").val(), Division: $("#division").val(), ActiveMarkets: $("#activemarket").val(), Currency: $("#currency").val(),
-                    EstimatedRevenue: $("#estrevenue").val(), Comments: $("#notes").val()
+                    EstimatedRevenue: $("#estrevenue").val(), Comments: $("#notes").val(), parentId: $('#parentrecordid').val()
                 };
                 $.ajax({
                     type: "POST",
@@ -829,11 +959,11 @@
                         }
                     }
                 });
-                
+
             });
-            
+
             var validator = {
-                    
+
                 agency : {
                         input: '#update_agency', message: 'Lead agency is required!', action: 'change', rule: function (input) {
                             if (input.val() != '') {
@@ -990,7 +1120,7 @@
                     } 
                 }
             };
-            
+
             $("#UpdateClient").jqxButton({ theme: theme });
             $("#CancelUpdate").jqxButton({ theme: theme });
             // update the edited row when the user clicks the 'Save' button.
@@ -998,8 +1128,10 @@
                 if(!$('#updateForm').jqxValidator('validate')) {
                         return false;
                 }
-                
+                //var filterGroups = $('#jqxgrid').jqxGrid('getfilterinformation');
+
                 var recordid = $("#recordid").val();
+                var parentrecordid = $("#update_parentrecordid").val();
                 var clientname = $("#divAdvertiser").text();
                 if($('#update_parentcompany').val()) {
                         var parentcompany = $('#update_parentcompany').val();
@@ -1084,14 +1216,23 @@
                         var actualrevenue = $('#divActualRevenue').text();
                 }
                 var comments = $("#update_notes").val();
-                
+
                 var row = { RecordId: recordid, ClientName: clientname, ParentCompany: parentcompany, Region: region,
-                    Country: country, City: city, LeadAgency: leadagency, ClientCategory: clientcategory, 
+                    Country: country, City: city, LeadAgency: leadagency, ClientCategory: clientcategory,
                     PitchStart: pitchstart, /*PitchLeader: pitchleader,*/ PitchStage: pitchstage,
                     ClientSinceMonth: clientsincemonth, ClientSinceYear: clientsinceyear, LostDate: lostdate,
                     Service: service, Division: division, ActiveMarkets: activemarkets, Currency: currency,
-                    EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments
+                    EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
                 };
+                
+                var updateRow = { RecordId: recordid, ClientName: clientname, ParentCompany: parentcompany, Region: region,
+                    Country: country, City: city, LeadAgency: leadagency, ClientCategory: clientcategory,
+                    PitchStart: pitchstart, PitchStage: pitchstage,
+                    ClientMonth: arrMonths[(parseInt(clientsincemonth)-1)], ClientYear: clientsinceyear, LostDate: lostdate,
+                    Service: service, Division: division, ActiveMarkets: activemarkets, Currency: currency,
+                    EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
+                };
+
                 $.ajax({
                     type: "POST",
                     url: "/reports/update_client_record/",
@@ -1101,6 +1242,10 @@
                     success : function(result) {
                         if(result.success == true) {
                             $("#jqxgrid").jqxGrid('updateBoundData');
+                            /*$("#jqxgrid").on("bindingcomplete", function (event) {
+                                    applyFilters(filterGroups);
+                            });*/
+                            //$('#jqxgrid').jqxGrid('updaterow', recordid, updateRow);
                             $("#updateWindow").jqxWindow('hide');
                         } else {
                             alert(result.errors);
@@ -1108,7 +1253,7 @@
                         }
                     }
                 });
-                
+
             });
         });
     </script>
@@ -1163,7 +1308,7 @@
                 <tr>
                     <td align="right">Advertiser Name</td>
                     <td align="left" style="padding-bottom: 5px;"><input type="text" id="advertisername" autocomplete="off"/></td>
-                    <td style="width: 150px"></td>
+                    <td style="width: 150px"><input type="hidden" id="parentrecordid"/></td>
                 </tr>
                 <tr>
                     <td align="right">Parent Company</td>
@@ -1271,6 +1416,7 @@
                     <td align="right" style="padding-bottom: 5px; padding-right: 5px">Advertiser Name</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="divAdvertiser"></div>
                             <input type="hidden" id="recordid"/>
+                            <input type="hidden" id="update_parentrecordid"/>
                     </td>
                     <td style="width: 150px"></td>
                 </tr>

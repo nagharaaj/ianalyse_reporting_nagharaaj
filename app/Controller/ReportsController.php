@@ -205,6 +205,7 @@ class ReportsController extends AppController {
                         $clientName = $arrData['ClientName'];
                         $estimatedRevenue = $arrData['EstimatedRevenue'];
                         $comments = $arrData['Comments'];
+                        $parentId = $arrData['parentId'];
 
                         $this->ClientRevenueByService->create();
                         $this->ClientRevenueByService->save(
@@ -231,6 +232,7 @@ class ReportsController extends AppController {
                                                 'currency_id' => $currencyId,
                                                 'estimated_revenue' => $estimatedRevenue,
                                                 'year' => date('Y'),
+                                                'parent_id' => $parentId,
                                                 'created' => date('Y-m-d H:i:s')
                                         )
                                 )
@@ -328,6 +330,7 @@ class ReportsController extends AppController {
                         $clientData[$i]['ActualRevenue'] = $client['ClientRevenueByService']['actual_revenue'];
                         $clientData[$i]['Comments'] = $client['ClientRevenueByService']['comments'];
                         $clientData[$i]['Year'] = $client['ClientRevenueByService']['year'];
+                        $clientData[$i]['ParentId'] = $client['ClientRevenueByService']['parent_id'];
 
                         $i++;
                 }
@@ -531,6 +534,7 @@ class ReportsController extends AppController {
                         $estimatedRevenue = $arrData['EstimatedRevenue'];
                         $actualRevenue = $arrData['ActualRevenue'];
                         $comments = trim($arrData['Comments']);
+                        $parentId = $arrData['ParentId'];
 
                         $this->ClientRevenueByService->id = $recordId;
                         $this->ClientRevenueByService->save(
@@ -562,6 +566,95 @@ class ReportsController extends AppController {
                                         )
                                 )
                         );
+                        
+                        if($parentId == 0 || $parentId == null) {
+                                $assocRecords = $this->ClientRevenueByService->find('all', array('fields' => array('ClientRevenueByService.id'), 'conditions' => array('ClientRevenueByService.parent_id' => $recordId)));
+                                foreach($assocRecords as $assocRecord) {
+                                        $this->ClientRevenueByService->id = $assocRecord['ClientRevenueByService']['id'];
+                                        $this->ClientRevenueByService->save(
+                                                array(
+                                                        'ClientRevenueByService' => array(
+                                                                'pitch_date' => $pitchDate,
+                                                                'pitch_stage' => $pitchStage,
+                                                                'client_name' => $clientName,
+                                                                'parent_company' => $companyName,
+                                                                'comments' => $comments,
+                                                                'category_id' => $categoryId,
+                                                                'agency_id' => $agencyId,
+                                                                'region_id' => $regionId,
+                                                                'managing_entity' => $managingEntity,
+                                                                'country_id' => $countryId,
+                                                                'city_id' => $cityId,
+                                                                'client_since_month' => $clientMonth,
+                                                                'client_since_year' => $clientYear,
+                                                                'lost_date' => $lostDate,
+                                                                'active_markets' => $activeMarkets,
+                                                                'division_id' => $divisionId,
+                                                                'currency_id' => $currencyId,
+                                                                'year' => date('Y'),
+                                                                'modified' => date('Y-m-d H:i:s')
+                                                        )
+                                                )
+                                        );
+                                }
+                        } else {
+                                $assocRecords = $this->ClientRevenueByService->find('all', array('fields' => array('ClientRevenueByService.id'), 'conditions' => array('ClientRevenueByService.parent_id' => $parentId)));
+                                foreach($assocRecords as $assocRecord) {
+                                        $this->ClientRevenueByService->id = $assocRecord['ClientRevenueByService']['id'];
+                                        $this->ClientRevenueByService->save(
+                                                array(
+                                                        'ClientRevenueByService' => array(
+                                                                'pitch_date' => $pitchDate,
+                                                                'pitch_stage' => $pitchStage,
+                                                                'client_name' => $clientName,
+                                                                'parent_company' => $companyName,
+                                                                'comments' => $comments,
+                                                                'category_id' => $categoryId,
+                                                                'agency_id' => $agencyId,
+                                                                'region_id' => $regionId,
+                                                                'managing_entity' => $managingEntity,
+                                                                'country_id' => $countryId,
+                                                                'city_id' => $cityId,
+                                                                'client_since_month' => $clientMonth,
+                                                                'client_since_year' => $clientYear,
+                                                                'lost_date' => $lostDate,
+                                                                'active_markets' => $activeMarkets,
+                                                                'division_id' => $divisionId,
+                                                                'currency_id' => $currencyId,
+                                                                'year' => date('Y'),
+                                                                'modified' => date('Y-m-d H:i:s')
+                                                        )
+                                                )
+                                        );
+                                }
+                                
+                                $this->ClientRevenueByService->id = $parentId;
+                                $this->ClientRevenueByService->save(
+                                        array(
+                                                'ClientRevenueByService' => array(
+                                                        'pitch_date' => $pitchDate,
+                                                        'pitch_stage' => $pitchStage,
+                                                        'client_name' => $clientName,
+                                                        'parent_company' => $companyName,
+                                                        'comments' => $comments,
+                                                        'category_id' => $categoryId,
+                                                        'agency_id' => $agencyId,
+                                                        'region_id' => $regionId,
+                                                        'managing_entity' => $managingEntity,
+                                                        'country_id' => $countryId,
+                                                        'city_id' => $cityId,
+                                                        'client_since_month' => $clientMonth,
+                                                        'client_since_year' => $clientYear,
+                                                        'lost_date' => $lostDate,
+                                                        'active_markets' => $activeMarkets,
+                                                        'division_id' => $divisionId,
+                                                        'currency_id' => $currencyId,
+                                                        'year' => date('Y'),
+                                                        'modified' => date('Y-m-d H:i:s')
+                                                )
+                                        )
+                                );
+                        }
                 }
                 $result = array();
                 $result['success'] = true;
