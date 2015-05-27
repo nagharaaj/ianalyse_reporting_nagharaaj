@@ -105,6 +105,18 @@
 <script type="text/javascript">
         $(document).ready(function() {
                 $('#nav-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
+                
+                var $window = $(window),
+                $document = $(document),
+                button = $('#btn-backstage');
+
+                $window.on('scroll', function () {
+                    if (($window.scrollTop() + $window.height()) == $document.height()) {
+                        button.stop(true).fadeOut( 'slow' );
+                    } else {
+                        button.stop(true).fadeIn( 'slow' )
+                    }
+                });
         });
 </script>                
                 <br/>
@@ -116,8 +128,18 @@
 
 		</div>
 		<div id="footer">
-
-                </div>
+                <?php if ($this->params['controller'].'-'.$this->params['action'] != 'users-login') { ?>
+                        <div id="btn-backstage" style="position: fixed;right: 0;bottom: 0; border: 2px solid; text-align: center; padding: 5px 10px; background-color: #ffffff; z-index: 1000">
+                                <a href="http://team.aemedia.com/sites/NewBusiness/iProspect/default.aspx" target="blank" style="text-decoration: none; color: #000000">
+                                        <div style="display: inline-block;margin-right: 10px;">
+                                                <div style="font-weight: bold;">iPROSPECT NEW BUSINESS</div>
+                                                <div style="border: 1px solid #444e53; text-align: center;letter-spacing: 3px;line-height: 14px;">BACKSTAGE</div>
+                                        </div>
+                                        <div style="display: inline-block;width: 200px; color: #CC2C88; font-size: 15px;">Click here for Pitch library, FAQ, Region leads and more content</div>
+                                </a>
+                        </div>
+                <?php } ?>
+		</div>
 	</div>
 	<?php echo $this->element('sql_dump'); ?>
 </body>
