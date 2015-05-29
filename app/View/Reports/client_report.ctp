@@ -30,7 +30,9 @@
                 var convert_ratio = $("#statscurrency").val();
                 for(var i = 0; i < rowscount; i++) {
                         if(dataRows[i].PitchStage.match(/Won/g) || dataRows[i].PitchStage == 'Current client') {
-                                clientsCount++;
+                                if(dataRows[i].ParentId == 0 || dataRows[i].ParentId == null || dataRows[i].ParentId == '') {
+                                        clientsCount++;
+                                }
                         }
                         if(dataRows[i].PitchStage.match(/Live/g)) {
                                 pitchesCount++;
@@ -122,7 +124,10 @@
                     { name: 'EstimatedRevenue', type: 'number' },
                     { name: 'ActualRevenue', type: 'number' },
                     { name: 'Comments', type: 'string' },
-                    { name: 'Year', type: 'number' }
+                    { name: 'Year', type: 'number' },
+                    { name: 'ParentId', type: 'number' },
+                    { name: 'Created', type: 'date' },
+                    { name: 'Modified', type: 'date' }
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
@@ -180,6 +185,9 @@
                 enablehover: false,
                 columns: [
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
+                  { text: 'ParentId', datafield: 'ParentId', hidden: true },
+                  { text: 'Created', datafield: 'Created', hidden: true },
+                  { text: 'Modified', datafield: 'Modified', hidden: true },
                   { text: 'Year', datafield: 'Year', hidden: true },
                   { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true,
                       createfilterwidget: function (column, columnElement, widget) {
