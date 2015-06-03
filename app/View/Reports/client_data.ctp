@@ -535,10 +535,10 @@
                                 var inpActualRevenue = $("<input type=\"text\" id=\"update_actualrevenue\" />");
                                 $("#divActualRevenue").append(inpActualRevenue);
                                 $("#update_actualrevenue").jqxInput({ height: 25, width: 150, rtl:true }).val(actualrevenue);
-                                if(pitchstage.match(/Won/g) || pitchstage == 'Current client') {
+                                /*if(pitchstage == 'Current client') {
                                         rules.push(validator.actualrevenueRequired);
                                         rules.push(validator.actualrevenueNumeric);
-                                }
+                                }*/
                         }
                         $("#update_notes").jqxInput({ height: 25, width: 200 }).val(comments);
                         // show the popup window.
@@ -600,7 +600,7 @@
 
                         var offset = $("#jqxgrid").offset();
                         $("#popupWindow").jqxWindow({ position: { x: 'center', y: 'top' }, height: "750px", maxWidth: 700, isModal: true });
-                        if(parentrecordid == 0 || parentrecordid == null) {
+                        if(parentrecordid == 0 || parentrecordid == null || parentrecordid == '') {
                                 $("#parentrecordid").val(recordid);
                         } else {
                                 $("#parentrecordid").val(parentrecordid);
@@ -671,6 +671,28 @@
                                 /*}*/
                             }
                         });
+                        if(pitchstage.match(/Won/g) || pitchstage == "Current client") {
+                                $("#trClientSinceMonth").show();
+                                $("#trClientSinceYear").show();
+
+                                $("#trLostSince").hide();
+                        }
+                        else if(pitchstage.match(/Live/g)) {
+                                $("#trClientSinceMonth").hide();
+                                $("#trClientSinceYear").hide();
+                                $("#trLostSince").hide();
+                        }
+                        else if(pitchstage.match(/Lost/g)) {
+                                $("#trClientSinceMonth").show();
+                                $("#trClientSinceYear").show();
+                                $("#trLostSince").show();
+                        }
+                        else if(pitchstage == 'Cancelled') {
+                                $("#trLostSince").show();
+
+                                $("#trClientSinceMonth").hide();
+                                $("#trClientSinceYear").hide();
+                        }
                 }
                 deleteClick = function (event) {
                     var target = $(event.target);
@@ -823,6 +845,39 @@
                                 $("#city").jqxDropDownList({ source: arrCities, checkboxes: false, selectedIndex: -1 });
                         /*}*/
                     }
+                });
+                $("#pitchstage").bind('select', function (event) {
+                        var args = event.args;
+                        var item = $('#pitchstage').jqxDropDownList('getItem', args.index);
+                        if(item != null) {
+                                if(item.label.match(/Won/g) || item.label == "Current client") {
+                                        $("#trClientSinceMonth").show();
+                                        $("#trClientSinceYear").show();
+                                        $("#trPitchedDate").show();
+                                        
+                                        $("#trLostSince").hide();
+                                }
+                                else if(item.label.match(/Live/g)) {
+                                        $("#trPitchedDate").show();
+                                        
+                                        $("#trClientSinceMonth").hide();
+                                        $("#trClientSinceYear").hide();
+                                        $("#trLostSince").hide();
+                                }
+                                else if(item.label.match(/Lost/g)) {
+                                        $("#trClientSinceMonth").show();
+                                        $("#trClientSinceYear").show();
+                                        $("#trLostSince").show();
+                                        $("#trPitchedDate").show();
+                                }
+                                else if(item.label == 'Cancelled') {
+                                        $("#trLostSince").show();
+                                        $("#trPitchedDate").show();
+                                        
+                                        $("#trClientSinceMonth").hide();
+                                        $("#trClientSinceYear").hide();
+                                }
+                        }
                 });
             });
 
@@ -1335,17 +1390,17 @@
                     <td align="left" style="padding-bottom: 5px;"><div id="division"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
-                <tr>
+                <tr id="trClientSinceMonth" style="display: none">
                     <td align="right">Client Since Month</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="clientsincemonth"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
-                <tr>
+                <tr id="trClientSinceYear" style="display: none">
                     <td align="right">Client Since Year</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="clientsinceyear"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
-                <tr>
+                <tr id="trLostSince" style="display: none">
                     <td align="right">Lost Since (M-Y)</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="lostdate"></div></td>
                     <td style="width: 150px"></td>
@@ -1486,7 +1541,7 @@
                     <td style="width: 150px"></td>
                 </tr>
                 <tr>
-                    <td align="right" style="padding-bottom: 5px; padding-right: 5px">iP 2014 actual revenue</td>
+                    <td align="right" style="padding-bottom: 5px; padding-right: 5px">iP <?php echo (date('Y')-1); ?> actual revenue</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="divActualRevenue"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
