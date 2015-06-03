@@ -111,10 +111,10 @@
                 button = $('#btn-backstage');
 
                 $window.on('scroll', function () {
-                    if (($window.scrollTop() + $window.height()) == $document.height()) {
-                        button.stop(true).fadeOut( 'slow' );
+                    if (($window.scrollTop() + $window.height()) >= $document.height()) {
+                        button.fadeOut( 'slow' );
                     } else {
-                        button.stop(true).fadeIn( 'slow' )
+                        button.fadeIn( 'slow' );
                     }
                 });
         });
