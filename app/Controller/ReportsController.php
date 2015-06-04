@@ -100,6 +100,8 @@ class ReportsController extends AppController {
                 $this->set('markets', json_encode($arrMarkets));
                 $this->set('cities', json_encode($arrCities));
                 $this->set('services', json_encode($this->Service->find('list', array('fields' => array('Service.service_name', 'Service.service_name'), 'order' => 'Service.service_name Asc'))));
+                $this->set('currMonth', date('n'));
+                $this->set('currYear', date('Y'));
 	}
 
         function search_client() {
@@ -192,9 +194,14 @@ class ReportsController extends AppController {
                         $pitchStart = explode('/', $arrData['PitchStart']);
                         $pitchDate = $pitchStart[1] . '-' . $pitchStart[0] . '-01';
                         //$pitchLeader = $arrData['PitchLeader'];
-                        $clientSinceMonth = $arrData['ClientSinceMonth'];
-                        $clientSinceYear = $arrData['ClientSinceYear'];
-                        if(preg_match('/Lost/', $pitchStage)) {
+                        if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled') {
+                                $clientSinceMonth = $arrData['ClientSinceMonth'];
+                                $clientSinceYear = $arrData['ClientSinceYear'];
+                        } else {
+                                $clientSinceMonth = null;
+                                $clientSinceYear = null;
+                        }
+                        if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled') {
                                 $lost = explode('/', $arrData['LostDate']);
                                 $lostDate = $lost[1] . '-' . $lost[0] . '-01';
                         } else {
@@ -576,13 +583,18 @@ class ReportsController extends AppController {
                         $pitchStart = explode('/', trim($arrData['PitchStart']));
                         $pitchDate = $pitchStart[1] . '-' . $pitchStart[0] . '-01';
                         //$pitchLeader = trim($arrData['PitchLeader']);
-                        if(is_numeric(trim($arrData['ClientSinceMonth']))) {
-                                $clientMonth = trim($arrData['ClientSinceMonth']);
+                        if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled') {
+                                if(is_numeric(trim($arrData['ClientSinceMonth']))) {
+                                        $clientMonth = trim($arrData['ClientSinceMonth']);
+                                } else {
+                                        $clientMonth = array_search(trim($arrData['ClientSinceMonth']), $this->months);
+                                }
+                                $clientYear = trim($arrData['ClientSinceYear']);
                         } else {
-                                $clientMonth = array_search(trim($arrData['ClientSinceMonth']), $this->months);
+                                $clientMonth = null;
+                                $clientYear = null;
                         }
-                        $clientYear = trim($arrData['ClientSinceYear']);
-                        if(trim($arrData['LostDate']) != 'No' && trim($arrData['LostDate']) != '') {
+                        if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled') {
                                 $lost = explode('/', trim($arrData['LostDate']));
                                 $lostDate = $lost[1] . '-' . $lost[0] . '-01';
                         } else {
@@ -1640,6 +1652,14 @@ class ReportsController extends AppController {
                 $result = array();
                 $result['success'] = true;
                 return json_encode($result);
+        }
+        
+        public function associate_records() {
+                
+        }
+        
+        public function deassociate_records() {
+                
         }
 
 }
