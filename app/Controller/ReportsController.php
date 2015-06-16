@@ -1,4 +1,6 @@
 <?php
+App::uses('CakeEmail', 'Network/Email');
+
 class ReportsController extends AppController {
 	public $helpers = array('Html', 'Form');
 
@@ -23,7 +25,8 @@ class ReportsController extends AppController {
             'OfficeEmployeeCountByDepartment',
             'Language',
             'PitchStage',
-            'Division'
+            'Division',
+            'UserLoginRole'
         );
 
         public $months = array(1 => 'Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)');
@@ -122,9 +125,8 @@ class ReportsController extends AppController {
 
         public function save_client_record() {
 
-                if ($this->request->isPost())
-		{
-                        if($this->RequestHandler->isAjax()){
+                if ($this->request->isPost()) {
+                        if($this->RequestHandler->isAjax()) {
                                 $this->autoRender=false;
                         }
 
@@ -244,63 +246,24 @@ class ReportsController extends AppController {
                                         )
                                 )
                         );
+                }
+                if ($arrData) {
+                        $this->UserLoginRole->Behaviors->attach('Containable');
+                        $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global'), 'order' => 'User.display_name'));
 
-                        /*$assocRecords = $this->ClientRevenueByService->find('all', array('fields' => array('ClientRevenueByService.id'), 'conditions' => array('ClientRevenueByService.parent_id' => $parentId)));
-                        foreach($assocRecords as $assocRecord) {
-                                $this->ClientRevenueByService->id = $assocRecord['ClientRevenueByService']['id'];
-                                $this->ClientRevenueByService->save(
-                                        array(
-                                                'ClientRevenueByService' => array(
-                                                        'pitch_date' => $pitchDate,
-                                                        'pitch_stage' => $pitchStage,
-                                                        'client_name' => $clientName,
-                                                        'parent_company' => $companyName,
-                                                        'comments' => $comments,
-                                                        'category_id' => $categoryId,
-                                                        'agency_id' => $agencyId,
-                                                        'region_id' => $regionId,
-                                                        'managing_entity' => $managingEntity,
-                                                        'country_id' => $countryId,
-                                                        'city_id' => $cityId,
-                                                        'client_since_month' => $clientSinceMonth,
-                                                        'client_since_year' => $clientSinceYear,
-                                                        'lost_date' => $lostDate,
-                                                        'active_markets' => $activeMarkets,
-                                                        'division_id' => $divisionId,
-                                                        'currency_id' => $currencyId,
-                                                        'year' => date('Y'),
-                                                        'modified' => date('Y-m-d H:i:s')
-                                                )
-                                        )
-                                );
+                        $emailTo = array();
+                        foreach($globalUsers as $globalUser) {
+                                $emailTo[] = $globalUser['User']['email_id'];
                         }
 
-                        $this->ClientRevenueByService->id = $parentId;
-                        $this->ClientRevenueByService->save(
-                                array(
-                                        'ClientRevenueByService' => array(
-                                                'pitch_date' => $pitchDate,
-                                                'pitch_stage' => $pitchStage,
-                                                'client_name' => $clientName,
-                                                'parent_company' => $companyName,
-                                                'comments' => $comments,
-                                                'category_id' => $categoryId,
-                                                'agency_id' => $agencyId,
-                                                'region_id' => $regionId,
-                                                'managing_entity' => $managingEntity,
-                                                'country_id' => $countryId,
-                                                'city_id' => $cityId,
-                                                'client_since_month' => $clientSinceMonth,
-                                                'client_since_year' => $clientSinceYear,
-                                                'lost_date' => $lostDate,
-                                                'active_markets' => $activeMarkets,
-                                                'division_id' => $divisionId,
-                                                'currency_id' => $currencyId,
-                                                'year' => date('Y'),
-                                                'modified' => date('Y-m-d H:i:s')
-                                        )
-                                )
-                        );*/
+                        $email = new CakeEmail('gmail');
+                        $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'New Pitch', 'data' => $arrData));
+                        $email->template('new_pitch', 'default')
+                            ->emailFormat('html')
+                            ->to($emailTo)
+                            ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
+                            ->subject('New pitch added')
+                            ->send();
                 }
                 $result = array();
                 $result['success'] = true;
@@ -509,8 +472,7 @@ class ReportsController extends AppController {
         }
 
         public function update_client_record() {
-                if ($this->request->isPost())
-		{
+                if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()){
                                 $this->autoRender=false;
                         }
@@ -518,6 +480,8 @@ class ReportsController extends AppController {
                         $arrData = $this->request->data;
 
                         $recordId = $arrData['RecordId'];
+                        
+                        $existingStatus = $this->ClientRevenueByService->find('first', array('fields' => array('pitch_stage'), 'conditions' => array('ClientRevenueByService.id' => $recordId)));
 
                         $category = $this->ClientCategory->findByCategory(trim($arrData['ClientCategory']));
                         $region = $this->Region->findByRegion(trim($arrData['Region']));
@@ -726,6 +690,34 @@ class ReportsController extends AppController {
                                                 )
                                         )
                                 );
+                        }
+                }
+                if ($arrData) {
+                        if(preg_match('/Live/', $existingStatus['ClientRevenueByService']['pitch_stage']) && !preg_match('/Live/', $pitchStage)
+                                && $existingStatus['ClientRevenueByService']['pitch_stage'] != $pitchStage) {
+                                if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled') {
+                                        $subject = 'Pitch is lost';
+                                        $template = 'lost_pitch';
+                                } else {
+                                        $subject = 'Pitch is won';
+                                        $template = 'won_pitch';
+                                }
+                                $this->UserLoginRole->Behaviors->attach('Containable');
+                                $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global'), 'order' => 'User.display_name'));
+
+                                $emailTo = array();
+                                foreach($globalUsers as $globalUser) {
+                                        $emailTo[] = $globalUser['User']['email_id'];
+                                }
+
+                                $email = new CakeEmail('gmail');
+                                $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Pitch updated', 'data' => $arrData));
+                                $email->template($template, 'default')
+                                    ->emailFormat('html')
+                                    ->to($emailTo)
+                                    ->from(array('connectiprospect@gmail.com' => 'iProspect Connect'))
+                                    ->subject('iProspect Connect: ' . $subject)
+                                    ->send();
                         }
                 }
                 $result = array();
@@ -1653,11 +1645,11 @@ class ReportsController extends AppController {
                 $result['success'] = true;
                 return json_encode($result);
         }
-        
+
         public function associate_records() {
                 
         }
-        
+
         public function deassociate_records() {
                 
         }
