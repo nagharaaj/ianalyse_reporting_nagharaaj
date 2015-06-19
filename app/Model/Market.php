@@ -3,7 +3,8 @@ App::uses('AppModel', 'Model');
 
 class Market extends AppModel {
 
-    
+    public $displayField = 'market';
+
 //The Associations below have been created with all possible keys, those that are not needed can be removed
 
     /**
