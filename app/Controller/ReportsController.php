@@ -748,6 +748,7 @@ class ReportsController extends AppController {
 
                         $arrData = $this->request->data['datarows'];
                         $exportCurrency = $this->request->data['currency'];
+                        $exportFormat = $this->request->data['format'];
                         $currencies = $this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'));
                         $convertRatio = array_search($exportCurrency, $currencies);
 
@@ -755,11 +756,17 @@ class ReportsController extends AppController {
                         if (!class_exists('PHPExcel')) {
                                 throw new CakeException('Vendor class PHPExcel not found!');
                         }
-                        App::import('Vendor', 'PHPExcel_Writer_Excel2007', array('file' => 'PhpExcel/PHPExcel/Writer/Excel2007.php'));
-                        if (!class_exists('PHPExcel_Writer_Excel2007')) {
-                                throw new CakeException('Vendor class PHPExcel not found!');
+                        if($exportFormat == 'csv') {
+                                App::import('Vendor', 'PHPExcel_Writer_CSV', array('file' => 'PhpExcel/PHPExcel/Writer/CSV.php'));
+                                if (!class_exists('PHPExcel_Writer_CSV')) {
+                                        throw new CakeException('Vendor class PHPExcel not found!');
+                                }
+                        } else {
+                                App::import('Vendor', 'PHPExcel_Writer_Excel2007', array('file' => 'PhpExcel/PHPExcel/Writer/Excel2007.php'));
+                                if (!class_exists('PHPExcel_Writer_Excel2007')) {
+                                        throw new CakeException('Vendor class PHPExcel not found!');
+                                }
                         }
-
                         $objPHPExcel = new PHPExcel();
 
                         // Set properties
@@ -772,14 +779,18 @@ class ReportsController extends AppController {
                         // Add some data
                         $objPHPExcel->setActiveSheetIndex(0);
                         if ($this->Auth->user('role') != 'Viewer') {
-                                $objPHPExcel->getActiveSheet()->getStyle("A1:T1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                if($exportFormat != 'csv') {
+                                        $objPHPExcel->getActiveSheet()->getStyle("A1:T1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                }
                         } else {
                                 $objPHPExcel->getActiveSheet()->getStyle("A1:O1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                         }
                         $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getStyle('F1:K1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
                         if ($this->Auth->user('role') != 'Viewer') {
-                                $objPHPExcel->getActiveSheet()->getStyle('L1:T1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
+                                if($exportFormat != 'csv') {
+                                        $objPHPExcel->getActiveSheet()->getStyle('L1:T1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
+                                }
                         } else {
                                 $objPHPExcel->getActiveSheet()->getStyle('L1:O1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
                         }
@@ -859,7 +870,7 @@ class ReportsController extends AppController {
                                 if($data['Created'] != '') {
                                         $createdDate = date('m/d/Y', strtotime($data['Created']));
                                 } else {
-                                        $createdDate = '';
+                                        $createdDate = '01/01/2015';
                                 }
                                 if($data['Modified'] != '') {
                                         $modifiedDate = date('m/d/Y', strtotime($data['Modified']));
@@ -921,20 +932,30 @@ class ReportsController extends AppController {
                                         $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
                                         $objPHPExcel->getActiveSheet()->setAutoFilter('A1:R'.$i);
                                 } else {
-                                        $objPHPExcel->getActiveSheet()->getStyle('A2:O'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                        if($exportFormat != 'csv') {
+                                                $objPHPExcel->getActiveSheet()->getStyle('A2:O'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                        }
                                         $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
-                                        $objPHPExcel->getActiveSheet()->setAutoFilter('A1:O'.$i);
+                                        if($exportFormat != 'csv') {
+                                                $objPHPExcel->getActiveSheet()->setAutoFilter('A1:O'.$i);
+                                        }
                                 }
                         }
 
                         // Rename sheet
                         $objPHPExcel->getActiveSheet()->setTitle('Client List');
 
-                        // Save Excel 2007 file
-                        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
-                        $objWriter->save('files/Client_Data_' . date('m-d-Y') . '.xlsx');
+                        // Save Excel 2007/CSV file
+                        if($exportFormat == 'csv') {
+                                $fileName = 'Client_Data_' . date('m-d-Y') . '.csv';
+                                $objWriter = new PHPExcel_Writer_CSV($objPHPExcel);
+                        } else {
+                                $fileName = 'Client_Data_' . date('m-d-Y') . '.xlsx';
+                                $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+                        }
+                        $objWriter->save('files/' . $fileName);
                 }
-                $result = array();
+                $result = array('filename' => $fileName);
                 $result['success'] = true;
                 return json_encode($result);
         }

@@ -284,7 +284,7 @@
             });
             $('#exporttoexcelbutton').click(function () {
                 if(userRole == 'Viewer') {
-                        $("#popupWindow").jqxWindow({ position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "100px", maxWidth: 400, isModal: true, draggable: false });
+                        $("#popupWindow").jqxWindow({ title: 'Export to excel', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "125px", maxWidth: 400, isModal: true, draggable: false });
                         $('#divSetting').hide();
                         $('#divLoader').show();
                         $("#popupWindow").jqxWindow('open');
@@ -294,13 +294,16 @@
                         $.ajax({
                             type: "POST",
                             url: "/reports/export_client_data/",
-                            data: JSON.stringify({datarows: rows, timezone: tz.name(), currency: $("#exportcurrency option:selected").text()}),
+                                data: JSON.stringify({datarows: rows, timezone: tz.name(), 
+                                currency: $("#exportcurrency option:selected").text(),
+                                format: 'excel'
+                            }),
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success : function(result) {
                                 if(result.success == true) {
                                     $("#popupWindow").jqxWindow('close');
-                                    window.open('/files/Client_Data_<?php echo date('m-d-Y'); ?>.xlsx');
+                                    window.open('/files/' + result.filename);
                                 } else {
                                     alert(result.errors);
                                     return false;
@@ -308,7 +311,7 @@
                             }
                         });
                 } else {
-                        $("#popupWindow").jqxWindow({ position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "100px", maxWidth: 400, isModal: true, draggable: false });
+                        $("#popupWindow").jqxWindow({ title: 'Export to excel/CSV', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "125px", maxWidth: 400, isModal: true, draggable: false });
                         $('#divSetting').show();
                         $('#divLoader').hide();
                         $("#popupWindow").jqxWindow('open');
@@ -324,13 +327,16 @@
                 $.ajax({
                     type: "POST",
                     url: "/reports/export_client_data/",
-                    data: JSON.stringify({datarows: rows, timezone: tz.name(), currency: $("#exportcurrency option:selected").text()}),
+                    data: JSON.stringify({datarows: rows, timezone: tz.name(), 
+                            currency: $("#exportcurrency option:selected").text(),
+                            format: $("#exportformat").val()
+                    }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success : function(result) {
                         if(result.success == true) {
                             $("#popupWindow").jqxWindow('close');
-                            window.open('/files/Client_Data_<?php echo date('m-d-Y'); ?>.xlsx');
+                            window.open('/files/' + result.filename);
                         } else {
                             alert(result.errors);
                             return false;
@@ -402,15 +408,21 @@
                 <div>Export to excel</div>
                 <div style="overflow: hidden;">
                         <div id="divSetting">
-                                Select currency:
-                                <select id="exportcurrency"><option value="default">Actual currencies</option></select>
+                                <div style="padding-bottom:10px;">
+                                        Select format:
+                                        <select id="exportformat"><option value="Excel">Excel</option><option value="csv">CSV</option></select>
+                                </div>
+                                <div>
+                                        Select currency:
+                                        <select id="exportcurrency"><option value="default">Actual currencies</option></select>
+                                </div>
                                 <div style="float: right; margin-top: 10px">
                                     <button style="margin-bottom: 5px;" id="exportButton">EXPORT</button>
                                     <button id="cancelExportButton">CANCEL</button>
                                 </div>
                                 <br />
                         </div>
-                        <div id="divLoader" align="center" style="display: none; padding-top: 15px; padding-left: 90px;">
+                        <div id="divLoader" align="center" style="display: none; padding-top: 25px; padding-left: 90px;">
                                 <div class="jqx-grid-load" style="float: left; overflow: hidden; width: 32px; height: 32px;"></div>
                                 <span style="margin-top: 10px; float: left; display: block; margin-left: 5px;">Please wait...</span>
                         </div>
