@@ -260,7 +260,7 @@ class ReportsController extends AppController {
                         $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'New Pitch', 'data' => $arrData));
                         $email->template('new_pitch', 'default')
                             ->emailFormat('html')
-                            ->to(array('helena.snowdon@iprospect.com', 'mathilde.natier@iprospect.com'))
+                            ->to(array('mathilde.natier@iprospect.com'))
                             ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
                             ->subject('New pitch added')
                             ->send();
@@ -714,7 +714,7 @@ class ReportsController extends AppController {
                                 $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Pitch updated', 'data' => $arrData));
                                 $email->template($template, 'default')
                                     ->emailFormat('html')
-                                    ->to(array('helena.snowdon@iprospect.com', 'mathilde.natier@iprospect.com'))
+                                    ->to(array('mathilde.natier@iprospect.com'))
                                     ->from(array('connectiprospect@gmail.com' => 'iProspect Connect'))
                                     ->subject('iProspect Connect: ' . $subject)
                                     ->send();
