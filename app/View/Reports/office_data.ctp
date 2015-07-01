@@ -668,6 +668,7 @@
                 if(!$('#testForm').jqxValidator('validate')) {
                         return false;
                 }
+		$("#SaveNew").attr('disabled', true);
                 
                 var keyContacts = [];
                 var executiveContacts = [];
@@ -788,6 +789,7 @@
                         if(result.success == true) {
                             //alert("Data saved successfully...");
                             $("#jqxgrid").jqxGrid('updateBoundData');
+			    $("#SaveNew").attr('disabled', false);
                             $("#popupWindow").jqxWindow('hide');
                         } else {
                             alert(result.errors);
