@@ -1083,10 +1083,11 @@
             $("#SaveNew").jqxButton({ theme: theme });
             // update the edited row when the user clicks the 'Save' button.
             $("#SaveNew").click(function () {
+		$("#SaveNew").attr('disabled', true);
                 if(!$('#testForm').jqxValidator('validate')) {
+			$("#SaveNew").attr('disabled', false);
                         return false;
                 }
-		$("#SaveNew").attr('disabled', true);
                 
                 var row = { ClientName: $("#advertisername").val(), ParentCompany: $("#parentcompany").val(), Region: $("#region").val(),
                     Country: $("#nameofentity").val(), City: $("#city").val(), LeadAgency: $("#agency").val(), ClientCategory: $("#category").val(), 
@@ -1105,8 +1106,8 @@
                         if(result.success == true) {
                             //alert("Data saved successfully...");
                             $("#jqxgrid").jqxGrid('updateBoundData');
-			    $("#SaveNew").attr('disabled', false);
-                            $("#popupWindow").jqxWindow('hide');
+			    $("#popupWindow").jqxWindow('hide');
+			     $("#SaveNew").attr('disabled', false);
                         } else {
                             alert(result.errors);
                             return false;
