@@ -278,8 +278,20 @@ class ReportsController extends AppController {
                         }
 
                         $arrData = $this->request->data;
+                        $clientRecord = $this->ClientRevenueByService->findById($arrData['RecordId']);
+                        $clientRecord['loggedUser']['display_name'] = $this->Session->read('loggedUser.displayName');
 
                         if ($this->ClientRevenueByService->delete($arrData['RecordId'])) {
+                                if ($clientRecord) {
+                                        $email = new CakeEmail('gmail');
+                                        $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
+                                        $email->template('delete_pitch', 'default')
+                                            ->emailFormat('html')
+                                            ->to(array('mathilde.natier@iprospect.com'))
+                                            ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
+                                            ->subject('Pitch is deleted')
+                                            ->send();
+                                }
                                 $result = array();
                                 $result['success'] = true;
                                 return json_encode($result);
