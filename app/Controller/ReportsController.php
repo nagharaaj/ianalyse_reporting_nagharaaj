@@ -26,7 +26,8 @@ class ReportsController extends AppController {
             'Language',
             'PitchStage',
             'Division',
-            'UserLoginRole'
+            'UserLoginRole',
+            'ClientDeleteLog'
         );
 
         public $months = array(1 => 'Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)');
@@ -283,6 +284,41 @@ class ReportsController extends AppController {
 
                         if ($this->ClientRevenueByService->delete($arrData['RecordId'])) {
                                 if ($clientRecord) {
+                                        $this->ClientDeleteLog->create();
+                                        $this->ClientDeleteLog->save(
+                                                array(
+                                                        'ClientDeleteLog' => array(
+                                                                'record_id' => $clientRecord['ClientRevenueByService']['id'],
+                                                                'pitch_date' => $clientRecord['ClientRevenueByService']['pitch_date'],
+                                                                'pitch_stage' => $clientRecord['ClientRevenueByService']['pitch_stage'],
+                                                                'lost_date' => $clientRecord['ClientRevenueByService']['lost_date'],
+                                                                'parent_id' => $clientRecord['ClientRevenueByService']['parent_id'],
+                                                                'client_name' => $clientRecord['ClientRevenueByService']['client_name'],
+                                                                'parent_company' => $clientRecord['ClientRevenueByService']['parent_company'],
+                                                                'comments' => $clientRecord['ClientRevenueByService']['comments'],
+                                                                'category_id' => $clientRecord['ClientRevenueByService']['category_id'],
+                                                                'client_since_month' => $clientRecord['ClientRevenueByService']['client_since_month'],
+                                                                'client_since_year' => $clientRecord['ClientRevenueByService']['client_since_year'],
+                                                                'agency_id' => $clientRecord['ClientRevenueByService']['agency_id'],
+                                                                'region_id' => $clientRecord['ClientRevenueByService']['region_id'],
+                                                                'managing_entity' => $clientRecord['ClientRevenueByService']['managing_entity'],
+                                                                'country_id' => $clientRecord['ClientRevenueByService']['country_id'],
+                                                                'city_id' => $clientRecord['ClientRevenueByService']['city_id'],
+                                                                'active_markets' => $clientRecord['ClientRevenueByService']['active_markets'],
+                                                                'service_id' => $clientRecord['ClientRevenueByService']['service_id'],
+                                                                'division_id' => $clientRecord['ClientRevenueByService']['division_id'],
+                                                                'currency_id' => $clientRecord['ClientRevenueByService']['currency_id'],
+                                                                'estimated_revenue' => $clientRecord['ClientRevenueByService']['estimated_revenue'],
+                                                                'actual_revenue' => $clientRecord['ClientRevenueByService']['actual_revenue'],
+                                                                'year' => $clientRecord['ClientRevenueByService']['year'],
+                                                                'created' => ($clientRecord['ClientRevenueByService']['created'] != '') ? $clientRecord['ClientRevenueByService']['created'] : 'NULL',
+                                                                'modified' => ($clientRecord['ClientRevenueByService']['modified'] != '') ? $clientRecord['ClientRevenueByService']['modified'] : 'NULL',
+                                                                'deleted_by' => $this->Auth->user('id'),
+                                                                'deleted' => date('Y-m-d H:i:s')
+                                                        )
+                                                )
+                                        );
+                                
                                         $email = new CakeEmail('gmail');
                                         $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
                                         $email->template('delete_pitch', 'default')
@@ -292,6 +328,7 @@ class ReportsController extends AppController {
                                             ->subject('Pitch is deleted')
                                             ->send();
                                 }
+                                
                                 $result = array();
                                 $result['success'] = true;
                                 return json_encode($result);
