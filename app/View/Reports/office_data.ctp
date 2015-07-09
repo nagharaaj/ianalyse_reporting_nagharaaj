@@ -142,11 +142,11 @@
                 enablehover: false,
                 columns: [
                   {
-                      text: '', cellsalign: 'center', pinned: true, columntype: 'custom', width: 150, editable: false, sortable: false, filterable: false, datafield: null, hidden: (userRole == 'Viewer' ? true : false),
+                      text: '', cellsalign: 'center', pinned: true, columntype: 'custom', width: 150, editable: false, sortable: false, filterable: false, datafield: null, hidden: ((userRole == 'Viewer' || userRole == 'Country - Viewer') ? true : false),
                       cellsrenderer: function (row, column, value) {
                           // render custom column.
                           var showButton = true;
-                          if(userRole == 'Viewer') {
+                          if(userRole == 'Viewer' || userRole == 'Country - Viewer') {
                                 showButton = false;
                           } else {
                                 if(userRole == 'Regional') {
@@ -668,7 +668,7 @@
                 if(!$('#testForm').jqxValidator('validate')) {
                         return false;
                 }
-		$("#SaveNew").attr('disabled', true);
+                $("#SaveNew").attr('disabled', true);
                 
                 var keyContacts = [];
                 var executiveContacts = [];
@@ -789,7 +789,7 @@
                         if(result.success == true) {
                             //alert("Data saved successfully...");
                             $("#jqxgrid").jqxGrid('updateBoundData');
-			    $("#SaveNew").attr('disabled', false);
+                            $("#SaveNew").attr('disabled', false);
                             $("#popupWindow").jqxWindow('hide');
                         } else {
                             alert(result.errors);

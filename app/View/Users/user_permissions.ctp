@@ -170,7 +170,7 @@
                   { text: 'Location', dataField: 'location', width: 120, align: 'center' },
                   { text: 'Email', dataField: 'email', editable: false, width: 230, align: 'center' },
                   {
-                      text: 'Permission', dataField: 'permission', width: 90, align: 'center',
+                      text: 'Permission', dataField: 'permission', width: 110, align: 'center',
                       columnType: 'template',
                       createEditor: function (row, cellvalue, editor, cellText, width, height) {
                           editor.jqxDropDownList({ autoDropDownHeight: true, source: permissions, width: width });
@@ -186,7 +186,7 @@
                                         entityEditor.jqxDropDownList({ source: ['Global'], checkboxes: false, selectedIndex: 0 });
                               } else if(item.value == "Regional") {
                                         entityEditor.jqxDropDownList({ source: regions, checkboxes: false, selectedIndex: -1 });
-                              } else if(item.value == "Country") {
+                              } else if(item.value == "Country" || item.value == "Country - Viewer") {
                                         entityEditor.jqxDropDownList({ source: markets, checkboxes: true, selectedIndex: -1 });
                               } else {
                                         entityEditor.jqxDropDownList({ source: ['/'], checkboxes: false, selectedIndex: 0 });
@@ -202,7 +202,7 @@
                       }
                   },
                   {
-                      text: 'Entity', dataField: 'nameofentity', width: 200, align: 'center',
+                      text: 'Entity', dataField: 'nameofentity', width: 180, align: 'center',
                       columnType: 'template',
                       initEditor: function (row, cellvalue, editor, cellText, width, height) {
                                 var permission = $('#dataTable').jqxDataTable('getCellValue', row, "permission");
@@ -214,7 +214,7 @@
                                                 var index = arrRegions.indexOf(cellvalue);
                                                 editor.jqxDropDownList('selectIndex', index);
                                         }
-                                } else if(permission == "Country") {
+                                } else if(permission == "Country" || permission == "Country - Viewer") {
                                         editor.jqxDropDownList({ source: markets, checkboxes: true, width: width, height: height });
                                         if (cellvalue != "Please Choose:") {
                                                 entities = cellvalue.split(',');
@@ -352,7 +352,7 @@
                         } else if(item.label == "Regional") {
                                 $("#nameofentity").jqxDropDownList({ source: regions, checkboxes: false, selectedIndex: -1 });
                                 $('#testForm').jqxValidator('validateInput', '#nameofentity');
-                        } else if(item.label == "Country") {
+                        } else if(item.label == "Country" || item.label == "Country - Viewer") {
                                 $("#nameofentity").jqxDropDownList({ source: markets, checkboxes: true, selectedIndex: -1 });
                                 $('#testForm').jqxValidator('validateInput', '#nameofentity');
                         } else {

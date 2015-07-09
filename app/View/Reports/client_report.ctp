@@ -283,7 +283,7 @@
                 width: 300, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none' 
             });
             $('#exporttoexcelbutton').click(function () {
-                if(userRole == 'Viewer') {
+                if(userRole == 'Viewer' || userRole == 'Country - Viewer') {
                         $("#popupWindow").jqxWindow({ title: 'Export to excel', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "125px", maxWidth: 400, isModal: true, draggable: false });
                         $('#divSetting').hide();
                         $('#divLoader').show();

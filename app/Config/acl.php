@@ -116,7 +116,8 @@ $config['alias'] = array(
         'Role/1' => 'Role/SuperAdmin',
         'Role/2' => 'Role/RegionalAdmin',
         'Role/3' => 'Role/CountryAdmin',
-        'Role/4' => 'Role/Viewer'
+        'Role/4' => 'Role/Viewer',
+        'Role/5' => 'Role/CountryViewer'
 );
 
 /**
@@ -126,7 +127,8 @@ $config['roles'] = array(
         'Role/SuperAdmin' => null,
         'Role/RegionalAdmin' => null,
         'Role/CountryAdmin' => null,
-        'Role/Viewer' => null
+        'Role/Viewer' => null,
+        'Role/CountryViewer' => null
 );
 
 /**
@@ -135,19 +137,18 @@ $config['roles'] = array(
 $config['rules'] = array(
         'allow' => array(
                 '*' => 'Role/SuperAdmin',
-                'controllers/dashboard/*' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer',
+                'controllers/dashboard/*' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer, Role/CountryViewer',
                 'controllers/reports/*' => 'Role/RegionalAdmin, Role/CountryAdmin',
-                'controllers/help/*' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer',
-                'controllers/reports/client_report' => 'Role/Viewer',
-                'controllers/reports/get_client_data' => 'Role/Viewer',
-                'controllers/reports/get_client_report_data' => 'Role/Viewer',
-                'controllers/reports/export_client_data' => 'Role/Viewer',
-                'controllers/reports/office_data' => 'Role/Viewer',
-                'controllers/reports/get_office_data' => 'Role/Viewer',
-                'controllers/reports/export_office_data' => 'Role/Viewer',
+                'controllers/help/*' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer, Role/CountryViewer',
+                'controllers/reports/client_report' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/reports/get_client_report_data' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/reports/export_client_data' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/reports/office_data' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/reports/get_office_data' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/reports/export_office_data' => 'Role/Viewer, Role/CountryViewer',
         ),
         'deny' => array(
                 'controllers/users/user_permissions' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer',
-                'controllers/reports/client_data' => 'Role/Viewer'
+                'controllers/reports/client_data' => 'Role/Viewer, Role/CountryViewer'
         ),
 );

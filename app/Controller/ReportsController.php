@@ -74,7 +74,7 @@ class ReportsController extends AppController {
                 if ($this->Auth->user('role') == 'Regional') {
                         $userRegion = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         $regions = $this->Region->find('all', array('conditions' => array('Region.id' => $userRegion['UserMarket']['market_id']), 'order' => 'Region.region Asc'));
-                } else if($this->Auth->user('role') == 'Country') {
+                } else if($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                         $userCountry = $this->UserMarket->find('list', array('fields' => array('UserMarket.id', 'UserMarket.market_id'), 'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         $userRegion = $this->Market->find('list', array('fields' => array('Market.id', 'Market.region_id'), 'conditions' => array('Market.country_id IN (' . implode(',', $userCountry) . ')'), 'order' => 'Market.region_id Asc', 'group' => 'Market.region_id'));
                         $regions = $this->Region->find('all', array('conditions' => array('Region.id IN (' . implode(',', $userRegion) . ')'), 'order' => 'Region.region Asc'));
@@ -84,7 +84,7 @@ class ReportsController extends AppController {
                 foreach ($regions as $region) {
                         //$arrMarkets[$region['Region']['region']] = 'Regional - ' . $region['Region']['region'];
                         $arrRegions[$region['Region']['region']] = $region['Region']['region'];
-                        if($this->Auth->user('role') == 'Country') {
+                        if($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                                 $markets = $this->Market->find('list', array('fields' => array('Market.country_id', 'Market.market'), 'conditions' => array('Market.region_id' => $region['Region']['id'], 'Market.country_id IN (' . implode(',', $userCountry) . ')'), 'order' => 'Market.market Asc'));
                         } else {
                                 $markets = $this->Market->find('list', array('fields' => array('Market.country_id', 'Market.market'), 'conditions' => array('Market.region_id' => $region['Region']['id']), 'order' => 'Market.market Asc'));
@@ -423,7 +423,7 @@ class ReportsController extends AppController {
                         $region = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         //$condition = 'ClientRevenueByService.region_id = ' . $region['UserMarket']['market_id'];
                 }
-                if ($this->Auth->user('role') == 'Country') {
+                if ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                         $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         $arrCountries = array();
                         foreach ($countries as $country) {
@@ -493,7 +493,7 @@ class ReportsController extends AppController {
                                                 $clientData[$i]['ActualRevenue'] = '';
                                                 $clientData[$i]['Currency'] = '';
                                         }
-                                } else if ($this->Auth->user('role') == 'Country') {
+                                } else if ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                                         if (in_array($client['ClientRevenueByService']['country_id'], $arrCountries)) {
                                                 $clientData[$i]['EstimatedRevenue'] = $client['ClientRevenueByService']['estimated_revenue'];
                                                 $clientData[$i]['ActualRevenue'] = $client['ClientRevenueByService']['actual_revenue'];
@@ -1036,7 +1036,7 @@ class ReportsController extends AppController {
                 if($this->Auth->user('role') == 'Regional') {
                         $arrUserMarkets = $this->UserMarket->find('first', array('fields' => array('UserMarket.market_id'),'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'), 'UserMarket.active' => 1)));
                         $userMarkets = $this->Region->find('list', array('conditions' => array('Region.id' => $arrUserMarkets['UserMarket']['market_id'])));
-                } else if($this->Auth->user('role') == 'Country') { 
+                } else if($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') { 
                         $arrUserMarkets = $this->UserMarket->find('all', array('fields' => array('UserMarket.market_id'),'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'), 'UserMarket.active' => 1)));
                         $arrCountries = array();
                         foreach($arrUserMarkets as $arrUserMarket) {

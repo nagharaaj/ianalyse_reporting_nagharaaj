@@ -190,7 +190,7 @@ class UsersController extends AppController
                                 }
                         }
                         
-                        if($arrData['permission'] == 'Country') {
+                        if($arrData['permission'] == 'Country' || $arrData['permission'] == 'Country - Viewer') {
                                 if(isset($arrData['nameofentity'])) {
                                         $countries = $this->Market->find('all', array('conditions' => array('Market.market in (\'' . str_replace(",", "','", $arrData['nameofentity']) . '\')')));
                                         foreach($countries as $country) {
@@ -233,7 +233,7 @@ class UsersController extends AppController
                                 $userMarket = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $user['User']['id'])));
                                 $region = $this->Region->find('first', array('conditions' => array('Region.id' => $userMarket['UserMarket']['market_id'])));
                                 $userData[$i]['nameofentity'] = $region['Region']['region'];
-                        } else if($userLoginRole['LoginRole']['name'] == 'Country') {
+                        } else if($userLoginRole['LoginRole']['name'] == 'Country' || $userLoginRole['LoginRole']['name'] == 'Country - Viewer') {
                                 $arrCountries = array();
                                 $userMarkets = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $user['User']['id'])));
                                 foreach($userMarkets as $userMarket) {
@@ -323,7 +323,7 @@ class UsersController extends AppController
                                         }
                                 }
 
-                                if($arrData['permission'] == 'Country') {
+                                if($arrData['permission'] == 'Country' || $arrData['permission'] == 'Country - Viewer') {
                                         if(!empty($arrData['nameofentity'])) {
                                                 $countries = $this->Market->find('all', array('conditions' => array('Market.market in (\'' . str_replace(",", "','", $arrData['nameofentity']) . '\')')));
                                                 foreach($countries as $country) {
