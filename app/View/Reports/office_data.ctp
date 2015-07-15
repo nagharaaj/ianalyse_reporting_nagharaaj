@@ -20,6 +20,29 @@
                  return '<div style="text-align: center; margin-top: 5px;">' + (1 + value) + '</div>';
              }
              
+             var calculateStats = function () {
+                var dataRows = $('#jqxgrid').jqxGrid('getrows');
+                var rowscount = dataRows.length;
+                $('#no_of_records span').text(rowscount);
+                var employeesCount = 0;
+                var keyContactsCount = 0;
+                var servicesContactsCount = 0;
+                for(var i = 0; i < rowscount; i++) {
+                        if(!isNaN(parseFloat(dataRows[i].TotalEmployee))) {
+                                employeesCount = employeesCount + parseFloat(dataRows[i].TotalEmployee);
+                        }
+                        if(!isNaN(parseFloat(dataRows[i].TotalEmployee))) {
+                                keyContactsCount = keyContactsCount + parseFloat(dataRows[i].totalKeyEmployeeCount);
+                        }
+                        if(!isNaN(parseFloat(dataRows[i].TotalEmployee))) {
+                                servicesContactsCount = servicesContactsCount + parseFloat(dataRows[i].totalServiceEmployeeCount);
+                        }
+                }
+                $('#no_of_employees span').text(Math.round(employeesCount));
+                $('#no_of_key_employees span').text(Math.round(keyContactsCount));
+                $('#no_of_service_employees span').text(Math.round(servicesContactsCount));
+             }
+             
              var source =
              {
                 dataType: "json",
@@ -277,10 +300,11 @@
                   { text: 'Technology', align: 'center', name: 'Technology' },
                   { text: 'Video', align: 'center', name: 'Video' },
                   { text: 'Languages', align: 'center', name: 'Languages' }
-                ]
+                ],
+                ready: calculateStats
             });
             $("#jqxgrid").on("filter", function (event) {
-                    //calculateStats();
+                    calculateStats();
                     var paginginfo = $("#jqxgrid").jqxGrid('getpaginginformation');
                     if(paginginfo.pagescount <= 1) {
                         $('#pagerjqxgrid').hide();
@@ -370,6 +394,7 @@
             // clear the filtering.
             $('#clearfilteringbutton').click(function () {
                 $("#jqxgrid").jqxGrid('clearfilters');
+                calculateStats();
             });
 
             $("#popupWindow").jqxWindow({
@@ -900,12 +925,22 @@
             <div style='margin-top: 20px;'>
         </div>
         
+        <div style="margin-right: 5px; margin-top: 5px; margin-bottom: 10px;" align="right">
+                <fieldset style="width: 260px">
+                        <legend>Quick stats</legend>
+                        <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 70px;"></span></div>
+                        <div id="no_of_employees" style="padding-bottom: 5px">Employees <span style="display: inline-block; width: 70px;"></span></div>
+                        <div id="no_of_key_employees" style="padding-bottom: 5px">Key Management Contacts <span style="display: inline-block; width: 70px;"></span></div>
+                        <div id="no_of_service_employees" style="padding-bottom: 5px">Services Contacts <span style="display: inline-block; width: 70px;"></span></div>
+                </fieldset>
+        </div>
+        
         <?php if($userRole == 'Global') { ?>
         <div style='float: right; padding-right: 7px; padding-bottom: 30px'>
             <button value="Add a new record" id='createNew'>ADD NEW LOCATION</button>
         </div>
         <?php } ?>
-        
+
     <div id="popupWindow">
         <div>Create new location</div>
         <div>
