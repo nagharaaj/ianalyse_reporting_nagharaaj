@@ -1180,8 +1180,6 @@ class ReportsController extends AppController {
                                 $officeData[$i]['SupportedLanguages'] = '';
                                 $officeData[$i]['countSupportedLanguages'] = '';
                         }
-                        $officeData[$i]['RecentAwards'] = $office['Office']['recent_awards'];
-                        $officeData[$i]['News'] = $office['Office']['news'];
 
                         $i++;
                 }
@@ -1511,22 +1509,19 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->mergeCells('BD1:BE1');
                         $objPHPExcel->getActiveSheet()->mergeCells('BF1:BG1');
                         $objPHPExcel->getActiveSheet()->mergeCells('BI1:BJ1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('BK1:BL1');
                         
-                        $objPHPExcel->getActiveSheet()->getStyle("A1:BL2")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
-                        //$objPHPExcel->getActiveSheet()->getStyle('A1:BL999')->getAlignment()->setWrapText(true);
+                        $objPHPExcel->getActiveSheet()->getStyle("A1:BJ2")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                        //$objPHPExcel->getActiveSheet()->getStyle('A1:BJ999')->getAlignment()->setWrapText(true);
                         $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getStyle('F1:J1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
                         $objPHPExcel->getActiveSheet()->getStyle('K1:Y1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getStyle('Z1:BH1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
                         $objPHPExcel->getActiveSheet()->getStyle('BI1:BJ1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('BK1:BL1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
                         $objPHPExcel->getActiveSheet()->getStyle('A2:E2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getStyle('F2:J2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
                         $objPHPExcel->getActiveSheet()->getStyle('K2:Y2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getStyle('Z2:BH2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
                         $objPHPExcel->getActiveSheet()->getStyle('BI2:BJ2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('BK2:BL2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
 
                         $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(11);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(11);
@@ -1590,8 +1585,6 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->getColumnDimension("BH")->setWidth(9);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("BI")->setWidth(11);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("BJ")->setWidth(17);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BK")->setWidth(20);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BL")->setWidth(20);
                         
                         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'General Information');
                         $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Contact details');
@@ -1615,7 +1608,6 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->SetCellValue('BF1', 'Video');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BH1', '');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BI1', 'Languages');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BK1', 'Other');
 
                         $objPHPExcel->getActiveSheet()->SetCellValue('A2', 'Region');
                         $objPHPExcel->getActiveSheet()->SetCellValue('B2', 'Market');
@@ -1679,8 +1671,6 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->SetCellValue('BH2', 'Total # management employees');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BI2', '# of supported languages');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BJ2', 'List supported languages');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BK2', 'Recent awards');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BL2', 'Interesting news');
 
                         $i = 2;
                         $arrDataExcel = array();
@@ -1695,13 +1685,13 @@ class ReportsController extends AppController {
                                     $data['Lead'], $data['countLead'], $data['Mobile'], $data['countMobile'], $data['RTB'], $data['countRTB'], $data['Search'], $data['countSearch'],
                                     $data['SEO'], $data['countSEO'], $data['SocialPaid'], $data['countSocialPaid'], $data['SocialMangement'], $data['countSocialMangement'],
                                     $data['Strategy'], $data['countStrategy'], $data['Technology'], $data['countTechnology'], $data['Video'], $data['countVideo'], $data['totalServiceEmployeeCount'],
-                                    $data['countSupportedLanguages'], $data['SupportedLanguages'], $data['RecentAwards'], $data['News']);
+                                    $data['countSupportedLanguages'], $data['SupportedLanguages']);
                                 $i++;
                         }
                         if(!empty($arrDataExcel)) {
-                                $objPHPExcel->getActiveSheet()->getStyle('A3:BL'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                $objPHPExcel->getActiveSheet()->getStyle('A3:BJ'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                                 $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A3');
-                                $objPHPExcel->getActiveSheet()->setAutoFilter('A2:BL'.$i);
+                                $objPHPExcel->getActiveSheet()->setAutoFilter('A2:BJ'.$i);
                         }
 
                         // Rename sheet

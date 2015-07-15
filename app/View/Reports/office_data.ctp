@@ -88,9 +88,7 @@
                     { name: 'countVideo', type: 'string' },
                     { name: 'totalServiceEmployeeCount', type: 'number' },
                     { name: 'countSupportedLanguages', type: 'number' },
-                    { name: 'SupportedLanguages', type: 'string' },
-                    { name: 'RecentAwards', type: 'string' },
-                    { name: 'News', type: 'string' }
+                    { name: 'SupportedLanguages', type: 'string' }
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
@@ -254,9 +252,7 @@
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 200 });
                       } 
-                  },
-                  { text: 'Recent awards', columngroup: 'Other', datafield: 'RecentAwards', width: 200, align: 'center', filterable: false },
-                  { text: 'Interesting news', columngroup: 'Other', datafield: 'News', width: 200, align: 'center', filterable: false }
+                  }
                 ],
                 columngroups: 
                 [
@@ -280,8 +276,7 @@
                   { text: 'Strategy', align: 'center', name: 'Strategy' },
                   { text: 'Technology', align: 'center', name: 'Technology' },
                   { text: 'Video', align: 'center', name: 'Video' },
-                  { text: 'Languages', align: 'center', name: 'Languages' },
-                  { text: 'Other', align: 'center', name: 'Other' }
+                  { text: 'Languages', align: 'center', name: 'Languages' }
                 ]
             });
             $("#jqxgrid").on("filter", function (event) {
@@ -778,7 +773,7 @@
                         Telephone: $("#telephone").val(), ContactEmail: $("#contact_email").val(), Website: $("#website").val(), SocialAccount: $("social_account").val(),
                         KeyContacts: keyContacts, ServicesContacts: serviceContacts, SupportedLanguages: $("#languages").val()
                 };
-                //console.log(row);
+
                 $.ajax({
                     type: "POST",
                     url: "/reports/save_office_record/",
@@ -787,7 +782,6 @@
                     dataType: "json",
                     success : function(result) {
                         if(result.success == true) {
-                            //alert("Data saved successfully...");
                             $("#jqxgrid").jqxGrid('updateBoundData');
                             $("#SaveNew").attr('disabled', false);
                             $("#popupWindow").jqxWindow('hide');
@@ -841,7 +835,6 @@
                     dataType: "json",
                     success : function(result) {
                         if(result.success == true) {
-                            //alert("Data saved successfully...");
                             $("#loaderWindow").jqxWindow('close');
                             window.open('/files/Office_Data_<?php echo date('m-d-Y'); ?>.xlsx');
                         } else {
