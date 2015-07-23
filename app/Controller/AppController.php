@@ -44,9 +44,8 @@ class AppController extends Controller {
     );
 
     public $arrNav = array(
-        'GLOBAL STRATEGY' => '/dashboard/index',
-        'GLOBAL GROWTH' => '/dashboard/global_growth',
-        'LOCAL GROWTH' => '/dashboard/local_growth',
+        'OVERVIEW' => '/dashboard/index',
+        'DASHBOARD' => '/dashboard/global_growth',
         'CLIENT & NEW BUSINESS DATA' => '/reports/client_report',
         'OFFICE DATA' => '/reports/office_data',
         'PERMISSIONS' => '/users/user_permissions',

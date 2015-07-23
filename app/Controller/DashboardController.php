@@ -25,6 +25,15 @@ class DashboardController extends AppController
                   'action' => 'login'
                 );
         }
+        
+        public $uses = array(
+            'Market',
+            'Region',
+            'ClientRevenueByService',
+            'User',
+            'UserLoginRole',
+            'UserMarket'
+        );
 
         public function beforeRender() {
                 if($this->Auth->user()) {
@@ -37,7 +46,12 @@ class DashboardController extends AppController
         }
 
         public function global_growth() {
-
+                $this->set('loggedUser', $this->Auth->user());
+                if($this->Auth->user('role') == 'Regional') {
+                        $userRegion = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                        $region = $this->Region->findById($userRegion['UserMarket']['market_id']);
+                        $this->set('userRegion', $region['Region']['region']);
+                }
         }
 
         public function local_growth() {

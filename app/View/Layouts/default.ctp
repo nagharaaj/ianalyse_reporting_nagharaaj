@@ -41,6 +41,7 @@
                 echo $this->Html->script('jqwidgets/jqxgrid.filter.js');
                 echo $this->Html->script('jqwidgets/jqxgrid.sort.js');
                 echo $this->Html->script('jqwidgets/jqxgrid.pager.js');
+                echo $this->Html->script('jqwidgets/jqxgrid.storage.js');
                 echo $this->Html->script('jqwidgets/jqxgrid.columnsresize.js');
                 echo $this->Html->script('jqwidgets/jqxgrid.export.js');
 	?>
@@ -78,12 +79,10 @@
                                                         $className = 'blue';
                                                 } else if ($navHead == 'HELP') {
                                                         $className = 'red';
-                                                } else if ($navHead == 'GLOBAL STRATEGY') {
+                                                } else if ($navHead == 'OVERVIEW') {
                                                         $className = 'light-grey';
-                                                } else if ($navHead == 'GLOBAL GROWTH') {
+                                                } else if ($navHead == 'DASHBOARD') {
                                                         $className = 'light-torquoise';
-                                                } else if ($navHead == 'LOCAL GROWTH') {
-                                                        $className = 'dark-torquoise';
                                                 } else {
                                                         $className = 'green';
                                                 }
@@ -129,7 +128,7 @@
 		</div>
 		<div id="footer">
                 <?php if ($this->params['controller'].'-'.$this->params['action'] != 'users-login') { ?>
-                        <div id="btn-backstage" style="position: fixed;right: 0;bottom: 0; border: 2px solid; text-align: center; padding: 5px 10px; background-color: #ffffff; z-index: 1000">
+                        <div id="btn-backstage" style="position: fixed;left: 0;bottom: 0; border: 2px solid; text-align: center; padding: 5px 10px; background-color: #ffffff; z-index: 1000">
                                 <a href="http://team.aemedia.com/sites/NewBusiness/iProspect/default.aspx" target="blank" style="text-decoration: none; color: #000000">
                                         <div style="display: inline-block;margin-right: 10px;">
                                                 <div style="font-weight: bold;">iPROSPECT NEW BUSINESS</div>
