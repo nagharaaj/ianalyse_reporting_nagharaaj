@@ -397,14 +397,21 @@
                                 $("#update_pitchleader").jqxInput({ height: 25, width: 200 }).val(pitchleader);
                                 rules.push(validator.pitchleader);
                         }*/
-                        $("#update_pitchstage").jqxDropDownList({ source: stages }).val(pitchstage);
-                        if(pitchstage != 'Current client') {
-                                $("#update_pitchstage").jqxDropDownList('disableItem',"Current client");
+                        if(pitchstage.match(/Lost/g)) {
+                                $("#divPitchStage").text(pitchstage);
+                        } else {
+                                $("#divPitchStage").html('');
+                                var inpPitchStage = $("<div id=\"update_pitchstage\"></div>");
+                                $("#divPitchStage").append(inpPitchStage);
+                                $("#update_pitchstage").jqxDropDownList({ source: stages }).val(pitchstage);
+                                if(pitchstage != 'Current client') {
+                                        $("#update_pitchstage").jqxDropDownList('disableItem',"Current client");
+                                }
+                                if(!pitchstage.match(/Lost/g)) {
+                                        $("#update_pitchstage").jqxDropDownList('disableItem',"Lost - archive");
+                                }
+                                rules.push(validator.pitchstage);
                         }
-                        if(!pitchstage.match(/Lost/g)) {
-                                $("#update_pitchstage").jqxDropDownList('disableItem',"Lost - archive");
-                        }
-                        rules.push(validator.pitchstage);
                         if(pitchstage.match(/Lost/g) || pitchstage == 'Cancelled') {
                                 $("#divClientSince").text('');
                         } else {
@@ -1254,7 +1261,11 @@
                 } else {
                         var pitchleader = $('#divPitchLeader').text();
                 }*/
-                var pitchstage = $('#update_pitchstage').val();
+                if($('#update_pitchstage').val()) {
+                        var pitchstage = $('#update_pitchstage').val();
+                } else {
+                        var pitchstage = $('#divPitchStage').text();
+                }
                 if($('#update_clientsince').val()) {
                         var clientsince = $('#update_clientsince').val();
                 } else {
@@ -1513,7 +1524,7 @@
                 </tr>
                 <tr>
                     <td align="right" style="padding-bottom: 5px; padding-right: 5px">Status</td>
-                    <td align="left" style="padding-bottom: 5px;"><div id="update_pitchstage"></div></td>
+                    <td align="left" style="padding-bottom: 5px;"><div id="divPitchStage"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
                 <tr>

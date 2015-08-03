@@ -598,9 +598,14 @@ class ReportsController extends AppController {
                         $pitchDate = $pitchStart[1] . '-' . $pitchStart[0] . '-01';
                         //$pitchLeader = trim($arrData['PitchLeader']);
                         if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled') {
-                                $clientSince = explode('/', $arrData['ClientSince']);
-                                $clientMonth = $clientSince[0];
-                                $clientYear = $clientSince[1];
+                                if($arrData['ClientSince'] != null) {
+                                        $clientSince = explode('/', $arrData['ClientSince']);
+                                        $clientMonth = $clientSince[0];
+                                        $clientYear = $clientSince[1];
+                                } else {
+                                        $clientMonth = null;
+                                        $clientYear = null;
+                                }
                         } else {
                                 $clientMonth = null;
                                 $clientYear = null;
