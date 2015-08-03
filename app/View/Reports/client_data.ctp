@@ -89,6 +89,7 @@
                     { name: 'PitchStage', type: 'string' },
                     { name: 'ClientMonth', type: 'string' },
                     { name: 'ClientYear', type: 'number' },
+                    { name: 'ClientSince', type: 'date' },
                     { name: 'Lost', type: 'date' },
                     { name: 'Service', type: 'string' },
                     { name: 'Division', type: 'string' },
@@ -208,16 +209,7 @@
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
                       }
                   },
-                  { text: 'Client Since Month', datafield: 'ClientMonth', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 120 });
-                      }
-                  },
-                  { text: 'Client Since Year', datafield: 'ClientYear', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 120 });
-                      }
-                  },
+                  { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 110, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 100, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 100, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy', editable: false },
                   /*{ text: 'Pitch Leader', columngroup: 'PitchLeader', datafield: 'PitchLeader', width: 150, cellClassName: cellclass, editable: false },*/
@@ -297,8 +289,7 @@
                         var pitchstart = data.PitchStart;
                         /*var pitchleader = data.PitchLeader;*/
                         var pitchstage = data.PitchStage;
-                        var clientsincemonth = data.ClientMonth;
-                        var clientsinceyear = data.ClientYear;
+                        var clientsince = data.ClientSince;
                         var lostdate = data.Lost;
                         var service = data.Service;
                         var division = data.Division;
@@ -414,56 +405,25 @@
                                 $("#update_pitchstage").jqxDropDownList('disableItem',"Lost - archive");
                         }
                         rules.push(validator.pitchstage);
-                        if(clientsincemonth != '' && clientsincemonth != null) {
-                                if(pitchstage.match(/Live/g)) {
-                                        $("#divClientMonth").html('');
-                                        var inpClientMonth = $("<div id=\"update_clientsincemonth\"></div>");
-                                        $("#divClientMonth").append(inpClientMonth);
-                                        $("#update_clientsincemonth").jqxDropDownList({ source: monthsAdapter, displayMember: 'label', valueMember: 'value', selectedIndex: -1  }).val(currMonth);
-                                        //rules.push(validator.clientsincemonth);
-                                } else {
-                                        //$("#divClientMonth").text(clientsincemonth);
-                                        $("#divClientMonth").html('');
-                                        var inpClientMonth = $("<div id=\"update_clientsincemonth\"></div>");
-                                        $("#divClientMonth").append(inpClientMonth);
-                                        $("#update_clientsincemonth").jqxDropDownList({ source: monthsAdapter, displayMember: 'label', valueMember: 'value', selectedIndex: -1  }).val((arrMonths.indexOf(clientsincemonth)+1));
-                                }
+                        if(pitchstage.match(/Lost/g) || pitchstage == 'Cancelled') {
+                                $("#divClientSince").text('');
                         } else {
-                                if(pitchstage.match(/Lost/g)) {
-                                        $("#divClientMonth").text('');
-                                } else {
-                                        $("#divClientMonth").html('');
-                                        var inpClientMonth = $("<div id=\"update_clientsincemonth\"></div>");
-                                        $("#divClientMonth").append(inpClientMonth);
-                                        $("#update_clientsincemonth").jqxDropDownList({ source: monthsAdapter, displayMember: 'label', valueMember: 'value', selectedIndex: -1  }).val(currMonth);
-                                        //rules.push(validator.clientsincemonth);
-                                }
-                        }
-                        if(clientsinceyear != 0 && clientsinceyear != null) {
+                                $("#divClientSince").html('');
+                                var inpClientSince = $("<div id=\"update_clientsince\"></div>");
+                                $("#divClientSince").append(inpClientSince);
+                                $("#update_clientsince").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                                 if(pitchstage.match(/Live/g)) {
-                                        $("#divClientYear").html('');
-                                        var inpClientYear = $("<div id=\"update_clientsinceyear\"></div>");
-                                        $("#divClientYear").append(inpClientYear);
-                                        $("#update_clientsinceyear").jqxDropDownList({ source: years, selectedIndex: -1  }).val(currYear);
-                                        rules.push(validator.clientsinceyear);
+                                        var clientSince = new Date();
+                                        $("#update_clientsince").val(clientSince);
                                 } else {
-                                        //$("#divClientYear").text(clientsinceyear);
-                                        $("#divClientYear").html('');
-                                        var inpClientYear = $("<div id=\"update_clientsinceyear\"></div>");
-                                        $("#divClientYear").append(inpClientYear);
-                                        $("#update_clientsinceyear").jqxDropDownList({ source: years, selectedIndex: -1  }).val(clientsinceyear);
-                                        rules.push(validator.clientsinceyear);
+                                        if(clientsince != '') {
+                                                var clientSince = new Date(clientsince);
+                                        } else {
+                                                var clientSince = new Date();
+                                        }
+                                        $("#update_clientsince").val(clientSince);
                                 }
-                        } else {
-                                if(pitchstage.match(/Lost/g)) {
-                                        $("#divClientYear").text('');
-                                } else {
-                                        $("#divClientYear").html('');
-                                        var inpClientYear = $("<div id=\"update_clientsinceyear\"></div>");
-                                        $("#divClientYear").append(inpClientYear);
-                                        $("#update_clientsinceyear").jqxDropDownList({ source: years, selectedIndex: -1  }).val(currYear);
-                                        rules.push(validator.clientsinceyear);
-                                }
+                                rules.push(validator.clientsince);
                         }
                         if(pitchstage.match(/Won/g) || pitchstage == 'Current client') {
                                 $("#divLostDate").text('No');
@@ -579,8 +539,7 @@
                                 var item = $('#update_pitchstage').jqxDropDownList('getItem', args.index);
                                 if(item != null) {
                                         if(item.label.match(/Won/g) || item.label == "Current client") {
-                                                $("#trUpdateClientSinceMonth").show();
-                                                $("#trUpdateClientSinceYear").show();
+                                                $("#trUpdateClientSince").show();
                                                 $("#trUpdatePitchedDate").show();
 
                                                 $("#trUpdateLostSince").hide();
@@ -588,13 +547,11 @@
                                         else if(item.label.match(/Live/g)) {
                                                 $("#trUpdatePitchedDate").show();
 
-                                                $("#trUpdateClientSinceMonth").hide();
-                                                $("#trUpdateClientSinceYear").hide();
+                                                $("#trUpdateClientSince").hide();
                                                 $("#trUpdateLostSince").hide();
                                         }
                                         else if(item.label.match(/Lost/g)) {
-                                                $("#trUpdateClientSinceMonth").show();
-                                                $("#trUpdateClientSinceYear").show();
+                                                $("#trUpdateClientSince").show();
                                                 $("#trUpdateLostSince").show();
                                                 $("#trUpdatePitchedDate").show();
                                         }
@@ -602,32 +559,27 @@
                                                 $("#trUpdateLostSince").show();
                                                 $("#trUpdatePitchedDate").show();
 
-                                                $("#trUpdateClientSinceMonth").hide();
-                                                $("#trUpdateClientSinceYear").hide();
+                                                $("#trUpdateClientSince").hide();
                                         }
                                 }
                         });
                         if(pitchstage.match(/Won/g) || pitchstage == "Current client") {
-                                $("#trUpdateClientSinceMonth").show();
-                                $("#trUpdateClientSinceYear").show();
+                                $("#trUpdateClientSince").show();
 
                                 $("#trUpdateLostSince").hide();
                         }
                         else if(pitchstage.match(/Live/g)) {
-                                $("#trUpdateClientSinceMonth").hide();
-                                $("#trUpdateClientSinceYear").hide();
+                                $("#trUpdateClientSince").hide();
                                 $("#trUpdateLostSince").hide();
                         }
                         else if(pitchstage.match(/Lost/g)) {
-                                $("#trUpdateClientSinceMonth").show();
-                                $("#trUpdateClientSinceYear").show();
+                                $("#trUpdateClientSince").show();
                                 $("#trUpdateLostSince").show();
                         }
                         else if(pitchstage == 'Cancelled') {
                                 $("#trUpdateLostSince").show();
 
-                                $("#trUpdateClientSinceMonth").hide();
-                                $("#trUpdateClientSinceYear").hide();
+                                $("#trUpdateClientSince").hide();
                         }
                         $('#updateForm').jqxValidator({ position: 'right', rules: rules});
                 }
@@ -693,8 +645,7 @@
                         if(!pitchstage.match(/Lost/g)) {
                                 $("#update_pitchstage").jqxDropDownList('disableItem',"Lost - archive");
                         }
-                        $("#clientsincemonth").jqxDropDownList({ source: monthsAdapter, displayMember: 'label', valueMember: 'value', selectedIndex: -1  }).val((arrMonths.indexOf(clientsincemonth)+1));
-                        $("#clientsinceyear").jqxDropDownList({ source: years, selectedIndex: -1  }).val(clientsinceyear);
+                        $("#clientsince").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                         $("#lostdate").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                         var lostDate = new Date(lostdate);
                         $("#lostdate").val(lostDate);
@@ -740,8 +691,7 @@
                                 var item = $('#pitchstage').jqxDropDownList('getItem', args.index);
                                 if(item != null) {
                                         if(item.label.match(/Won/g) || item.label == "Current client") {
-                                                $("#trClientSinceMonth").show();
-                                                $("#trClientSinceYear").show();
+                                                $("#trClientSince").show();
                                                 $("#trPitchedDate").show();
 
                                                 $("#trLostSince").hide();
@@ -749,13 +699,11 @@
                                         else if(item.label.match(/Live/g)) {
                                                 $("#trPitchedDate").show();
 
-                                                $("#trClientSinceMonth").hide();
-                                                $("#trClientSinceYear").hide();
+                                                $("#trClientSince").hide();
                                                 $("#trLostSince").hide();
                                         }
                                         else if(item.label.match(/Lost/g)) {
-                                                $("#trClientSinceMonth").show();
-                                                $("#trClientSinceYear").show();
+                                                $("#trClientSince").show();
                                                 $("#trLostSince").show();
                                                 $("#trPitchedDate").show();
                                         }
@@ -763,32 +711,27 @@
                                                 $("#trLostSince").show();
                                                 $("#trPitchedDate").show();
 
-                                                $("#trClientSinceMonth").hide();
-                                                $("#trClientSinceYear").hide();
+                                                $("#trClientSince").hide();
                                         }
                                 }
                         });
                         if(pitchstage.match(/Won/g) || pitchstage == "Current client") {
-                                $("#trClientSinceMonth").show();
-                                $("#trClientSinceYear").show();
-
+                                $("#trClientSince").show();
+                                
                                 $("#trLostSince").hide();
                         }
                         else if(pitchstage.match(/Live/g)) {
-                                $("#trClientSinceMonth").hide();
-                                $("#trClientSinceYear").hide();
+                                $("#trClientSince").hide();
                                 $("#trLostSince").hide();
                         }
                         else if(pitchstage.match(/Lost/g)) {
-                                $("#trClientSinceMonth").show();
-                                $("#trClientSinceYear").show();
+                                $("#trClientSince").show();
                                 $("#trLostSince").show();
                         }
                         else if(pitchstage == 'Cancelled') {
                                 $("#trLostSince").show();
 
-                                $("#trClientSinceMonth").hide();
-                                $("#trClientSinceYear").hide();
+                                $("#trClientSince").hide();
                         }
                 }
                 deleteClick = function (event) {
@@ -910,8 +853,7 @@
                 $("#pitchstart").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                 /*$("#pitchleader").jqxInput({ height: 25, width: 200 }).val('');*/
                 $("#pitchstage").jqxDropDownList({ source: stages, selectedIndex: -1 });
-                $("#clientsincemonth").jqxDropDownList({ source: monthsAdapter, displayMember: 'label', valueMember: 'value', selectedIndex: -1  }).val(currMonth);
-                $("#clientsinceyear").jqxDropDownList({ source: years, selectedIndex: -1  }).val(currYear);
+                $("#clientsince").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                 $("#lostdate").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                 $("#service").jqxDropDownList({ source: services, selectedIndex: -1 });
                 $("#division").jqxDropDownList({ source: divisions, selectedIndex: -1 });
@@ -948,8 +890,7 @@
                         var item = $('#pitchstage').jqxDropDownList('getItem', args.index);
                         if(item != null) {
                                 if(item.label.match(/Won/g) || item.label == "Current client") {
-                                        $("#trClientSinceMonth").show();
-                                        $("#trClientSinceYear").show();
+                                        $("#trClientSince").show();
                                         $("#trPitchedDate").show();
                                         
                                         $("#trLostSince").hide();
@@ -957,13 +898,11 @@
                                 else if(item.label.match(/Live/g)) {
                                         $("#trPitchedDate").show();
                                         
-                                        $("#trClientSinceMonth").hide();
-                                        $("#trClientSinceYear").hide();
+                                        $("#trClientSince").hide();
                                         $("#trLostSince").hide();
                                 }
                                 else if(item.label.match(/Lost/g)) {
-                                        $("#trClientSinceMonth").show();
-                                        $("#trClientSinceYear").show();
+                                        $("#trClientSince").show();
                                         $("#trLostSince").show();
                                         $("#trPitchedDate").show();
                                 }
@@ -971,8 +910,7 @@
                                         $("#trLostSince").show();
                                         $("#trPitchedDate").show();
                                         
-                                        $("#trClientSinceMonth").hide();
-                                        $("#trClientSinceYear").hide();
+                                        $("#trClientSince").show();
                                 }
                         }
                 });
@@ -1024,7 +962,7 @@
                                 return false;
                             } 
                         },
-                        { input: '#clientsinceyear', message: 'Client Since Year is required!', action: 'change', rule: function (input) {
+                        { input: '#clientsince', message: 'Client Since is required!', action: 'change', rule: function (input) {
                                 var pitchstage = $('#pitchstage').val();
                                 if ((pitchstage.match(/Won/g) || pitchstage == 'Current client') && input.val() == '') {
                                         return false;
@@ -1083,16 +1021,15 @@
             $("#SaveNew").jqxButton({ theme: theme });
             // update the edited row when the user clicks the 'Save' button.
             $("#SaveNew").click(function () {
-		$("#SaveNew").attr('disabled', true);
                 if(!$('#testForm').jqxValidator('validate')) {
-			$("#SaveNew").attr('disabled', false);
                         return false;
                 }
+                $("#SaveNew").attr('disabled', true);
                 
                 var row = { ClientName: $("#advertisername").val(), ParentCompany: $("#parentcompany").val(), Region: $("#region").val(),
                     Country: $("#nameofentity").val(), City: $("#city").val(), LeadAgency: $("#agency").val(), ClientCategory: $("#category").val(), 
                     PitchStart: $("#pitchstart").val(), /*PitchLeader: $("#pitchleader").val(),*/ PitchStage: $("#pitchstage").val(),
-                    ClientSinceMonth: $("#clientsincemonth").val(), ClientSinceYear: $("#clientsinceyear").val(), LostDate: $("#lostdate").val(),
+                    ClientSince: $("#clientsince").val(), LostDate: $("#lostdate").val(),
                     Service: $("#service").val(), Division: $("#division").val(), ActiveMarkets: $("#activemarket").val(), Currency: $("#currency").val(),
                     EstimatedRevenue: $("#estrevenue").val(), Comments: $("#notes").val(), parentId: $('#parentrecordid').val()
                 };
@@ -1106,8 +1043,8 @@
                         if(result.success == true) {
                             //alert("Data saved successfully...");
                             $("#jqxgrid").jqxGrid('updateBoundData');
-			    $("#popupWindow").jqxWindow('hide');
-			     $("#SaveNew").attr('disabled', false);
+                            $("#SaveNew").attr('disabled', false);
+                            $("#popupWindow").jqxWindow('hide');
                         } else {
                             alert(result.errors);
                             return false;
@@ -1167,19 +1104,7 @@
                             return false;
                         } 
                 },*/
-                clientsincemonth: { input: "#update_clientsincemonth", message: 'Client Since Month is required!', action: 'change', rule: function (input) {
-                        if($('#update_pitchstage').val()) {
-                                var pitchstage = $('#update_pitchstage').val();
-                        } else {
-                                var pitchstage = $('#update_pitchstage').text();
-                        }
-                        if ((pitchstage.match(/Live/g) || pitchstage.match(/Won/g) || pitchstage == 'Current client') && input.val() == '') {
-                                return false;
-                        }
-                        return true;
-                    } 
-                },
-                clientsinceyear: { input: "#update_clientsinceyear", message: 'Client Since Year is required!', action: 'change', rule: function (input) {
+                clientsince: { input: '#update_clientsince', message: 'Client Since is required!', action: 'change', rule: function (input) {
                         if($('#update_pitchstage').val()) {
                                 var pitchstage = $('#update_pitchstage').val();
                         } else {
@@ -1284,6 +1209,7 @@
                         return false;
                 }
                 //var filterGroups = $('#jqxgrid').jqxGrid('getfilterinformation');
+                var state = $("#jqxgrid").jqxGrid('savestate');
 
                 var recordid = $("#recordid").val();
                 var parentrecordid = $("#update_parentrecordid").val();
@@ -1329,15 +1255,10 @@
                         var pitchleader = $('#divPitchLeader').text();
                 }*/
                 var pitchstage = $('#update_pitchstage').val();
-                if($('#update_clientsincemonth').val()) {
-                        var clientsincemonth = $('#update_clientsincemonth').val();
+                if($('#update_clientsince').val()) {
+                        var clientsince = $('#update_clientsince').val();
                 } else {
-                        var clientsincemonth = $('#divClientMonth').text();
-                }
-                if($('#update_clientsinceyear').val()) {
-                        var clientsinceyear = $('#update_clientsinceyear').val();
-                } else {
-                        var clientsinceyear = $('#divClientYear').text();
+                        var clientsince = $('#divClientSince').text();
                 }
                 if($('#update_lostdate').val()) {
                         var lostdate = $('#update_lostdate').val();
@@ -1375,15 +1296,15 @@
                 var row = { RecordId: recordid, ClientName: clientname, ParentCompany: parentcompany, Region: region,
                     Country: country, City: city, LeadAgency: leadagency, ClientCategory: clientcategory,
                     PitchStart: pitchstart, /*PitchLeader: pitchleader,*/ PitchStage: pitchstage,
-                    ClientSinceMonth: clientsincemonth, ClientSinceYear: clientsinceyear, LostDate: lostdate,
+                    ClientSince: clientsince, LostDate: lostdate,
                     Service: service, Division: division, ActiveMarkets: activemarkets, Currency: currency,
                     EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
                 };
-                
+
                 var updateRow = { RecordId: recordid, ClientName: clientname, ParentCompany: parentcompany, Region: region,
                     Country: country, City: city, LeadAgency: leadagency, ClientCategory: clientcategory,
                     PitchStart: pitchstart, PitchStage: pitchstage,
-                    ClientMonth: arrMonths[(parseInt(clientsincemonth)-1)], ClientYear: clientsinceyear, LostDate: lostdate,
+                    ClientSince: clientsince, LostDate: lostdate,
                     Service: service, Division: division, ActiveMarkets: activemarkets, Currency: currency,
                     EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
                 };
@@ -1397,6 +1318,9 @@
                     success : function(result) {
                         if(result.success == true) {
                             $("#jqxgrid").jqxGrid('updateBoundData');
+                            if (state) {
+                                $("#jqxgrid").jqxGrid('loadstate', state);
+                            }
                             /*$("#jqxgrid").on("bindingcomplete", function (event) {
                                     applyFilters(filterGroups);
                             });*/
@@ -1410,10 +1334,10 @@
                 });
 
             });
-            
-            /*$("#addassociation").click(function () {
+
+            $("#addassociation").click(function () {
                 
-            });*/
+            });
         });
     </script>
     <div id="tab-menu" align="left">
@@ -1429,18 +1353,18 @@
                 $('#tab-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
                 $('#nav-menu div#-reports-client_report').addClass('selected');
         });
-</script>    
+</script>
 <div id='jqxWidget'>
         <!--<div style="margin-right: 7px; margin-bottom: 5px" align="right">
             <button style="margin-left: 5px" value="Manage Association" id="addassociation">MANAGE ASSOCIATIONS</button>
         </div>-->
-                    
+
         <div id="jqxgrid"></div>
         <div style='margin-top: 20px;'></div>
         <div style='float: right; padding-right: 7px; padding-bottom: 30px'>
             <button value="Add a new record" id='createNew'>ADD A NEW RECORD</button>
         </div>
-    
+
     <div id="popupWindow">
         <div>Add a new record</div>
         <div style="overflow: hidden;">
@@ -1497,14 +1421,9 @@
                     <td align="left" style="padding-bottom: 5px;"><div id="division"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
-                <tr id="trClientSinceMonth" style="display: none">
-                    <td align="right">Client Since Month</td>
-                    <td align="left" style="padding-bottom: 5px;"><div id="clientsincemonth"></div></td>
-                    <td style="width: 150px"></td>
-                </tr>
-                <tr id="trClientSinceYear" style="display: none">
-                    <td align="right">Client Since Year</td>
-                    <td align="left" style="padding-bottom: 5px;"><div id="clientsinceyear"></div></td>
+                <tr id="trClientSince" style="display: none">
+                    <td align="right">Client Since (M-Y)</td>
+                    <td align="left" style="padding-bottom: 5px;"><div id="clientsince"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
                 <tr id="trLostSince" style="display: none">
@@ -1607,14 +1526,9 @@
                     <td align="left" style="padding-bottom: 5px;"><div id="divDivision"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
-                <tr id="trUpdateClientSinceMonth" style="display: none">
-                    <td align="right" style="padding-bottom: 5px; padding-right: 5px">Client since M</td>
-                    <td align="left" style="padding-bottom: 5px;"><div id="divClientMonth"></div></td>
-                    <td style="width: 150px"></td>
-                </tr>
-                <tr id="trUpdateClientSinceYear" style="display: none">
-                    <td align="right" style="padding-bottom: 5px; padding-right: 5px">Client since Y</td>
-                    <td align="left" style="padding-bottom: 5px;"><div id="divClientYear"></div></td>
+                <tr id="trUpdateClientSince" style="display: none">
+                    <td align="right">Client Since (M-Y)</td>
+                    <td align="left" style="padding-bottom: 5px;"><div id="divClientSince"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
                 <tr id="trUpdateLostSince" style="display: none">

@@ -160,6 +160,7 @@
                 horizontalscrollbarstep: 50,
                 horizontalscrollbarlargestep: 200,
                 showpinnedcolumnbackground: false,
+                enablebrowserselection: true,
                 enablehover: false,
                 columns: [
                   {
@@ -215,11 +216,35 @@
                       } 
                   },
                   { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Address', columngroup: 'ContactDetails', datafield: 'Address', width: 250, cellClassName: cellclass, align: 'center', filterable: false },
+                  { text: 'Address', columngroup: 'ContactDetails', datafield: 'Address', width: 250, cellClassName: cellclass, align: 'center', filterable: false,
+                          cellsrenderer: function(row, cell, value) {
+                                if(value != '') {
+                                        return '<a style="text-decoration:none;color:#000" href="https://maps.google.com/?q='+value+'"/ target="_blank">'+value+'</a>'
+                                }
+                          }
+                  },
                   { text: 'Telephone', columngroup: 'ContactDetails', datafield: 'Telephone', width: 120, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: 'General email', columngroup: 'ContactDetails', datafield: 'GeneralEmail', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: 'Website', columngroup: 'ContactDetails', datafield: 'Website', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: 'Twitter', columngroup: 'ContactDetails', datafield: 'SocialAccount', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
+                  { text: 'General email', columngroup: 'ContactDetails', datafield: 'GeneralEmail', width: 150, cellClassName: cellclass, align: 'center', filterable: false,
+                          cellsrenderer: function(row, cell, value) {
+                                return '<a href="mailto:'+value+'"/ target="_blank">'+value+'</a>'
+                          }
+                  },
+                  { text: 'Website', columngroup: 'ContactDetails', datafield: 'Website', width: 150, cellClassName: cellclass, align: 'center', filterable: false,
+                          cellsrenderer: function(row, cell, value) {
+                                if(value.indexOf('http') != -1) {
+                                        return '<a href="'+value+'"/ target="_blank">'+value+'</a>'
+                                } else {
+                                        return '<a href="http://'+value+'"/ target="_blank">'+value+'</a>'
+                                }
+                          }
+                  },
+                  { text: 'Twitter', columngroup: 'ContactDetails', datafield: 'SocialAccount', width: 150, cellClassName: cellclass, align: 'center', filterable: false,
+                          cellsrenderer: function(row, cell, value) {
+                                if(value.indexOf('http') != -1) {
+                                        return '<a href="'+value+'"/ target="_blank">'+value+'</a>'
+                                }
+                          }
+                  },
                   { text: 'Executive contact', columngroup: 'KeyContacts', datafield: 'Executive', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: '# of employee or % FTE', columngroup: 'KeyContacts', datafield: 'countExecutive', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'CFO or finance lead', columngroup: 'KeyContacts', datafield: 'FinanceHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
@@ -494,7 +519,7 @@
                 $("#divExecutiveEmpCount").html('');
                 var inpExecutiveEmpCount = $("<input type=\"text\" id=\"executive_employee_count\" />");
                 $("#divExecutiveEmpCount").append(inpExecutiveEmpCount);
-                $("#executive_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 20%" }).val((rowData && rowData.countExecutive ? rowData.countExecutive : ''));
+                $("#executive_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countExecutive ? rowData.countExecutive : ''));
                 
                 if(rowData && rowData.FinanceHead) {
                         arrFinanceHead = rowData.FinanceHead.split("\n");
@@ -516,7 +541,7 @@
                 $("#divFinanceHeadEmpCount").html('');
                 var inpFinanceHeadEmpCount = $("<input type=\"text\" id=\"finance_employee_count\" />");
                 $("#divFinanceHeadEmpCount").append(inpFinanceHeadEmpCount);
-                $("#finance_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 20%" }).val((rowData && rowData.countFinanceHead ? rowData.countFinanceHead : ''));
+                $("#finance_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countFinanceHead ? rowData.countFinanceHead : ''));
                 
                 if(rowData && rowData.ProductHead) {
                         arrProductHead = rowData.ProductHead.split("\n");
@@ -538,7 +563,7 @@
                 $("#divProductHeadEmpCount").html('');
                 var inpProductHeadEmpCount = $("<input type=\"text\" id=\"product_employee_count\" />");
                 $("#divProductHeadEmpCount").append(inpProductHeadEmpCount);
-                $("#product_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 20%" }).val((rowData && rowData.countProductHead ? rowData.countProductHead : ''));
+                $("#product_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countProductHead ? rowData.countProductHead : ''));
                 
                 if(rowData && rowData.StrategyHead) {
                         arrStrategyHead = rowData.StrategyHead.split("\n");
@@ -560,7 +585,7 @@
                 $("#divStrategyHeadEmpCount").html('');
                 var inpStrategyHeadEmpCount = $("<input type=\"text\" id=\"strategy_employee_count\" />");
                 $("#divStrategyHeadEmpCount").append(inpStrategyHeadEmpCount);
-                $("#strategy_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 20%" }).val((rowData && rowData.countStrategyHead ? rowData.countStrategyHead : ''));
+                $("#strategy_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countStrategyHead ? rowData.countStrategyHead : ''));
                 
                 if(rowData && rowData.ClientHead) {
                         arrClientHead = rowData.ClientHead.split("\n");
@@ -582,7 +607,7 @@
                 $("#divClientHeadEmpCount").html('');
                 var inpClientHeadEmpCount = $("<input type=\"text\" id=\"client_employee_count\" />");
                 $("#divClientHeadEmpCount").append(inpClientHeadEmpCount);
-                $("#client_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 20%" }).val((rowData && rowData.countClientHead ? rowData.countClientHead : ''));
+                $("#client_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countClientHead ? rowData.countClientHead : ''));
 
                 if(rowData && rowData.BusinessHead) {
                         arrBusinessHead = rowData.BusinessHead.split("\n");
@@ -604,7 +629,7 @@
                 $("#divBusinessHeadEmpCount").html('');
                 var inpBusinessHeadEmpCount = $("<input type=\"text\" id=\"business_employee_count\" />");
                 $("#divBusinessHeadEmpCount").append(inpBusinessHeadEmpCount);
-                $("#business_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 20%" }).val((rowData && rowData.countBusinessHead ? rowData.countBusinessHead : ''));
+                $("#business_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countBusinessHead ? rowData.countBusinessHead : ''));
 
                 if(rowData && rowData.MarketingHead) {
                         arrMarketingHead = rowData.MarketingHead.split("\n");
@@ -626,7 +651,7 @@
                 $("#divMarketingHeadEmpCount").html('');
                 var inpMarketingHeadEmpCount = $("<input type=\"text\" id=\"marketing_employee_count\" />");
                 $("#divMarketingHeadEmpCount").append(inpMarketingHeadEmpCount);
-                $("#marketing_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 20%" }).val((rowData && rowData.countMarketingHead ? rowData.countMarketingHead : ''));
+                $("#marketing_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countMarketingHead ? rowData.countMarketingHead : ''));
                 
                 for (i = 0; i < arrServices.length; i++) {
                         if(rowData && rowData[arrServices[i]]) {
@@ -649,7 +674,7 @@
                         $("#div" + arrServices[i] + "EmpCount").html('');
                         var inpServiceEmpCount = $("<input type=\"text\" id=\"" + arrServices[i] + "_employee_count\" />");
                         $("#div" + arrServices[i] + "EmpCount").append(inpServiceEmpCount);
-                        $("#" + arrServices[i] + "_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 20%" }).val(rowData && rowData['count' + arrServices[i]] ? rowData['count' + arrServices[i]] : '');
+                        $("#" + arrServices[i] + "_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val(rowData && rowData['count' + arrServices[i]] ? rowData['count' + arrServices[i]] : '');
                 }
 
                 $("#divLanguagesSupported").html('');
@@ -1016,7 +1041,7 @@
                             </tr>
                         </table>
                         <div style="margin-top: 10px;">
-                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or % FTE</div>
+                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or FTE</div>
                             <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divExecutiveEmpCount"></div></div>
                             <div align="right" style="padding-bottom: 5px; float: right; padding-right: 25px"><a style="text-decoration: none; cursor: pointer" href="javascript:addContactRow('executive')">Add more...</a></div>
                             <input type="hidden" class="contact-row-count" id="executiveHeadCount" value="0"/>
@@ -1037,7 +1062,7 @@
                             </tr>
                         </table>
                         <div style="margin-top: 10px;">
-                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or % FTE</div>
+                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or FTE</div>
                             <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divFinanceHeadEmpCount"></div></div>
                             <div align="right" style="padding-bottom: 5px; float: right; padding-right: 25px"><a style="text-decoration: none; cursor: pointer" href="javascript:addContactRow('finance')">Add more...</a></div>
                             <input type="hidden" class="contact-row-count" id="financeHeadCount" value="0"/>
@@ -1058,7 +1083,7 @@
                             </tr>
                         </table>
                         <div style="margin-top: 10px;">
-                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or % FTE</div>
+                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or FTE</div>
                             <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divProductHeadEmpCount"></div></div>
                             <div align="right" style="padding-bottom: 5px; float: right; padding-right: 25px"><a style="text-decoration: none; cursor: pointer" href="javascript:addContactRow('product')">Add more...</a></div>
                             <input type="hidden" class="contact-row-count" id="productHeadCount" value="0"/>
@@ -1079,7 +1104,7 @@
                             </tr>
                         </table>
                         <div style="margin-top: 10px;">
-                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or % FTE</div>
+                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or FTE</div>
                             <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divStrategyHeadEmpCount"></div></div>
                             <div align="right" style="padding-bottom: 5px; float: right; padding-right: 25px"><a style="text-decoration: none; cursor: pointer" href="javascript:addContactRow('strategy')">Add more...</a></div>
                             <input type="hidden" class="contact-row-count" id="strategyHeadCount" value="0"/>
@@ -1100,7 +1125,7 @@
                             </tr>
                         </table>
                         <div style="margin-top: 10px;">
-                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or % FTE</div>
+                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or FTE</div>
                             <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divClientHeadEmpCount"></div></div>
                             <div align="right" style="padding-bottom: 5px; float: right; padding-right: 25px"><a style="text-decoration: none; cursor: pointer" href="javascript:addContactRow('client')">Add more...</a></div>
                             <input type="hidden" class="contact-row-count" id="clientHeadCount" value="0"/>
@@ -1121,7 +1146,7 @@
                             </tr>
                         </table>
                         <div style="margin-top: 10px;">
-                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or % FTE</div>
+                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or FTE</div>
                             <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divBusinessHeadEmpCount"></div></div>
                             <div align="right" style="padding-bottom: 5px; float: right; padding-right: 25px"><a style="text-decoration: none; cursor: pointer" href="javascript:addContactRow('business')">Add more...</a></div>
                             <input type="hidden" class="contact-row-count" id="businessHeadCount" value="0"/>
@@ -1142,7 +1167,7 @@
                             </tr>
                         </table>
                         <div style="margin-top: 10px;">
-                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or % FTE</div>
+                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or FTE</div>
                             <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divMarketingHeadEmpCount"></div></div>
                             <div align="right" style="padding-bottom: 5px; float: right; padding-right: 25px"><a style="text-decoration: none; cursor: pointer" href="javascript:addContactRow('marketing')">Add more...</a></div>
                             <input type="hidden" class="contact-row-count" id="marketingHeadCount" value="0"/>
@@ -1167,7 +1192,7 @@
                     </tr>
                 </table>
                 <div style="margin-top: 10px; margin-left: 10px;">
-                    <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or % FTE</div>
+                    <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;"># of employee or FTE</div>
                     <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="div<?php echo $service; ?>EmpCount"></div></div>
                     <div align="right" style="padding-bottom: 5px; float: right; padding-right: 25px"><a style="text-decoration: none; cursor: pointer" href="javascript:addContactRow('<?php echo $service; ?>', '1')">Add more...</a></div>
                     <input type="hidden" class="contact-row-count" id="<?php echo $service; ?>Count" value="0"/>

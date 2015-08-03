@@ -198,8 +198,9 @@ class ReportsController extends AppController {
                         $pitchDate = $pitchStart[1] . '-' . $pitchStart[0] . '-01';
                         //$pitchLeader = $arrData['PitchLeader'];
                         if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled') {
-                                $clientSinceMonth = $arrData['ClientSinceMonth'];
-                                $clientSinceYear = $arrData['ClientSinceYear'];
+                                $clientSince = explode('/', $arrData['ClientSince']);
+                                $clientSinceMonth = $clientSince[0];
+                                $clientSinceYear = $clientSince[1];
                         } else {
                                 $clientSinceMonth = null;
                                 $clientSinceYear = null;
@@ -597,12 +598,9 @@ class ReportsController extends AppController {
                         $pitchDate = $pitchStart[1] . '-' . $pitchStart[0] . '-01';
                         //$pitchLeader = trim($arrData['PitchLeader']);
                         if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled') {
-                                if(is_numeric(trim($arrData['ClientSinceMonth']))) {
-                                        $clientMonth = trim($arrData['ClientSinceMonth']);
-                                } else {
-                                        $clientMonth = array_search(trim($arrData['ClientSinceMonth']), $this->months);
-                                }
-                                $clientYear = trim($arrData['ClientSinceYear']);
+                                $clientSince = explode('/', $arrData['ClientSince']);
+                                $clientMonth = $clientSince[0];
+                                $clientYear = $clientSince[1];
                         } else {
                                 $clientMonth = null;
                                 $clientYear = null;
@@ -779,7 +777,7 @@ class ReportsController extends AppController {
                 $this->set('currencies', json_encode($this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'))));
                 $this->set('current_year', date('Y'));
 
-                $this->set('loggedUser', $this->Auth->user());    
+                $this->set('loggedUser', $this->Auth->user());
                 $this->set('userAcl', $this->Acl);
                 $this->set('userRole', $this->Auth->user('role'));
         }
@@ -1115,18 +1113,18 @@ class ReportsController extends AppController {
                         $arrServiceEmployeeCount = array();
                         foreach($office['OfficeEmployeeCountByDepartment'] as $officeEmployeeCountByDepartment) {
                                 if($officeEmployeeCountByDepartment['department_type'] == 'service') {
-                                        if($officeEmployeeCountByDepartment['count_type'] == 'FTE') {
+                                        /*if($officeEmployeeCountByDepartment['count_type'] == 'FTE') {
                                                 $arrServiceEmployeeCount[$officeEmployeeCountByDepartment['department_id']] = round(($officeEmployeeCountByDepartment['employee_count']*100),2) . '%';
-                                        } else {
+                                        } else {*/
                                                 $arrServiceEmployeeCount[$officeEmployeeCountByDepartment['department_id']] = round($officeEmployeeCountByDepartment['employee_count'],2);
-                                        }
+                                        //}
                                         $totalServiceEmpCount += $officeEmployeeCountByDepartment['employee_count'];
                                 } else {
-                                        if($officeEmployeeCountByDepartment['count_type'] == 'FTE') {
+                                        /*if($officeEmployeeCountByDepartment['count_type'] == 'FTE') {
                                                 $arrKeyEmployeeCount[$officeEmployeeCountByDepartment['department_type']] = round(($officeEmployeeCountByDepartment['employee_count']*100),2) . '%';
-                                        } else {
+                                        } else {*/
                                                 $arrKeyEmployeeCount[$officeEmployeeCountByDepartment['department_type']] = round($officeEmployeeCountByDepartment['employee_count'],2);
-                                        }
+                                        //}
                                         $totalKeyEmpCount += $officeEmployeeCountByDepartment['employee_count'];
                                 }
                         }
@@ -1620,54 +1618,54 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->SetCellValue('I2', 'Website');
                         $objPHPExcel->getActiveSheet()->SetCellValue('J2', 'Twitter');
                         $objPHPExcel->getActiveSheet()->SetCellValue('K2', 'Executive Contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('L2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('L2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('M2', 'CFO or Finacial Lead (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('N2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('N2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('O2', 'Head of Products & Services (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('P2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('P2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('Q2', 'Head of Stratetgy (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('R2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('R2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('S2', 'Head of Client Services (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('T2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('T2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('U2', 'New Business (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('V2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('V2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('W2', 'Marketing (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('X2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('X2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('Y2', 'Total # management employees');
                         $objPHPExcel->getActiveSheet()->SetCellValue('Z2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AA2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AA2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AB2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AC2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AC2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AD2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AE2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AE2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AF2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AG2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AG2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AH2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AI2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AI2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AJ2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AK2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AK2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AL2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AM2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AM2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AN2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AO2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AO2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AP2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AQ2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AQ2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AR2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AS2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AS2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AT2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AU2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AU2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AV2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AW2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AW2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AX2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AY2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AY2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('AZ2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BA2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BA2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BB2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BC2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BC2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BD2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BE2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BE2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BF2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BG2', '# employees or % FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BG2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BH2', 'Total # management employees');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BI2', '# of supported languages');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BJ2', 'List supported languages');
