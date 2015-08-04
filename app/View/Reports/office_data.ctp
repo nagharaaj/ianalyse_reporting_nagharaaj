@@ -157,6 +157,7 @@
                 autorowheight: true,
                 selectionmode: 'none',
                 columnsresize: true,
+                columnsheight: 50,
                 horizontalscrollbarstep: 50,
                 horizontalscrollbarlargestep: 200,
                 showpinnedcolumnbackground: false,
@@ -246,57 +247,57 @@
                           }
                   },
                   { text: 'Executive contact', columngroup: 'KeyContacts', datafield: 'Executive', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'KeyContacts', datafield: 'countExecutive', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countExecutive', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'CFO or finance lead', columngroup: 'KeyContacts', datafield: 'FinanceHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'KeyContacts', datafield: 'countFinanceHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Head of product and services', columngroup: 'KeyContacts', datafield: 'ProductHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'KeyContacts', datafield: 'countProductHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countFinanceHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: 'Head of product<br/>and services', columngroup: 'KeyContacts', datafield: 'ProductHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
+                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countProductHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Head of strategy', columngroup: 'KeyContacts', datafield: 'StrategyHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'KeyContacts', datafield: 'countStrategyHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countStrategyHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Head of client services', columngroup: 'KeyContacts', datafield: 'ClientHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'KeyContacts', datafield: 'countClientHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countClientHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'New business', columngroup: 'KeyContacts', datafield: 'BusinessHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'KeyContacts', datafield: 'countBusinessHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countBusinessHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Marketing', columngroup: 'KeyContacts', datafield: 'MarketingHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'KeyContacts', datafield: 'countMarketingHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Total # employees', datafield: 'totalKeyEmployeeCount', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countMarketingHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: 'Total # employees', datafield: 'totalKeyEmployeeCount', width: 110, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Affiliates', datafield: 'Affiliates', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Affiliates', datafield: 'countAffiliates', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Affiliates', datafield: 'countAffiliates', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Content', datafield: 'Content', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Content', datafield: 'countContent', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Content', datafield: 'countContent', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Conversion', datafield: 'Conversion', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Conversion', datafield: 'countConversion', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Conversion', datafield: 'countConversion', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Data', datafield: 'Data', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Data', datafield: 'countData', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Data', datafield: 'countData', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Development', datafield: 'Development', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Development', datafield: 'countDevelopment', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Development', datafield: 'countDevelopment', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Display', datafield: 'Display', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Display', datafield: 'countDisplay', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Display', datafield: 'countDisplay', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Feeds', datafield: 'Feeds', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Feeds', datafield: 'countFeeds', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Feeds', datafield: 'countFeeds', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Lead', datafield: 'Lead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Lead', datafield: 'countLead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Lead', datafield: 'countLead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Mobile', datafield: 'Mobile', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Mobile', datafield: 'countMobile', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Mobile', datafield: 'countMobile', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'RTB', datafield: 'RTB', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'RTB', datafield: 'countRTB', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'RTB', datafield: 'countRTB', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Search', datafield: 'Search', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Search', datafield: 'countSearch', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Search', datafield: 'countSearch', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'SEO', datafield: 'SEO', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'SEO', datafield: 'countSEO', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'SEO', datafield: 'countSEO', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'SocialPaid', datafield: 'SocialPaid', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'SocialPaid', datafield: 'countSocialPaid', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'SocialPaid', datafield: 'countSocialPaid', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'SocialManagement', datafield: 'SocialManagement', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'SocialManagement', datafield: 'countSocialManagement', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'SocialManagement', datafield: 'countSocialManagement', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Strategy', datafield: 'Strategy', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Strategy', datafield: 'countStrategy', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Strategy', datafield: 'countStrategy', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Technology', datafield: 'Technology', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Technology', datafield: 'countTechnology', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Technology', datafield: 'countTechnology', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Video', datafield: 'Video', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee or % FTE', columngroup: 'Video', datafield: 'countVideo', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Total # employees', datafield: 'totalServiceEmployeeCount', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: '# of supported languages', columngroup: 'Languages', datafield: 'countSupportedLanguages', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'List supported languages', columngroup: 'Languages', datafield: 'SupportedLanguages', width: 200, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', 
+                  { text: '# of employee<br/>or FTE', columngroup: 'Video', datafield: 'countVideo', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: 'Total # employees', datafield: 'totalServiceEmployeeCount', width: 110, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: '# of supported<br/>languages', columngroup: 'Languages', datafield: 'countSupportedLanguages', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: 'List supported<br/>languages', columngroup: 'Languages', datafield: 'SupportedLanguages', width: 200, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', 
                       createfilterwidget: function (column, columnElement, widget) {
                           widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 200 });
                       } 
@@ -500,10 +501,10 @@
                 $("#social_account").jqxInput({ height: 25, width: 250 }).val((rowData ? rowData.SocialAccount : ''));
                 
                 if(rowData && rowData.Executive) {
-                        arrExecutive = rowData.Executive.split("\n");
+                        arrExecutive = rowData.Executive.split("<br/>-------------------------<br/>");
                         $.each(arrExecutive, function(index, value) {
                                 if(index == 0) {
-                                        var executiveDetails = value.split("/");
+                                        var executiveDetails = value.split("<br/>");
                                         $("#executive_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(executiveDetails[0]);
                                         $("#executive_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((executiveDetails[1] != 'title' ? executiveDetails[1] : ''));
                                         $("#executive_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((executiveDetails[2] != 'email' ? executiveDetails[2] : ''));
@@ -522,10 +523,10 @@
                 $("#executive_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countExecutive ? rowData.countExecutive : ''));
                 
                 if(rowData && rowData.FinanceHead) {
-                        arrFinanceHead = rowData.FinanceHead.split("\n");
+                        arrFinanceHead = rowData.FinanceHead.split("<br/>-------------------------<br/>");
                         $.each(arrFinanceHead, function(index, value) {
                                 if(index == 0) {
-                                        var financeHeadDetails = value.split("/");
+                                        var financeHeadDetails = value.split("<br/>");
                                         $("#finance_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(financeHeadDetails[0]);
                                         $("#finance_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((financeHeadDetails[1] != 'title' ? financeHeadDetails[1] : ''));
                                         $("#finance_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((financeHeadDetails[2] != 'email' ? financeHeadDetails[2] : ''));
@@ -544,10 +545,10 @@
                 $("#finance_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countFinanceHead ? rowData.countFinanceHead : ''));
                 
                 if(rowData && rowData.ProductHead) {
-                        arrProductHead = rowData.ProductHead.split("\n");
+                        arrProductHead = rowData.ProductHead.split("<br/>-------------------------<br/>");
                         $.each(arrProductHead, function(index, value) {
                                 if(index == 0) {
-                                        var productHeadDetails = value.split("/");
+                                        var productHeadDetails = value.split("<br/>");
                                         $("#product_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(productHeadDetails[0]);
                                         $("#product_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((productHeadDetails[1] != 'title' ? productHeadDetails[1] : ''));
                                         $("#product_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((productHeadDetails[2] != 'email' ? productHeadDetails[2] : ''));
@@ -566,10 +567,10 @@
                 $("#product_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countProductHead ? rowData.countProductHead : ''));
                 
                 if(rowData && rowData.StrategyHead) {
-                        arrStrategyHead = rowData.StrategyHead.split("\n");
+                        arrStrategyHead = rowData.StrategyHead.split("<br/>-------------------------<br/>");
                         $.each(arrStrategyHead, function(index, value) {
                                 if(index == 0) {
-                                        var strategyHeadDetails = value.split("/");
+                                        var strategyHeadDetails = value.split("<br/>");
                                         $("#strategy_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(strategyHeadDetails[0]);
                                         $("#strategy_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((strategyHeadDetails[1] != 'title' ? strategyHeadDetails[1] : ''));
                                         $("#strategy_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((strategyHeadDetails[2] != 'email' ? strategyHeadDetails[2] : ''));
@@ -588,10 +589,10 @@
                 $("#strategy_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countStrategyHead ? rowData.countStrategyHead : ''));
                 
                 if(rowData && rowData.ClientHead) {
-                        arrClientHead = rowData.ClientHead.split("\n");
+                        arrClientHead = rowData.ClientHead.split("<br/>-------------------------<br/>");
                         $.each(arrClientHead, function(index, value) {
                                 if(index == 0) {
-                                        var clientHeadDetails = value.split("/");
+                                        var clientHeadDetails = value.split("<br/>");
                                         $("#client_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(clientHeadDetails[0]);
                                         $("#client_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((clientHeadDetails[1] != 'title' ? clientHeadDetails[1] : ''));
                                         $("#client_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((clientHeadDetails[2] != 'email' ? clientHeadDetails[2] : ''));
@@ -610,10 +611,10 @@
                 $("#client_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countClientHead ? rowData.countClientHead : ''));
 
                 if(rowData && rowData.BusinessHead) {
-                        arrBusinessHead = rowData.BusinessHead.split("\n");
+                        arrBusinessHead = rowData.BusinessHead.split("<br/>-------------------------<br/>");
                         $.each(arrBusinessHead, function(index, value) {
                                 if(index == 0) {
-                                        var businessHeadDetails = value.split("/");
+                                        var businessHeadDetails = value.split("<br/>");
                                         $("#business_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(businessHeadDetails[0]);
                                         $("#business_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((businessHeadDetails[1] != 'title' ? businessHeadDetails[1] : ''));
                                         $("#business_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((businessHeadDetails[2] != 'email' ? businessHeadDetails[2] : ''));
@@ -632,10 +633,10 @@
                 $("#business_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countBusinessHead ? rowData.countBusinessHead : ''));
 
                 if(rowData && rowData.MarketingHead) {
-                        arrMarketingHead = rowData.MarketingHead.split("\n");
+                        arrMarketingHead = rowData.MarketingHead.split("<br/>-------------------------<br/>");
                         $.each(arrMarketingHead, function(index, value) {
                                 if(index == 0) {
-                                        var marketingHeadDetails = value.split("/");
+                                        var marketingHeadDetails = value.split("<br/>");
                                         $("#marketing_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(marketingHeadDetails[0]);
                                         $("#marketing_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((marketingHeadDetails[1] != 'title' ? marketingHeadDetails[1] : ''));
                                         $("#marketing_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((marketingHeadDetails[2] != 'email' ? marketingHeadDetails[2] : ''));
@@ -655,10 +656,10 @@
                 
                 for (i = 0; i < arrServices.length; i++) {
                         if(rowData && rowData[arrServices[i]]) {
-                                arrServiceContact = rowData[arrServices[i]].split("\n");
+                                arrServiceContact = rowData[arrServices[i]].split("<br/>-------------------------<br/>");
                                 $.each(arrServiceContact, function(index, value) {
                                         if(index == 0) {
-                                                var ServiceContactDetails = value.split("/");
+                                                var ServiceContactDetails = value.split("<br/>");
                                                 $("#" + arrServices[i] + "_contact_name_0").jqxInput({ height: 25, width: 310 }).val(ServiceContactDetails[0]);
                                                 $("#" + arrServices[i] + "_contact_title_0").jqxInput({ height: 25, width: 310 }).val((ServiceContactDetails[1] != 'title' ? ServiceContactDetails[1] : ''));
                                                 $("#" + arrServices[i] + "_contact_email_0").jqxInput({ height: 25, width: 310 }).val((ServiceContactDetails[2] != 'email' ? ServiceContactDetails[2] : ''));
@@ -898,7 +899,7 @@
         });
         var addContactRow = function (rowType, serviceFlag, data) {
                 if(data) {
-                        var dataDetails = data.split("/");
+                        var dataDetails = data.split("<br/>");
                 } else {
                         var dataDetails = [];
                 }

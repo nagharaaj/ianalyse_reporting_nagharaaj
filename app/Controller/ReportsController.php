@@ -1092,22 +1092,22 @@ class ReportsController extends AppController {
                                 }
                         }
                         if(!empty($arrTelephones)) {
-                                $officeData[$i]['Telephone'] = implode("\n", $arrTelephones);
+                                $officeData[$i]['Telephone'] = implode("<br/>", $arrTelephones);
                         } else {
                                 $officeData[$i]['Telephone'] = '';
                         }
                         if(!empty($arrEmails)) {
-                                $officeData[$i]['GeneralEmail'] = implode("\n", $arrEmails);
+                                $officeData[$i]['GeneralEmail'] = implode("<br/>", $arrEmails);
                         } else {
                                 $officeData[$i]['GeneralEmail'] = '';
                         }
                         if(!empty($arrWebsites)) {
-                                $officeData[$i]['Website'] = implode("\n", $arrWebsites);
+                                $officeData[$i]['Website'] = implode("<br/>", $arrWebsites);
                         } else {
                                 $officeData[$i]['Website'] = '';
                         }
                         if(!empty($arrSocialAccounts)) {
-                                $officeData[$i]['SocialAccount'] = implode("\n", $arrSocialAccounts);
+                                $officeData[$i]['SocialAccount'] = implode("<br/>", $arrSocialAccounts);
                         } else {
                                 $officeData[$i]['SocialAccount'] = '';
                         }
@@ -1136,11 +1136,11 @@ class ReportsController extends AppController {
 
                         $keyContacts = array();
                         foreach($office['OfficeKeyContact'] as $officeKeyContact) {
-                                $keyContacts[$officeKeyContact['contact_type']][] = $officeKeyContact['contact_name'] . (!empty($officeKeyContact['contact_title']) ? '/' . $officeKeyContact['contact_title'] : '/title') . (!empty($officeKeyContact['contact_email']) ? '/' . $officeKeyContact['contact_email'] : '/email');
+                                $keyContacts[$officeKeyContact['contact_type']][] = $officeKeyContact['contact_name'] . (!empty($officeKeyContact['contact_title']) ? "<br/>" . $officeKeyContact['contact_title'] : "<br/>" . 'title') . (!empty($officeKeyContact['contact_email']) ? "<br/>" . $officeKeyContact['contact_email'] : "<br/>" . 'email');
                         }
                         foreach($arrKeyDepts as $key => $keyDept) {
                                 if(isset($keyContacts[$keyDept])) {
-                                        $officeData[$i][$key] = implode("\n", $keyContacts[$keyDept]);
+                                        $officeData[$i][$key] = implode("<br/>-------------------------<br/>", $keyContacts[$keyDept]);
                                 } else {
                                         $officeData[$i][$key] = '';
                                 }
@@ -1155,11 +1155,11 @@ class ReportsController extends AppController {
 
                         $serviceContacts = array();
                         foreach($office['OfficeServiceContact'] as $officeServiceContact) {
-                                $serviceContacts[$officeServiceContact['service_id']][] = $officeServiceContact['contact_name'] . (!empty($officeServiceContact['contact_title']) ? '/' . $officeServiceContact['contact_title'] : '/title') . (!empty($officeServiceContact['contact_email']) ? '/' . $officeServiceContact['contact_email'] : '/email');
+                                $serviceContacts[$officeServiceContact['service_id']][] = $officeServiceContact['contact_name'] . (!empty($officeServiceContact['contact_title']) ? "<br/>" . $officeServiceContact['contact_title'] : "<br/>" . 'title') . (!empty($officeServiceContact['contact_email']) ? "<br/>" . $officeServiceContact['contact_email'] : "<br/>" . 'email');
                         }
                         foreach($arrServices as $serviceId => $service) {
                                 if(isset($serviceContacts[$serviceId])) {
-                                        $officeData[$i][$service] = implode("\n", $serviceContacts[$serviceId]);
+                                        $officeData[$i][$service] = implode("<br/>-------------------------<br/>", $serviceContacts[$serviceId]);
                                 } else {
                                         $officeData[$i][$service] = '';
                                 }
@@ -1680,14 +1680,14 @@ class ReportsController extends AppController {
                         foreach($arrData as $data) {
                                 $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'], $data['YearEstablished'], 
                                     $data['TotalEmployee'], $data['Address'], $data['Telephone'], $data['GeneralEmail'], $data['Website'], $data['SocialAccount'],
-                                    $data['Executive'], $data['countExecutive'], $data['FinanceHead'], $data['countFinanceHead'], $data['ProductHead'], $data['countProductHead'],
-                                    $data['StrategyHead'], $data['countStrategyHead'], $data['ClientHead'], $data['countClientHead'], $data['BusinessHead'], $data['countBusinessHead'],
-                                    $data['MarketingHead'], $data['countMarketingHead'], $data['totalKeyEmployeeCount'], $data['Affiliates'], $data['countAffiliates'],
-                                    $data['Content'], $data['countContent'], $data['Conversion'], $data['countConversion'], $data['Data'], $data['countData'],
-                                    $data['Development'], $data['countDevelopment'], $data['Display'], $data['countDisplay'], $data['Feeds'], $data['countFeeds'],
-                                    $data['Lead'], $data['countLead'], $data['Mobile'], $data['countMobile'], $data['RTB'], $data['countRTB'], $data['Search'], $data['countSearch'],
-                                    $data['SEO'], $data['countSEO'], $data['SocialPaid'], $data['countSocialPaid'], $data['SocialMangement'], $data['countSocialMangement'],
-                                    $data['Strategy'], $data['countStrategy'], $data['Technology'], $data['countTechnology'], $data['Video'], $data['countVideo'], $data['totalServiceEmployeeCount'],
+                                    str_replace('<br/>', "\n", $data['Executive']), $data['countExecutive'], str_replace('<br/>', "\n", $data['FinanceHead']), $data['countFinanceHead'], str_replace('<br/>', "\n", $data['ProductHead']), $data['countProductHead'],
+                                    str_replace('<br/>', "\n", $data['StrategyHead']), $data['countStrategyHead'], str_replace('<br/>', "\n", $data['ClientHead']), $data['countClientHead'], str_replace('<br/>', "\n", $data['BusinessHead']), $data['countBusinessHead'],
+                                    str_replace('<br/>', "\n", $data['MarketingHead']), $data['countMarketingHead'], $data['totalKeyEmployeeCount'], str_replace('<br/>', "\n", $data['Affiliates']), $data['countAffiliates'],
+                                    str_replace('<br/>', "\n", $data['Content']), $data['countContent'], str_replace('<br/>', "\n", $data['Conversion']), $data['countConversion'], str_replace('<br/>', "\n", $data['Data']), $data['countData'],
+                                    str_replace('<br/>', "\n", $data['Development']), $data['countDevelopment'], str_replace('<br/>', "\n", $data['Display']), $data['countDisplay'], str_replace('<br/>', "\n", $data['Feeds']), $data['countFeeds'],
+                                    str_replace('<br/>', "\n", $data['Lead']), $data['countLead'], str_replace('<br/>', "\n", $data['Mobile']), $data['countMobile'], str_replace('<br/>', "\n", $data['RTB']), $data['countRTB'], str_replace('<br/>', "\n", $data['Search']), $data['countSearch'],
+                                    str_replace('<br/>', "\n", $data['SEO'], $data['countSEO']), str_replace('<br/>', "\n", $data['SocialPaid']), $data['countSocialPaid'], str_replace('<br/>', "\n", $data['SocialMangement']), $data['countSocialMangement'],
+                                    str_replace('<br/>', "\n", $data['Strategy']), $data['countStrategy'], str_replace('<br/>', "\n", $data['Technology']), $data['countTechnology'], str_replace('<br/>', "\n", $data['Video']), $data['countVideo'], $data['totalServiceEmployeeCount'],
                                     $data['countSupportedLanguages'], $data['SupportedLanguages']);
                                 $i++;
                         }
