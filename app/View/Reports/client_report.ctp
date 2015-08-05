@@ -358,7 +358,7 @@
     </script>
     <div id="tab-menu" align="left">
         <?php
-                if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/client_report') && $loggedUser['role'] != 'Viewer') {
+                if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/client_report') && !preg_match('/Viewer/', $loggedUser['role'])) {
         ?>
             <div id="-reports-client-report" class="light-grey selected">
                     <a href="/reports/client_report">SEARCH</a>

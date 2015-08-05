@@ -143,12 +143,13 @@ $config['rules'] = array(
                 'controllers/reports/client_report' => 'Role/Viewer, Role/CountryViewer',
                 'controllers/reports/get_client_report_data' => 'Role/Viewer, Role/CountryViewer',
                 'controllers/reports/export_client_data' => 'Role/Viewer, Role/CountryViewer',
-                'controllers/reports/office_data' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/reports/office_report' => 'Role/Viewer, Role/CountryViewer',
                 'controllers/reports/get_office_data' => 'Role/Viewer, Role/CountryViewer',
                 'controllers/reports/export_office_data' => 'Role/Viewer, Role/CountryViewer',
         ),
         'deny' => array(
                 'controllers/users/user_permissions' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer',
-                'controllers/reports/client_data' => 'Role/Viewer, Role/CountryViewer'
+                'controllers/reports/client_data' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/reports/office_data' => 'Role/Viewer, Role/CountryViewer'
         ),
 );

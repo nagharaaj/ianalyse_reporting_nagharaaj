@@ -20,34 +20,12 @@
                  return '<div style="text-align: center; margin-top: 5px;">' + (1 + value) + '</div>';
              }
              
-             var calculateStats = function () {
-                var dataRows = $('#jqxgrid').jqxGrid('getrows');
-                var rowscount = dataRows.length;
-                $('#no_of_records span').text(rowscount);
-                var employeesCount = 0;
-                var keyContactsCount = 0;
-                var servicesContactsCount = 0;
-                for(var i = 0; i < rowscount; i++) {
-                        if(!isNaN(parseFloat(dataRows[i].TotalEmployee))) {
-                                employeesCount = employeesCount + parseFloat(dataRows[i].TotalEmployee);
-                        }
-                        if(!isNaN(parseFloat(dataRows[i].TotalEmployee))) {
-                                keyContactsCount = keyContactsCount + parseFloat(dataRows[i].totalKeyEmployeeCount);
-                        }
-                        if(!isNaN(parseFloat(dataRows[i].TotalEmployee))) {
-                                servicesContactsCount = servicesContactsCount + parseFloat(dataRows[i].totalServiceEmployeeCount);
-                        }
-                }
-                $('#no_of_employees span').text(Math.round(employeesCount));
-                $('#no_of_key_employees span').text(Math.round(keyContactsCount));
-                $('#no_of_service_employees span').text(Math.round(servicesContactsCount));
-             }
-             
              var source =
              {
                 dataType: "json",
                 id: 'id',
                 url: "/reports/get_office_data/",
+                data: { mode: 'edit' },
                 datafields: [
                     { name: 'RecordId', type: 'number' },
                     { name: 'Region', type: 'string' },
@@ -326,11 +304,9 @@
                   { text: 'Technology', align: 'center', name: 'Technology' },
                   { text: 'Video', align: 'center', name: 'Video' },
                   { text: 'Languages', align: 'center', name: 'Languages' }
-                ],
-                ready: calculateStats
+                ]
             });
             $("#jqxgrid").on("filter", function (event) {
-                    calculateStats();
                     var paginginfo = $("#jqxgrid").jqxGrid('getpaginginformation');
                     if(paginginfo.pagescount <= 1) {
                         $('#pagerjqxgrid').hide();
@@ -415,13 +391,6 @@
                     });
                 }
             }
-            $('#clearfilteringbutton').jqxButton({ theme: theme });
-            $('#exporttoexcelbutton').jqxButton({ theme: theme });
-            // clear the filtering.
-            $('#clearfilteringbutton').click(function () {
-                $("#jqxgrid").jqxGrid('clearfilters');
-                calculateStats();
-            });
 
             $("#popupWindow").jqxWindow({
                 width: 1100, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelNew"), maxWidth: 1200, maxHeight: 750, showCloseButton: false 
@@ -870,31 +839,6 @@
                         } 
                 }
             }
-            $("#loaderWindow").jqxWindow({
-                width: 300, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none' 
-            });
-            $('#exporttoexcelbutton').click(function () {
-                $("#loaderWindow").jqxWindow({ position: { x: 'center', y: 'top' }, height: "100px", maxWidth: 400, isModal: true, draggable: false });
-                $("#loaderWindow").jqxWindow('open');
-
-                var rows = $("#jqxgrid").jqxGrid('getrows');
-                $.ajax({
-                    type: "POST",
-                    url: "/reports/export_office_data/",
-                    data: JSON.stringify(rows),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success : function(result) {
-                        if(result.success == true) {
-                            $("#loaderWindow").jqxWindow('close');
-                            window.open('/files/Office_Data_<?php echo date('m-d-Y'); ?>.xlsx');
-                        } else {
-                            alert(result.errors);
-                            return false;
-                        }
-                    }
-                });
-            });
             
         });
         var addContactRow = function (rowType, serviceFlag, data) {
@@ -941,24 +885,24 @@
                 }
         }
     </script>
+    <div id="tab-menu" align="left">
+            <div id="-reports-client-report" class="light-grey">
+                    <a href="/reports/office_report">SEARCH</a>
+            </div>
+            <div id="-reports-client-data" class="light-grey selected">
+                    <a href="/reports/office_data">UPDATE YOUR RECORDS</a>
+            </div>
+    </div>
+<script type="text/javascript">
+        $(document).ready(function() {
+                $('#tab-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
+                $('#nav-menu div#-reports-office_report').addClass('selected');
+        });
+</script>
 
 <div id='jqxWidget'>
-        <div style="margin-right: 7px; margin-bottom: 5px;" align="right">
-            <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
-            <button style="margin-left:5px" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
-        </div>
         <div id="jqxgrid"></div>
             <div style='margin-top: 20px;'>
-        </div>
-        
-        <div style="margin-right: 5px; margin-top: 5px; margin-bottom: 10px;" align="right">
-                <fieldset style="width: 260px">
-                        <legend>Quick stats</legend>
-                        <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 70px;"></span></div>
-                        <div id="no_of_employees" style="padding-bottom: 5px">Employees <span style="display: inline-block; width: 70px;"></span></div>
-                        <div id="no_of_key_employees" style="padding-bottom: 5px">Key Management Contacts <span style="display: inline-block; width: 70px;"></span></div>
-                        <div id="no_of_service_employees" style="padding-bottom: 5px">Services Contacts <span style="display: inline-block; width: 70px;"></span></div>
-                </fieldset>
         </div>
         
         <?php if($userRole == 'Global') { ?>
@@ -1217,14 +1161,4 @@
         <div style="padding-top: 20px; padding-bottom: 20px;" align="right"><button style="margin-right: 15px;" id="SaveNew">CREATE NEW LOCATION</button></div>
         </div>
    </div>
-
-        <div id="loaderWindow">
-                <div>Export to excel</div>
-                <div style="overflow: hidden;">
-                        <div id="divLoader" align="center" style="padding-top: 15px; padding-left: 90px;">
-                                <div class="jqx-grid-load" style="float: left; overflow: hidden; width: 32px; height: 32px;"></div>
-                                <span style="margin-top: 10px; float: left; display: block; margin-left: 5px;">Please wait...</span>
-                        </div>
-                </div>
-        </div>
 </div>

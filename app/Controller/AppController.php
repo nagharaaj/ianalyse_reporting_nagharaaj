@@ -47,7 +47,7 @@ class AppController extends Controller {
         'OVERVIEW' => '/dashboard/index',
         'DASHBOARD' => '/dashboard/global_growth',
         'CLIENT & NEW BUSINESS DATA' => '/reports/client_report',
-        'OFFICE DATA' => '/reports/office_data',
+        'OFFICE DATA' => '/reports/office_report',
         'PERMISSIONS' => '/users/user_permissions',
         'HELP' => '/help/index'
     );

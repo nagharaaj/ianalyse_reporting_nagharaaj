@@ -1012,10 +1012,6 @@ class ReportsController extends AppController {
                 return json_encode($result);
         }
 
-        public function client_report_new() {
-
-        }
-
         public function office_data() {
 
                 $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
@@ -1060,6 +1056,20 @@ class ReportsController extends AppController {
 
                 $i = 0;
                 $conditions = array();
+                if(isset($_GET['mode']) && $_GET['mode'] == 'edit') {
+                        if ($this->Auth->user('role') == 'Regional') {
+                                $region = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                                $conditions[] = 'Office.region_id = ' . $region['UserMarket']['market_id'];
+                        }
+                        if ($this->Auth->user('role') == 'Country') {
+                                $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                                $arrCountries = array();
+                                foreach ($countries as $country) {
+                                        $arrCountries[] = $country['UserMarket']['market_id'];
+                                }
+                                $conditions[] = 'Office.country_id IN (' . implode(',', $arrCountries) . ')';
+                        }
+                }
                 $this->Office->Behaviors->attach('Containable');
                 $offices = $this->Office->find('all', array('conditions' => $conditions, 'order' => 'Region.region Asc, Country.country, City.city'));
 
@@ -1458,6 +1468,13 @@ class ReportsController extends AppController {
                                 return json_encode($result);
                         }
                 }
+        }
+
+        public function office_report() {
+
+                $this->set('userRole', $this->Auth->user('role'));
+                $this->set('loggedUser', $this->Auth->user());
+                $this->set('userAcl', $this->Acl);
         }
 
         public function export_office_data() {
