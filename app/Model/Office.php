@@ -4,7 +4,7 @@ App::uses('AppModel', 'Model');
 class Office extends AppModel {
 
     public $displayField = 'address';
-    
+
 /**
  * belongsTo associations
  *
@@ -33,7 +33,7 @@ class Office extends AppModel {
 			'order' => ''
 		)
 	);
-        
+
 /**
  * hasMany associations
  *

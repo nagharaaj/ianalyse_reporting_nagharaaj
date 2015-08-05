@@ -2,7 +2,7 @@
 App::uses('AppModel', 'Model');
 
 class UserLoginRole extends AppModel {
-    
+
     public $belongsTo = array(
         'User' => array(
             'className' => 'User',

@@ -9,5 +9,5 @@ class Language extends AppModel {
  *
  * @var array
  */
-        
+
 }

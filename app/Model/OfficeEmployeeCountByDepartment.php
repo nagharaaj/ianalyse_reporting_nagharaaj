@@ -8,5 +8,5 @@ class OfficeEmployeeCountByDepartment extends AppModel {
  *
  * @var array
  */
-        
+
 }
