@@ -117,6 +117,21 @@
                     }
                 });
         });
+        
+        var timer;
+        var wait=20;
+        document.onkeypress=resetTimer;
+        document.onmousemove=resetTimer;
+        function resetTimer()
+        {
+            clearTimeout(timer);
+            timer=setTimeout("logout()", 60000*wait);
+        }
+
+        function logout()
+        {
+            window.location.href='/users/logout';
+        }
 </script>                
                 <br/>
                 <div id="content">
