@@ -29,6 +29,13 @@ class ReportsController extends AppController {
             'UserLoginRole',
             'ClientDeleteLog'
         );
+        
+        public $unwanted_array = array(    'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
+                            'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
+                            'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
+                            'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
+                            'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y' );
+
 
         public $months = array(1 => 'Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)');
 
@@ -374,7 +381,9 @@ class ReportsController extends AppController {
                         }
                         $clientData[$i]['LeadAgency'] = $client[0]['agency'];
                         $clientData[$i]['ClientName'] = $client['ClientRevenueByService']['client_name'];
+                        $clientData[$i]['SearchClientName'] = strtr( $client['ClientRevenueByService']['client_name'], $this->unwanted_array );
                         $clientData[$i]['ParentCompany'] = $client['ClientRevenueByService']['parent_company'];
+                        $clientData[$i]['SearchParentCompany'] = strtr( $client['ClientRevenueByService']['parent_company'], $this->unwanted_array );
                         $clientData[$i]['ClientCategory'] = $client[0]['category'];
                         if ($client['ClientRevenueByService']['pitch_date'] != '0000-00-00') {
                                 $pitchDate = explode('-', $client['ClientRevenueByService']['pitch_date']);
@@ -451,7 +460,9 @@ class ReportsController extends AppController {
                         }
                         $clientData[$i]['LeadAgency'] = $client[0]['agency'];
                         $clientData[$i]['ClientName'] = $client['ClientRevenueByService']['client_name'];
+                        $clientData[$i]['SearchClientName'] = strtr( $client['ClientRevenueByService']['client_name'], $this->unwanted_array );
                         $clientData[$i]['ParentCompany'] = $client['ClientRevenueByService']['parent_company'];
+                        $clientData[$i]['SearchParentCompany'] = strtr( $client['ClientRevenueByService']['parent_company'], $this->unwanted_array );
                         $clientData[$i]['ClientCategory'] = $client[0]['category'];
                         if ($client['ClientRevenueByService']['pitch_date'] != '0000-00-00') {
                                 $pitchDate = explode('-', $client['ClientRevenueByService']['pitch_date']);
@@ -1472,6 +1483,9 @@ class ReportsController extends AppController {
 
         public function office_report() {
 
+                $arrLanguages = $this->Language->find('list', array('fields' => array('Language.language', 'Language.language'), 'order' => 'Language.language Asc'));
+
+                $this->set('languages', json_encode($arrLanguages));
                 $this->set('userRole', $this->Auth->user('role'));
                 $this->set('loggedUser', $this->Auth->user());
                 $this->set('userAcl', $this->Acl);

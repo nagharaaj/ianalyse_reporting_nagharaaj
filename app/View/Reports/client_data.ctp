@@ -98,7 +98,9 @@
                     { name: 'EstimatedRevenue', type: 'float' },
                     { name: 'ActualRevenue', type: 'float' },
                     { name: 'Comments', type: 'string' },
-                    { name: 'ParentId', type: 'number' }
+                    { name: 'ParentId', type: 'number' },
+                    { name: 'SearchClientName', type: 'string' },
+                    { name: 'SearchParentCompany', type: 'string' }
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
@@ -134,6 +136,56 @@
                         return '';
                 }
              }
+             var buildFilterPanel = function (filterPanel, datafield) {
+                var textInput = $("<input style='margin:5px;'/>");
+                var applyinput = $("<div class='filter' style='height: 25px; margin-left: 20px; margin-top: 7px;'></div>");
+                var filterbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 2px;">Filter</span>');
+                applyinput.append(filterbutton);
+                var filterclearbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 5px;">Clear</span>');
+                applyinput.append(filterclearbutton);
+                filterPanel.append(textInput);
+                filterPanel.append(applyinput);
+                filterbutton.jqxButton({ theme: theme, height: 20 });
+                filterclearbutton.jqxButton({ theme: theme, height: 20 });
+                var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
+                textInput.jqxInput({ theme: theme, placeHolder: "Enter " + column.text, popupZIndex: 9999999, displayMember: datafield, /*source: dataadapter,*/ height: 23, width: 155 });
+                textInput.keyup(function (event) {
+                    if (event.keyCode === 13) {
+                        filterbutton.trigger('click');
+                    }
+                });
+                filterbutton.click(function () {
+                    var filtergroup = new $.jqx.filter();
+                    var filter_or_operator = 1;
+                    var filtervalue = textInput.val();
+                    var filtercondition = 'contains';
+                    var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);            
+                    filtergroup.addfilter(filter_or_operator, filter1);
+                    // add the filters.
+                    $("#jqxgrid").jqxGrid('addfilter', "Search"+datafield, filtergroup);
+                    // apply the filters.
+                    $("#jqxgrid").jqxGrid('applyfilters');
+                    $("#jqxgrid").jqxGrid('closemenu');
+                });
+                filterbutton.keydown(function (event) {
+                    if (event.keyCode === 13) {
+                        filterbutton.trigger('click');
+                    }
+                });
+                filterclearbutton.click(function () {
+                    $("#jqxgrid").jqxGrid('removefilter', "Search"+datafield);
+                    // apply the filters.
+                    $("#jqxgrid").jqxGrid('applyfilters');
+                    $("#jqxgrid").jqxGrid('closemenu');
+                    textInput.val("");
+                });
+                filterclearbutton.keydown(function (event) {
+                    if (event.keyCode === 13) {
+                        filterclearbutton.trigger('click');
+                    }
+                    textInput.val("");
+                });
+             }
 
              // initialize jqxGrid
              $("#jqxgrid").jqxGrid(
@@ -147,13 +199,22 @@
                 pagerMode: 'simple',
                 sortable: true,
                 filterable: true,
-                showfilterrow: true,
                 editable: true,
                 autoRowHeight: true,
                 selectionmode: 'none',
                 columnsresize: true,
                 showpinnedcolumnbackground: false,
                 enablehover: false,
+                columnmenuopening: function (menu, datafield, height) {
+                    var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
+                    if (column.filtertype === "custom") {
+                        menu.height(155);
+                        setTimeout(function () {
+                            menu.find('input').focus();
+                        }, 25);
+                    }
+                    else menu.height(height);
+                },
                 columns: [
                   {
                       text: '', cellsAlign: 'center', pinned: true, columntype: 'custom', width: 255, sortable: false, dataField: null, filterable: false, editable: false,
@@ -167,62 +228,32 @@
                   },*/
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'ParentId', datafield: 'ParentId', hidden: true },
-                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true, editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 120 });
+                  { text: '', datafield: 'SearchClientName', hidden: true },
+                  { text: '', datafield: 'SearchParentCompany', hidden: true },
+                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true, editable: false },
+                  { text: 'Country', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true, editable: false },
+                  { text: 'City', datafield: 'City', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true, editable: false },
+                  { text: 'Client', datafield: 'ClientName', width: 250, cellClassName: cellclass, pinned: true, editable: false, filtertype: 'custom',
+                      createfilterpanel: function (datafield, filterPanel) {
+                          buildFilterPanel(filterPanel, datafield);
                       }
                   },
-                  { text: 'Country', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true, editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
+                  { text: 'Parent Company', datafield: 'ParentCompany', width: 250, cellClassName: cellclass, editable: false, filtertype: 'custom',
+                      createfilterpanel: function (datafield, filterPanel) {
+                          buildFilterPanel(filterPanel, datafield);
                       }
                   },
-                  { text: 'City', datafield: 'City', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true, editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      }
-                  },
-                  { text: 'Client', datafield: 'ClientName', width: 250, cellClassName: cellclass, pinned: true, editable: false },
-                  { text: 'Parent Company', datafield: 'ParentCompany', width: 250, cellClassName: cellclass, editable: false },
-                  { text: 'Client Category', datafield: 'ClientCategory', width: 200, cellClassName: cellclass, filtertype: 'checkedlist', editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 200 });
-                      }
-                  },
-                  { text: 'Lead Agency', datafield: 'LeadAgency', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      }
-                  },
-                  { text: 'Status', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      }
-                  },
-                  { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      }
-                  },
-                  { text: 'Division', datafield: 'Division', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      }
-                  },
-                  { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 110, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy', editable: false },
-                  { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 100, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy', editable: false },
-                  { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 100, cellClassName: cellclass, filtertype: 'range', cellsformat: 'MM/yyyy', editable: false },
+                  { text: 'Client Category', datafield: 'ClientCategory', width: 200, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
+                  { text: 'Lead Agency', datafield: 'LeadAgency', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
+                  { text: 'Status', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
+                  { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
+                  { text: 'Division', datafield: 'Division', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
+                  { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 110, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
+                  { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 100, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
+                  { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 100, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
                   /*{ text: 'Pitch Leader', columngroup: 'PitchLeader', datafield: 'PitchLeader', width: 150, cellClassName: cellclass, editable: false },*/
-                  { text: 'Active Markets', datafield: 'ActiveMarkets', width: 250, cellClassName: cellclass, filtertype: 'checkedlist', editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 200 });
-                      }
-                  },
-                  { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false,
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 120 });
-                      }
-                  },
+                  { text: 'Active Markets', datafield: 'ActiveMarkets', width: 250, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
+                  { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'iP estimated revenue', datafield: 'EstimatedRevenue', width: 130, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
                   { text: 'iP 2014 Actual revenue', datafield: 'ActualRevenue', width: 150, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
                   { text: 'Comments', datafield: 'Comments', width: 200, cellClassName: cellclass, editable: false }
