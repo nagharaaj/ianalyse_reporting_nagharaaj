@@ -39,54 +39,54 @@
                     { name: 'Website', type: 'string' },
                     { name: 'SocialAccount', type: 'string' },
                     { name: 'Executive', type: 'string' },
-                    { name: 'countExecutive', type: 'string' },
+                    { name: 'countExecutive', type: 'number' },
                     { name: 'FinanceHead', type: 'string' },
-                    { name: 'countFinanceHead', type: 'string' },
+                    { name: 'countFinanceHead', type: 'number' },
                     { name: 'ProductHead', type: 'string' },
-                    { name: 'countProductHead', type: 'string' },
+                    { name: 'countProductHead', type: 'number' },
                     { name: 'StrategyHead', type: 'string' },
-                    { name: 'countStrategyHead', type: 'string' },
+                    { name: 'countStrategyHead', type: 'number' },
                     { name: 'ClientHead', type: 'string' },
-                    { name: 'countClientHead', type: 'string' },
+                    { name: 'countClientHead', type: 'number' },
                     { name: 'BusinessHead', type: 'string' },
-                    { name: 'countBusinessHead', type: 'string' },
+                    { name: 'countBusinessHead', type: 'number' },
                     { name: 'MarketingHead', type: 'string' },
-                    { name: 'countMarketingHead', type: 'string' },
+                    { name: 'countMarketingHead', type: 'number' },
                     { name: 'totalKeyEmployeeCount', type: 'number' },
                     { name: 'Affiliates', type: 'string' },
-                    { name: 'countAffiliates', type: 'string' },
+                    { name: 'countAffiliates', type: 'number' },
                     { name: 'Content', type: 'string' },
-                    { name: 'countContent', type: 'string' },
+                    { name: 'countContent', type: 'number' },
                     { name: 'Conversion', type: 'string' },
-                    { name: 'countConversion', type: 'string' },
+                    { name: 'countConversion', type: 'number' },
                     { name: 'Data', type: 'string' },
-                    { name: 'countData', type: 'string' },
+                    { name: 'countData', type: 'number' },
                     { name: 'Development', type: 'string' },
-                    { name: 'countDevelopment', type: 'string' },
+                    { name: 'countDevelopment', type: 'number' },
                     { name: 'Display', type: 'string' },
-                    { name: 'countDisplay', type: 'string' },
+                    { name: 'countDisplay', type: 'number' },
                     { name: 'Feeds', type: 'string' },
-                    { name: 'countFeeds', type: 'string' },
+                    { name: 'countFeeds', type: 'number' },
                     { name: 'Lead', type: 'string' },
-                    { name: 'countLead', type: 'string' },
+                    { name: 'countLead', type: 'number' },
                     { name: 'Mobile', type: 'string' },
-                    { name: 'countMobile', type: 'string' },
+                    { name: 'countMobile', type: 'number' },
                     { name: 'RTB', type: 'string' },
-                    { name: 'countRTB', type: 'string' },
+                    { name: 'countRTB', type: 'number' },
                     { name: 'Search', type: 'string' },
-                    { name: 'countSearch', type: 'string' },
+                    { name: 'countSearch', type: 'number' },
                     { name: 'SEO', type: 'string' },
-                    { name: 'countSEO', type: 'string' },
+                    { name: 'countSEO', type: 'number' },
                     { name: 'SocialPaid', type: 'string' },
-                    { name: 'countSocialPaid', type: 'string' },
-                    { name: 'SocialMangement', type: 'string' },
-                    { name: 'countSocialMangement', type: 'string' },
+                    { name: 'countSocialPaid', type: 'number' },
+                    { name: 'SocialManagement', type: 'string' },
+                    { name: 'countSocialManagement', type: 'number' },
                     { name: 'Strategy', type: 'string' },
-                    { name: 'countStrategy', type: 'string' },
+                    { name: 'countStrategy', type: 'number' },
                     { name: 'Technology', type: 'string' },
-                    { name: 'countTechnology', type: 'string' },
+                    { name: 'countTechnology', type: 'number' },
                     { name: 'Video', type: 'string' },
-                    { name: 'countVideo', type: 'string' },
+                    { name: 'countVideo', type: 'number' },
                     { name: 'totalServiceEmployeeCount', type: 'number' },
                     { name: 'countSupportedLanguages', type: 'number' },
                     { name: 'SupportedLanguages', type: 'string' }
@@ -118,6 +118,91 @@
              }
 
              var dataAdapter = new $.jqx.dataAdapter(source);
+
+             var listInput;
+             var buildFilterPanel = function (filterPanel, datafield) {
+                listInput = $("<div id='languageList'></div>");
+                var filterheader = $('<div style="margin-top: 3px; margin-bottom: 3px;" class="filter">Show rows where:</div>');
+                var applyinput = $("<div class='filter' style='height: 25px; margin-left: 20px; margin-top: 7px;'></div>");
+                var filterbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 2px;">Filter</span>');
+                applyinput.append(filterbutton);
+                var filterclearbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 5px;">Clear</span>');
+                applyinput.append(filterclearbutton);
+                filterPanel.append(filterheader);
+                filterPanel.append(listInput);
+                filterPanel.append(applyinput);
+                filterbutton.jqxButton({ theme: theme, height: 20 });
+                filterclearbutton.jqxButton({ theme: theme, height: 20 });
+                listInput.jqxListBox({ theme: theme, width: 170, source: languages, checkboxes: true, height: 125 });
+                listInput.jqxListBox('insertAt', { label: '(Select All)', value: 'all' }, 0 );
+                listInput.jqxListBox('checkAll');
+                var handleCheckChange = true;
+                listInput.on('checkChange', function (event) {
+                    if (!handleCheckChange)
+                        return;
+
+                    if (event.args.label != '(Select All)') {
+                        handleCheckChange = false;
+                        listInput.jqxListBox('checkIndex', 0);
+                        var checkedItems = listInput.jqxListBox('getCheckedItems');
+                        var items = listInput.jqxListBox('getItems');
+
+                        if (checkedItems.length == 1) {
+                            listInput.jqxListBox('uncheckIndex', 0);
+                        }
+                        else if (items.length != checkedItems.length) {
+                            listInput.jqxListBox('indeterminateIndex', 0);
+                        }
+                        handleCheckChange = true;
+                    }
+                    else {
+                        handleCheckChange = false;
+                        if (event.args.checked) {
+                            listInput.jqxListBox('checkAll');
+                        }
+                        else {
+                            listInput.jqxListBox('uncheckAll');
+                        }
+                        handleCheckChange = true;
+                    }
+                });
+                filterbutton.click(function () {
+                    var filtergroup = new $.jqx.filter();
+                    var filter_or_operator = 1;
+                    //var filtervalue = textInput.val();
+                    var arrSelectedLang = listInput.jqxListBox('getCheckedItems');
+                    var filtervalue = null;
+                    var filtercondition = 'contains';
+                    $.each(arrSelectedLang, function (index) {
+                        filtervalue = this.label;
+                        var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);            
+                        filtergroup.addfilter(filter_or_operator, filter1);
+                    });
+                    // add the filters.
+                    $("#jqxgrid").jqxGrid('addfilter', datafield, filtergroup);
+                    // apply the filters.
+                    $("#jqxgrid").jqxGrid('applyfilters');
+                    $("#jqxgrid").jqxGrid('closemenu');
+                });
+                filterbutton.keydown(function (event) {
+                    if (event.keyCode === 13) {
+                        filterbutton.trigger('click');
+                    }
+                });
+                filterclearbutton.click(function () {
+                    $("#jqxgrid").jqxGrid('removefilter', datafield);
+                    // apply the filters.
+                    $("#jqxgrid").jqxGrid('applyfilters');
+                    $("#jqxgrid").jqxGrid('closemenu');
+                    listInput.jqxListBox('checkAll');
+                });
+                filterclearbutton.keydown(function (event) {
+                    if (event.keyCode === 13) {
+                        filterclearbutton.trigger('click');
+                    }
+                    listInput.jqxListBox('checkAll');
+                });
+             }
              // initialize jqxGrid
              $("#jqxgrid").jqxGrid(
              {
@@ -130,7 +215,6 @@
                 pagerMode: 'simple',
                 sortable: true,
                 filterable: true,
-                showfilterrow: true,
                 editable: false,
                 autorowheight: true,
                 selectionmode: 'none',
@@ -141,6 +225,13 @@
                 showpinnedcolumnbackground: false,
                 enablebrowserselection: true,
                 enablehover: false,
+                columnmenuopening: function (menu, datafield, height) {
+                    var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
+                    if (column.filtertype === "custom") {
+                        menu.height(265);
+                    }
+                    else menu.height(height);
+                },
                 columns: [
                   {
                       text: '', cellsalign: 'center', pinned: true, columntype: 'custom', width: 150, editable: false, sortable: false, filterable: false, datafield: null, hidden: ((userRole == 'Viewer' || userRole == 'Country - Viewer') ? true : false),
@@ -174,26 +265,10 @@
                       }
                   },
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
-                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true, 
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 120 });
-                      } 
-                  },
-                  { text: 'Market', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true, 
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
-                  },
-                  { text: 'Location Name (City)', datafield: 'City', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true, 
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
-                  },
-                  { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center', 
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 150 });
-                      } 
-                  },
+                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
+                  { text: 'Market', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
+                  { text: 'Location Name (City)', datafield: 'City', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
+                  { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center' },
                   { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Address', columngroup: 'ContactDetails', datafield: 'Address', width: 250, cellClassName: cellclass, align: 'center', filterable: false,
                           cellsrenderer: function(row, cell, value) {
@@ -275,10 +350,10 @@
                   { text: '# of employee<br/>or FTE', columngroup: 'Video', datafield: 'countVideo', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Total # employees', datafield: 'totalServiceEmployeeCount', width: 110, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: '# of supported<br/>languages', columngroup: 'Languages', datafield: 'countSupportedLanguages', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'List supported<br/>languages', columngroup: 'Languages', datafield: 'SupportedLanguages', width: 200, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', 
-                      createfilterwidget: function (column, columnElement, widget) {
-                          widget.jqxDropDownList({ itemHeight: 30, dropDownWidth: 200 });
-                      } 
+                  { text: 'List supported<br/>languages', columngroup: 'Languages', datafield: 'SupportedLanguages', width: 200, cellClassName: cellclass, filtertype: 'custom', filteritems: arrLanguages, align: 'center', 
+                      createfilterpanel: function (datafield, filterPanel) {
+                          buildFilterPanel(filterPanel, datafield);
+                      }
                   }
                 ],
                 columngroups: 
@@ -476,7 +551,7 @@
                                         var executiveDetails = value.split("<br/>");
                                         $("#executive_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(executiveDetails[0]);
                                         $("#executive_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((executiveDetails[1] != 'title' ? executiveDetails[1] : ''));
-                                        $("#executive_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((executiveDetails[2] != 'email' ? executiveDetails[2] : ''));
+                                        $("#executive_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((executiveDetails[2] != 'email' ? $(executiveDetails[2]).text() : ''));
                                 } else {
                                         addContactRow('executive', 0, value);
                                 }
@@ -498,7 +573,7 @@
                                         var financeHeadDetails = value.split("<br/>");
                                         $("#finance_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(financeHeadDetails[0]);
                                         $("#finance_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((financeHeadDetails[1] != 'title' ? financeHeadDetails[1] : ''));
-                                        $("#finance_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((financeHeadDetails[2] != 'email' ? financeHeadDetails[2] : ''));
+                                        $("#finance_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((financeHeadDetails[2] != 'email' ? $(financeHeadDetails[2]).text() : ''));
                                 } else {
                                         addContactRow('finance', 0, value);
                                 }
@@ -520,7 +595,7 @@
                                         var productHeadDetails = value.split("<br/>");
                                         $("#product_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(productHeadDetails[0]);
                                         $("#product_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((productHeadDetails[1] != 'title' ? productHeadDetails[1] : ''));
-                                        $("#product_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((productHeadDetails[2] != 'email' ? productHeadDetails[2] : ''));
+                                        $("#product_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((productHeadDetails[2] != 'email' ? $(productHeadDetails[2]).text() : ''));
                                 } else {
                                         addContactRow('product', 0, value);
                                 }
@@ -542,7 +617,7 @@
                                         var strategyHeadDetails = value.split("<br/>");
                                         $("#strategy_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(strategyHeadDetails[0]);
                                         $("#strategy_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((strategyHeadDetails[1] != 'title' ? strategyHeadDetails[1] : ''));
-                                        $("#strategy_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((strategyHeadDetails[2] != 'email' ? strategyHeadDetails[2] : ''));
+                                        $("#strategy_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((strategyHeadDetails[2] != 'email' ? $(strategyHeadDetails[2]).text() : ''));
                                 } else {
                                         addContactRow('strategy', 0, value);
                                 }
@@ -564,7 +639,7 @@
                                         var clientHeadDetails = value.split("<br/>");
                                         $("#client_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(clientHeadDetails[0]);
                                         $("#client_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((clientHeadDetails[1] != 'title' ? clientHeadDetails[1] : ''));
-                                        $("#client_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((clientHeadDetails[2] != 'email' ? clientHeadDetails[2] : ''));
+                                        $("#client_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((clientHeadDetails[2] != 'email' ? $(clientHeadDetails[2]).text() : ''));
                                 } else {
                                         addContactRow('client', 0, value);
                                 }
@@ -586,7 +661,7 @@
                                         var businessHeadDetails = value.split("<br/>");
                                         $("#business_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(businessHeadDetails[0]);
                                         $("#business_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((businessHeadDetails[1] != 'title' ? businessHeadDetails[1] : ''));
-                                        $("#business_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((businessHeadDetails[2] != 'email' ? businessHeadDetails[2] : ''));
+                                        $("#business_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((businessHeadDetails[2] != 'email' ? $(businessHeadDetails[2]).text() : ''));
                                 } else {
                                         addContactRow('business', 0, value);
                                 }
@@ -608,7 +683,7 @@
                                         var marketingHeadDetails = value.split("<br/>");
                                         $("#marketing_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val(marketingHeadDetails[0]);
                                         $("#marketing_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val((marketingHeadDetails[1] != 'title' ? marketingHeadDetails[1] : ''));
-                                        $("#marketing_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((marketingHeadDetails[2] != 'email' ? marketingHeadDetails[2] : ''));
+                                        $("#marketing_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val((marketingHeadDetails[2] != 'email' ? $(marketingHeadDetails[2]).text() : ''));
                                 } else {
                                         addContactRow('marketing', 0, value);
                                 }
@@ -631,7 +706,7 @@
                                                 var ServiceContactDetails = value.split("<br/>");
                                                 $("#" + arrServices[i] + "_contact_name_0").jqxInput({ height: 25, width: 310 }).val(ServiceContactDetails[0]);
                                                 $("#" + arrServices[i] + "_contact_title_0").jqxInput({ height: 25, width: 310 }).val((ServiceContactDetails[1] != 'title' ? ServiceContactDetails[1] : ''));
-                                                $("#" + arrServices[i] + "_contact_email_0").jqxInput({ height: 25, width: 310 }).val((ServiceContactDetails[2] != 'email' ? ServiceContactDetails[2] : ''));
+                                                $("#" + arrServices[i] + "_contact_email_0").jqxInput({ height: 25, width: 310 }).val((ServiceContactDetails[2] != 'email' ? $(ServiceContactDetails[2]).text() : ''));
                                         } else {
                                                 addContactRow(arrServices[i], 1, value);
                                         }
@@ -652,7 +727,7 @@
                 $("#divLanguagesSupported").append(inpLanguages);
                 $("#languages").jqxDropDownList({ source: languages, checkboxes: true }).val('');
                 if(rowData && rowData.SupportedLanguages) {
-                        var entities = rowData.SupportedLanguages.split(',');
+                        var entities = rowData.SupportedLanguages.split(', ');
                         for(key in entities) {
                                 if(arrLanguages.indexOf(entities[key]) != -1) {
                                        index = arrLanguages.indexOf(entities[key]);

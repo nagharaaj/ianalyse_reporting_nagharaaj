@@ -34,7 +34,7 @@ class ReportsController extends AppController {
                             'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
                             'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
                             'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
-                            'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', '\''=>'', '"'=>'', ' '=>'' );
+                            'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', '\''=>'', '"'=>'', ' '=>'', '`'=>'' );
 
 
         public $months = array(1 => 'Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)');
@@ -1026,7 +1026,7 @@ class ReportsController extends AppController {
         public function office_data() {
 
                 $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
-                $arrServices = array(1 => 'Affiliates', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialMangement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
+                $arrServices = array(1 => 'Affiliates', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
                 $countries = $this->Country->find('list', array('fields' => array('Country.country', 'Country.country'), 'order' => 'Country.country Asc'));
                 $this->set('countries', json_encode($countries, JSON_HEX_APOS));
                 $arrRegions = array();
@@ -1062,7 +1062,7 @@ class ReportsController extends AppController {
 
                 $officeData = array();
                 $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
-                $arrServices = array(1 => 'Affiliates', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialMangement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
+                $arrServices = array(1 => 'Affiliates', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
                 $arrLanguages = $this->Language->find('list', array('fields' => array('Language.id', 'Language.language'), 'order' => 'Language.language Asc'));
 
                 $i = 0;
@@ -1157,7 +1157,7 @@ class ReportsController extends AppController {
 
                         $keyContacts = array();
                         foreach($office['OfficeKeyContact'] as $officeKeyContact) {
-                                $keyContacts[$officeKeyContact['contact_type']][] = $officeKeyContact['contact_name'] . (!empty($officeKeyContact['contact_title']) ? "<br/>" . $officeKeyContact['contact_title'] : "<br/>" . 'title') . (!empty($officeKeyContact['contact_email']) ? "<br/>" . $officeKeyContact['contact_email'] : "<br/>" . 'email');
+                                $keyContacts[$officeKeyContact['contact_type']][] = $officeKeyContact['contact_name'] . (!empty($officeKeyContact['contact_title']) ? "<br/>" . $officeKeyContact['contact_title'] : "<br/>" . 'title') . (!empty($officeKeyContact['contact_email']) ? "<br/><a href='mailto:" . $officeKeyContact['contact_email'] . "' target='_blank'>" . $officeKeyContact['contact_email'] . '</a>' : "<br/>" . 'email');
                         }
                         foreach($arrKeyDepts as $key => $keyDept) {
                                 if(isset($keyContacts[$keyDept])) {
@@ -1176,7 +1176,7 @@ class ReportsController extends AppController {
 
                         $serviceContacts = array();
                         foreach($office['OfficeServiceContact'] as $officeServiceContact) {
-                                $serviceContacts[$officeServiceContact['service_id']][] = $officeServiceContact['contact_name'] . (!empty($officeServiceContact['contact_title']) ? "<br/>" . $officeServiceContact['contact_title'] : "<br/>" . 'title') . (!empty($officeServiceContact['contact_email']) ? "<br/>" . $officeServiceContact['contact_email'] : "<br/>" . 'email');
+                                $serviceContacts[$officeServiceContact['service_id']][] = $officeServiceContact['contact_name'] . (!empty($officeServiceContact['contact_title']) ? "<br/>" . $officeServiceContact['contact_title'] : "<br/>" . 'title') . (!empty($officeServiceContact['contact_email']) ? "<br/><a href='mailto:" . $officeServiceContact['contact_email'] . "' target='_blank'>" . $officeServiceContact['contact_email'] . '</a>' : "<br/>" . 'email');
                         }
                         foreach($arrServices as $serviceId => $service) {
                                 if(isset($serviceContacts[$serviceId])) {
@@ -1198,7 +1198,7 @@ class ReportsController extends AppController {
                                 $supportedLanguages[] = $arrLanguages[$officeLanguage['language_id']];
                         }
                         if(!empty($supportedLanguages)) {
-                                $officeData[$i]['SupportedLanguages'] = implode(',', $supportedLanguages);
+                                $officeData[$i]['SupportedLanguages'] = implode(', ', $supportedLanguages);
                                 $officeData[$i]['countSupportedLanguages'] = count($supportedLanguages);
                         } else {
                                 $officeData[$i]['SupportedLanguages'] = '';
@@ -1212,7 +1212,7 @@ class ReportsController extends AppController {
 
         public function save_office_record() {
                 $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
-                $arrServices = array(1 => 'Affiliates', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialMangement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
+                $arrServices = array(1 => 'Affiliates', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
                 $arrLanguages = $this->Language->find('list', array('fields' => array('Language.id', 'Language.language'), 'order' => 'Language.language Asc'));
 
                 if ($this->request->isPost())
@@ -1711,14 +1711,14 @@ class ReportsController extends AppController {
                         foreach($arrData as $data) {
                                 $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'], $data['YearEstablished'], 
                                     $data['TotalEmployee'], $data['Address'], $data['Telephone'], $data['GeneralEmail'], $data['Website'], $data['SocialAccount'],
-                                    str_replace('<br/>', "\n", $data['Executive']), $data['countExecutive'], str_replace('<br/>', "\n", $data['FinanceHead']), $data['countFinanceHead'], str_replace('<br/>', "\n", $data['ProductHead']), $data['countProductHead'],
-                                    str_replace('<br/>', "\n", $data['StrategyHead']), $data['countStrategyHead'], str_replace('<br/>', "\n", $data['ClientHead']), $data['countClientHead'], str_replace('<br/>', "\n", $data['BusinessHead']), $data['countBusinessHead'],
-                                    str_replace('<br/>', "\n", $data['MarketingHead']), $data['countMarketingHead'], $data['totalKeyEmployeeCount'], str_replace('<br/>', "\n", $data['Affiliates']), $data['countAffiliates'],
-                                    str_replace('<br/>', "\n", $data['Content']), $data['countContent'], str_replace('<br/>', "\n", $data['Conversion']), $data['countConversion'], str_replace('<br/>', "\n", $data['Data']), $data['countData'],
-                                    str_replace('<br/>', "\n", $data['Development']), $data['countDevelopment'], str_replace('<br/>', "\n", $data['Display']), $data['countDisplay'], str_replace('<br/>', "\n", $data['Feeds']), $data['countFeeds'],
-                                    str_replace('<br/>', "\n", $data['Lead']), $data['countLead'], str_replace('<br/>', "\n", $data['Mobile']), $data['countMobile'], str_replace('<br/>', "\n", $data['RTB']), $data['countRTB'], str_replace('<br/>', "\n", $data['Search']), $data['countSearch'],
-                                    str_replace('<br/>', "\n", $data['SEO'], $data['countSEO']), str_replace('<br/>', "\n", $data['SocialPaid']), $data['countSocialPaid'], str_replace('<br/>', "\n", $data['SocialMangement']), $data['countSocialMangement'],
-                                    str_replace('<br/>', "\n", $data['Strategy']), $data['countStrategy'], str_replace('<br/>', "\n", $data['Technology']), $data['countTechnology'], str_replace('<br/>', "\n", $data['Video']), $data['countVideo'], $data['totalServiceEmployeeCount'],
+                                    strip_tags(str_replace('<br/>', "\n", $data['Executive'])), $data['countExecutive'], strip_tags(str_replace('<br/>', "\n", $data['FinanceHead'])), $data['countFinanceHead'], strip_tags(str_replace('<br/>', "\n", $data['ProductHead'])), $data['countProductHead'],
+                                    strip_tags(str_replace('<br/>', "\n", $data['StrategyHead'])), $data['countStrategyHead'], strip_tags(str_replace('<br/>', "\n", $data['ClientHead'])), $data['countClientHead'], strip_tags(str_replace('<br/>', "\n", $data['BusinessHead'])), $data['countBusinessHead'],
+                                    strip_tags(str_replace('<br/>', "\n", $data['MarketingHead'])), $data['countMarketingHead'], $data['totalKeyEmployeeCount'], strip_tags(str_replace('<br/>', "\n", $data['Affiliates'])), $data['countAffiliates'],
+                                    strip_tags(str_replace('<br/>', "\n", $data['Content'])), $data['countContent'], strip_tags(str_replace('<br/>', "\n", $data['Conversion'])), $data['countConversion'], strip_tags(str_replace('<br/>', "\n", $data['Data'])), $data['countData'],
+                                    strip_tags(str_replace('<br/>', "\n", $data['Development'])), $data['countDevelopment'], strip_tags(str_replace('<br/>', "\n", $data['Display'])), $data['countDisplay'], strip_tags(str_replace('<br/>', "\n", $data['Feeds'])), $data['countFeeds'],
+                                    strip_tags(str_replace('<br/>', "\n", $data['Lead'])), $data['countLead'], strip_tags(str_replace('<br/>', "\n", $data['Mobile'])), $data['countMobile'], strip_tags(str_replace('<br/>', "\n", $data['RTB'])), $data['countRTB'], strip_tags(str_replace('<br/>', "\n", $data['Search'])), $data['countSearch'],
+                                    strip_tags(str_replace('<br/>', "\n", $data['SEO'])), $data['countSEO'], strip_tags(str_replace('<br/>', "\n", $data['SocialPaid'])), $data['countSocialPaid'], strip_tags(str_replace('<br/>', "\n", $data['SocialManagement'])), $data['countSocialManagement'],
+                                    strip_tags(str_replace('<br/>', "\n", $data['Strategy'])), $data['countStrategy'], strip_tags(str_replace('<br/>', "\n", $data['Technology'])), $data['countTechnology'], strip_tags(str_replace('<br/>', "\n", $data['Video'])), $data['countVideo'], $data['totalServiceEmployeeCount'],
                                     $data['countSupportedLanguages'], $data['SupportedLanguages']);
                                 $i++;
                         }
