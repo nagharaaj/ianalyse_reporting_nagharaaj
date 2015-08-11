@@ -64,7 +64,7 @@
                 source: dataAdapter,
                 pageable: false,
                 sortable: false,
-                altrows: true,
+                altRows: true,
                 editable: true,
                 autoRowHeight: true,
                 enableHover: false,
