@@ -9,6 +9,12 @@
              var numberrenderer = function (row, column, value) {
                  return '<div style="text-align: center; margin-top: 5px;">' + (1 + value) + '</div>';
              }
+             var cities = jQuery.parseJSON('<?php echo $cities; ?>');
+             var arrCities = $.map(cities, function(el) { return el; });
+             var markets = jQuery.parseJSON('<?php echo $markets; ?>');
+             var arrMarkets = new Array();
+             var regions = jQuery.parseJSON('<?php echo $regions; ?>');
+             var arrRegions = $.map(regions, function(el) { return el; });
              var currencies = jQuery.parseJSON('<?php echo $currencies; ?>');
              var currYear = '<?php echo $current_year; ?>';
              var userRole = '<?php echo $userRole;?>';
@@ -253,7 +259,7 @@
                   { text: 'Year', datafield: 'Year', hidden: true },
                   { text: '', datafield: 'SearchClientName', hidden: true },
                   { text: '', datafield: 'SearchParentCompany', hidden: true },
-                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true },
+                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', filteritems: arrRegions, pinned: true },
                   { text: 'Country', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true },
                   { text: 'City', datafield: 'City', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true },
                   { text: 'Client', columngroup: 'ClientName', datafield: 'ClientName', width: 250, cellClassName: cellclass, pinned: true, filtertype: 'custom',
@@ -285,11 +291,45 @@
             });
             $("#jqxgrid").on("filter", function (event) {
                     calculateStats();
+                    $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', false);
+                    $("#jqxgrid").jqxGrid('setcolumnproperty', 'Country', 'filteritems', false);
+
                     var paginginfo = $("#jqxgrid").jqxGrid('getpaginginformation');
                     if(paginginfo.pagescount <= 1) {
                         $('#pagerjqxgrid').hide();
                     } else {
                         $('#pagerjqxgrid').show();
+                    }
+                    
+                    var filterGroups = $("#jqxgrid").jqxGrid('getfilterinformation');
+                    if(filterGroups.length) {
+                        for (var i = 0; i < filterGroups.length; i++) {
+                            var filterGroup = filterGroups[i];
+                            if(filterGroup.filtercolumn == 'Region') {
+                                var arrRegionCountries = new Array();
+                                var arrCities = new Array();
+                                var filters = filterGroup.filter.getfilters();
+                                for (var j = 0; j < filters.length; j++) {
+                                    $.map(markets[filters[j].value], function(el) { 
+                                            arrRegionCountries.push(el);
+                                            $.map(cities[el], function(elm) { arrCities.push(elm); });
+                                    });
+                                }
+                                arrRegionCountries.sort();
+                                $("#jqxgrid").jqxGrid('setcolumnproperty', 'Country', 'filteritems', arrRegionCountries);
+                                arrCities.sort();
+                                $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', arrCities);
+                            }
+                            if(filterGroup.filtercolumn == 'Country') {
+                                var arrCities = new Array();
+                                var filters = filterGroup.filter.getfilters();
+                                for (var j = 0; j < filters.length; j++) {
+                                    $.map(cities[filters[j].value], function(el) { arrCities.push(el); });
+                                }
+                                arrCities.sort();
+                                $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', arrCities);
+                            }
+                        }
                     }
             });
             $('#jqxgrid').jqxGrid({ rendered: function() {

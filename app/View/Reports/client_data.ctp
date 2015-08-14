@@ -260,6 +260,9 @@
                 ]
             });
             $("#jqxgrid").on("filter", function (event) {
+                    $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', false);
+                    $("#jqxgrid").jqxGrid('setcolumnproperty', 'Country', 'filteritems', false);
+
                     var paginginfo = $("#jqxgrid").jqxGrid('getpaginginformation');
                     if(paginginfo.pagescount <= 1) {
                         $('#pagerjqxgrid').hide();
@@ -271,6 +274,36 @@
                         $( ".editButtons" ).each(function( i ) {
                                 $(this).parent().parent().css('line-height', $(this).parent().parent().css('height'));
                         });
+                    }
+                    var filterGroups = $("#jqxgrid").jqxGrid('getfilterinformation');
+                    if(filterGroups.length) {
+                        for (var i = 0; i < filterGroups.length; i++) {
+                            var filterGroup = filterGroups[i];
+                            if(filterGroup.filtercolumn == 'Region') {
+                                var arrRegionCountries = new Array();
+                                var arrCities = new Array();
+                                var filters = filterGroup.filter.getfilters();
+                                for (var j = 0; j < filters.length; j++) {
+                                    $.map(markets[filters[j].value], function(el) { 
+                                            arrRegionCountries.push(el);
+                                            $.map(cities[el], function(elm) { arrCities.push(elm); });
+                                    });
+                                }
+                                arrRegionCountries.sort();
+                                $("#jqxgrid").jqxGrid('setcolumnproperty', 'Country', 'filteritems', arrRegionCountries);
+                                arrCities.sort();
+                                $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', arrCities);
+                            }
+                            if(filterGroup.filtercolumn == 'Country') {
+                                var arrCities = new Array();
+                                var filters = filterGroup.filter.getfilters();
+                                for (var j = 0; j < filters.length; j++) {
+                                    $.map(cities[filters[j].value], function(el) { arrCities.push(el); });
+                                }
+                                arrCities.sort();
+                                $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', arrCities);
+                            }
+                        }
                     }
             });
             $('#jqxgrid').jqxGrid({ rendered: function() {

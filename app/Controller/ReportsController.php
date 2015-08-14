@@ -792,6 +792,27 @@ class ReportsController extends AppController {
 
                 $this->set('currencies', json_encode($this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'))));
                 $this->set('current_year', date('Y'));
+                $arrMarkets = array();
+                $arrRegions = array();
+                $arrCities = array();
+                $regions = $this->Region->find('all', array('order' => 'Region.region Asc'));
+                foreach ($regions as $region) {
+                        $arrRegions[$region['Region']['region']] = $region['Region']['region'];
+                        $markets = $this->Market->find('list', array('fields' => array('Market.country_id', 'Market.market'), 'conditions' => array('Market.region_id' => $region['Region']['id']), 'order' => 'Market.market Asc'));
+                        if(!empty($markets)) {
+                                foreach ($markets as $countryId => $market)
+                                {
+                                        $arrMarkets[$region['Region']['region']][$market] = $market;
+                                        $cities = $this->City->find('list', array('fields' => array('City.city', 'City.city'), 'conditions' => array('City.country_id' => $countryId), 'order' => 'City.city Asc'));
+                                        if(!empty($cities)) {
+                                                $arrCities[$market] = $cities;
+                                        }
+                                }
+                        }
+                }
+                $this->set('regions', json_encode($arrRegions));
+                $this->set('markets', json_encode($arrMarkets));
+                $this->set('cities', json_encode($arrCities));
 
                 $this->set('loggedUser', $this->Auth->user());
                 $this->set('userAcl', $this->Acl);
