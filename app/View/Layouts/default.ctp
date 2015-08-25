@@ -118,21 +118,40 @@
                 });
         });
         
+        var loggedUser = "<?php echo $this->Session->read('loggedUser.displayName');?>"
         var timer;
         var wait=20;
         document.onkeypress=resetTimer;
         document.onmousemove=resetTimer;
         function resetTimer()
         {
-            clearTimeout(timer);
-            timer=setTimeout("logout()", 60000*wait);
+            if(loggedUser) {
+                    clearTimeout(timer);
+                    timer=setTimeout("logout()", 60000*wait);
+            }
         }
 
         function logout()
         {
             window.location.href='/users/logout';
         }
-</script>                
+        
+        $.fn.serializeObject = function() {
+           var o = {};
+           var a = this.serializeArray();
+           $.each(a, function() {
+               if (o[this.name]) {
+                   if (!o[this.name].push) {
+                       o[this.name] = [o[this.name]];
+                   }
+                   o[this.name].push(this.value || '');
+               } else {
+                   o[this.name] = this.value || '';
+               }
+           });
+           return o;
+        };
+</script>
                 <br/>
                 <div id="content">
 

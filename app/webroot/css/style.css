@@ -437,7 +437,7 @@ h2 span {
 
 button#createNew, button#CancelNew, button#SaveNew, button#SaveNewUser, button#UpdateClient, button#CancelUpdate,
 button#clearfilteringbutton, button#exporttoexcelbutton, button#exportButton, button#cancelExportButton,
-button#CancelNewChapter, button#CancelNewQuestion, button#SaveNewChapter, button#SaveNewQuestion
+button#CancelNewChapter, button#CancelNewQuestion, button#SaveNewChapter, button#SaveNewQuestion, button#addassociation
 {
         border: 1px solid #9ca0a3;
         background-color: #fefefe;
@@ -476,7 +476,8 @@ button#exporttoexcelbutton {
 
 button#createNew:hover, button#CancelNew:hover, button#SaveNew:hover, button#SaveNewUser:hover, button#CancelUpdate:hover,
 button#UpdateClient:hover, button#clearfilteringbutton:hover, button#exporttoexcelbutton:hover, button#exportButton:hover, button#cancelExportButton:hover,
-button#CancelNewChapter:hover, button#CancelNewQuestion:hover, button#SaveNewChapter:hover, button#SaveNewQuestion:hover
+button#CancelNewChapter:hover, button#CancelNewQuestion:hover, button#SaveNewChapter:hover, button#SaveNewQuestion:hover,
+button#addassociation:hover
 {
         font-size: 12px;
         font-weight: 600;
@@ -704,3 +705,6 @@ button.btn-create-chapter:hover, button.btn-create-question:hover, button.btn-li
     line-height: 16px;
 }
 
+.login-help-questions {
+    padding-bottom: 7px;
+}
