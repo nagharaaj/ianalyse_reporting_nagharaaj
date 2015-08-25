@@ -29,12 +29,12 @@ class ExcelReaderComponent extends Component {
                 $sheetData = array();
                 $this->loadExcelFile($filename, $sheetName, !($formatData));
                 if($this->PHPExcelLoaded) {
-                        $sheetData = $this->excel->getSheetByName($sheetName)->toArray(null,true,$formatData,true);
+                        $sheetData = $this->excel->getSheetByName($sheetName)->toArray(null, true, $formatData, true);
                 }
                 $this->dataArray = $sheetData;
                 return $this->dataArray;
         }
-        
+
         public function readDateFromExcel($date, $format = 'm/d/Y') {
                 $date = PHPExcel_Shared_Date::ExcelToPHP($date);
                 return date($format, $date);
@@ -43,9 +43,9 @@ class ExcelReaderComponent extends Component {
         public function excel_array_search($needle, $haystack, &$searchResult = array()) {
             $row = null;
             $cell = null;
-            foreach($haystack as $rowKey=>$rowValue) {
+            foreach($haystack as $rowKey => $rowValue) {
                 $row = $rowKey;
-                foreach($rowValue as $cellKey=>$cellValue) {
+                foreach($rowValue as $cellKey => $cellValue) {
                     if($needle === $cellValue) {
                         $cell = $cellKey;
                     }

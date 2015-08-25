@@ -1,7 +1,6 @@
 <?php
 
-class DashboardController extends AppController
-{
+class DashboardController extends AppController {
 	public $helpers = array('Html', 'Form');
 
         public $components = array('RequestHandler');
@@ -25,7 +24,7 @@ class DashboardController extends AppController
                   'action' => 'login'
                 );
         }
-        
+
         public $uses = array(
             'Market',
             'Region',

@@ -54,29 +54,26 @@ class AppController extends Controller {
 
     function beforeFilter() {
         $this->Auth->allow();
-    } 
+    }
 
     public function generateNav($arrNav, $user) {
         $arrAuthNav = array();
-            
+
         foreach($arrNav as $linkName => $linkUrl) {
             $arrLink = explode('/', $linkUrl);
             if($this->Acl->check($user, 'controllers'.$linkUrl)) {
                 $arrAuthNav[$linkName] = $linkUrl;
             }
-        } 
-        
+        }
+
         return $arrAuthNav;
-        print_r($arrAuthNav);
     }
 
     public function parseRequestVars() {
         $requestVars = array();
 
-        if (isset($this->params['pass']) && !empty($this->params['pass']))
-        {
-            for ($i = 0; $i < count($this->params['pass']); $i = $i+2 )
-            {
+        if (isset($this->params['pass']) && !empty($this->params['pass'])) {
+            for ($i = 0; $i < count($this->params['pass']); $i = $i+2 ) {
                 $requestVars[$this->params['pass'][$i]] = $this->params['pass'][$i+1];
             }
         }

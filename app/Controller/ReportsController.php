@@ -29,7 +29,7 @@ class ReportsController extends AppController {
             'UserLoginRole',
             'ClientDeleteLog'
         );
-        
+
         public $unwanted_array = array( 'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
                             'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
                             'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
@@ -81,7 +81,7 @@ class ReportsController extends AppController {
                 if ($this->Auth->user('role') == 'Regional') {
                         $userRegion = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         $regions = $this->Region->find('all', array('conditions' => array('Region.id' => $userRegion['UserMarket']['market_id']), 'order' => 'Region.region Asc'));
-                } else if($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
+                } elseif($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                         $userCountry = $this->UserMarket->find('list', array('fields' => array('UserMarket.id', 'UserMarket.market_id'), 'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         $userRegion = $this->Market->find('list', array('fields' => array('Market.id', 'Market.region_id'), 'conditions' => array('Market.country_id IN (' . implode(',', $userCountry) . ')'), 'order' => 'Market.region_id Asc', 'group' => 'Market.region_id'));
                         $regions = $this->Region->find('all', array('conditions' => array('Region.id IN (' . implode(',', $userRegion) . ')'), 'order' => 'Region.region Asc'));
@@ -97,8 +97,7 @@ class ReportsController extends AppController {
                                 $markets = $this->Market->find('list', array('fields' => array('Market.country_id', 'Market.market'), 'conditions' => array('Market.region_id' => $region['Region']['id']), 'order' => 'Market.market Asc'));
                         }
                         if(!empty($markets)) {
-                                foreach ($markets as $countryId => $market)
-                                {
+                                foreach ($markets as $countryId => $market) {
                                         $arrMarkets[$region['Region']['region']][$market] = $market;
                                         $cities = $this->City->find('list', array('fields' => array('City.city', 'City.city'), 'conditions' => array('City.country_id' => $countryId), 'order' => 'City.city Asc'));
                                         if(!empty($cities)) {
@@ -146,7 +145,7 @@ class ReportsController extends AppController {
                                 $managingEntity = 'Global';
                                 $country = null;
                                 $city = null;
-                        } else if(strpos(trim($arrData['Country']),'Regional') !== false) {
+                        } elseif(strpos(trim($arrData['Country']), 'Regional') !== false) {
                                 $managingEntity = 'Regional';
                                 $country = null;
                                 $city = null;
@@ -280,9 +279,8 @@ class ReportsController extends AppController {
         }
 
         public function delete_client_record() {
-                if ($this->request->isPost())
-		{
-                        if($this->RequestHandler->isAjax()){
+                if ($this->request->isPost()) {
+                        if($this->RequestHandler->isAjax()) {
                                 $this->autoRender=false;
                         }
 
@@ -326,7 +324,7 @@ class ReportsController extends AppController {
                                                         )
                                                 )
                                         );
-                                
+
                                         $email = new CakeEmail('gmail');
                                         $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
                                         $email->template('delete_pitch', 'default')
@@ -336,7 +334,7 @@ class ReportsController extends AppController {
                                             ->subject('Pitch is deleted')
                                             ->send();
                                 }
-                                
+
                                 $result = array();
                                 $result['success'] = true;
                                 return json_encode($result);
@@ -349,7 +347,7 @@ class ReportsController extends AppController {
 
                 $clientData = array();
                 $i = 0;
-                $condition = NULL;
+                $condition = null;
                 if ($this->Auth->user('role') == 'Regional') {
                         $region = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         $condition = 'ClientRevenueByService.region_id = ' . $region['UserMarket']['market_id'];
@@ -403,7 +401,7 @@ class ReportsController extends AppController {
                         $clientData[$i]['ClientYear'] = $client['ClientRevenueByService']['client_since_year'];
                         if ($client['ClientRevenueByService']['client_since_month'] != 0 && $client['ClientRevenueByService']['client_since_year'] != 0) {
                                 $clientData[$i]['ClientSince'] = $client['ClientRevenueByService']['client_since_month']. '/' .$client['ClientRevenueByService']['client_since_year'];
-                        } else if ($client['ClientRevenueByService']['client_since_month'] == 0 && $client['ClientRevenueByService']['client_since_year'] != 0) {
+                        } elseif ($client['ClientRevenueByService']['client_since_month'] == 0 && $client['ClientRevenueByService']['client_since_year'] != 0) {
                                 $clientData[$i]['ClientSince'] = '01/' .$client['ClientRevenueByService']['client_since_year'];
                         } else {
                                 $clientData[$i]['ClientSince'] = '';
@@ -428,7 +426,7 @@ class ReportsController extends AppController {
 
                 $clientData = array();
                 $i = 0;
-                $condition = NULL;
+                $condition = null;
                 if ($this->Auth->user('role') == 'Regional') {
                         $region = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         //$condition = 'ClientRevenueByService.region_id = ' . $region['UserMarket']['market_id'];
@@ -482,7 +480,7 @@ class ReportsController extends AppController {
                         $clientData[$i]['ClientYear'] = $client['ClientRevenueByService']['client_since_year'];
                         if ($client['ClientRevenueByService']['client_since_month'] != 0 && $client['ClientRevenueByService']['client_since_year'] != 0) {
                                 $clientData[$i]['ClientSince'] = $client['ClientRevenueByService']['client_since_month']. '/' .$client['ClientRevenueByService']['client_since_year'];
-                        } else if ($client['ClientRevenueByService']['client_since_month'] == 0 && $client['ClientRevenueByService']['client_since_year'] != 0) {
+                        } elseif ($client['ClientRevenueByService']['client_since_month'] == 0 && $client['ClientRevenueByService']['client_since_year'] != 0) {
                                 $clientData[$i]['ClientSince'] = '01/' .$client['ClientRevenueByService']['client_since_year'];
                         } else {
                                 $clientData[$i]['ClientSince'] = '';
@@ -505,7 +503,7 @@ class ReportsController extends AppController {
                                                 $clientData[$i]['ActualRevenue'] = '';
                                                 $clientData[$i]['Currency'] = '';
                                         }
-                                } else if ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
+                                } elseif ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                                         if (in_array($client['ClientRevenueByService']['country_id'], $arrCountries)) {
                                                 $clientData[$i]['EstimatedRevenue'] = $client['ClientRevenueByService']['estimated_revenue'];
                                                 $clientData[$i]['ActualRevenue'] = $client['ClientRevenueByService']['actual_revenue'];
@@ -541,7 +539,7 @@ class ReportsController extends AppController {
                         $arrData = $this->request->data;
 
                         $recordId = $arrData['RecordId'];
-                        
+
                         $existingStatus = $this->ClientRevenueByService->find('first', array('fields' => array('pitch_stage'), 'conditions' => array('ClientRevenueByService.id' => $recordId)));
 
                         $category = $this->ClientCategory->findByCategory(trim($arrData['ClientCategory']));
@@ -550,7 +548,7 @@ class ReportsController extends AppController {
                                 $managingEntity = 'Global';
                                 $country = null;
                                 $city = null;
-                        } else if(strpos(trim($arrData['Country']),'Regional') !== false) {
+                        } elseif(strpos(trim($arrData['Country']), 'Regional') !== false) {
                                 $managingEntity = 'Regional';
                                 $country = null;
                                 $city = null;
@@ -665,7 +663,7 @@ class ReportsController extends AppController {
                                         )
                                 )
                         );
-                        
+
                         if($parentId == 0 || $parentId == null || $parentId == '') {
                                 $assocRecords = $this->ClientRevenueByService->find('all', array('fields' => array('ClientRevenueByService.id'), 'conditions' => array('ClientRevenueByService.parent_id' => $recordId)));
                                 foreach($assocRecords as $assocRecord) {
@@ -726,7 +724,7 @@ class ReportsController extends AppController {
                                                 )
                                         );
                                 }
-                                
+
                                 $this->ClientRevenueByService->id = $parentId;
                                 $this->ClientRevenueByService->save(
                                         array(
@@ -823,8 +821,7 @@ class ReportsController extends AppController {
                 set_time_limit(0);
                 ini_set('memory_limit', '-1');
 
-                if ($this->request->isPost())
-		{
+                if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()){
                                 $this->autoRender=false;
                         }
@@ -995,13 +992,13 @@ class ReportsController extends AppController {
                                                         }
                                                 }
                                         }
-                                        $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'], 
+                                        $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'],
                                             $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
                                             $data['PitchStage'], $data['Service'], $data['Division'], $clientSince, $lostDate, $pitchDate,
                                             $data['ActiveMarkets'], $currency, $estimatedRevenue, $actualRevenue, $data['Comments'],
                                             $createdDate, $modifiedDate);
                                 } else {
-                                        $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'], 
+                                        $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'],
                                             $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
                                             $data['PitchStage'], $data['Service'], $data['Division'], $clientSince, $lostDate, $pitchDate,
                                             $data['ActiveMarkets'], $data['Comments']);
@@ -1067,7 +1064,7 @@ class ReportsController extends AppController {
                 if($this->Auth->user('role') == 'Regional') {
                         $arrUserMarkets = $this->UserMarket->find('first', array('fields' => array('UserMarket.market_id'),'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'), 'UserMarket.active' => 1)));
                         $userMarkets = $this->Region->find('list', array('conditions' => array('Region.id' => $arrUserMarkets['UserMarket']['market_id'])));
-                } else if($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') { 
+                } elseif($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                         $arrUserMarkets = $this->UserMarket->find('all', array('fields' => array('UserMarket.market_id'),'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'), 'UserMarket.active' => 1)));
                         $arrCountries = array();
                         foreach($arrUserMarkets as $arrUserMarket) {
@@ -1161,16 +1158,16 @@ class ReportsController extends AppController {
                         foreach($office['OfficeEmployeeCountByDepartment'] as $officeEmployeeCountByDepartment) {
                                 if($officeEmployeeCountByDepartment['department_type'] == 'service') {
                                         /*if($officeEmployeeCountByDepartment['count_type'] == 'FTE') {
-                                                $arrServiceEmployeeCount[$officeEmployeeCountByDepartment['department_id']] = round(($officeEmployeeCountByDepartment['employee_count']*100),2) . '%';
+                                                $arrServiceEmployeeCount[$officeEmployeeCountByDepartment['department_id']] = round(($officeEmployeeCountByDepartment['employee_count']*100), 2) . '%';
                                         } else {*/
-                                                $arrServiceEmployeeCount[$officeEmployeeCountByDepartment['department_id']] = round($officeEmployeeCountByDepartment['employee_count'],2);
+                                                $arrServiceEmployeeCount[$officeEmployeeCountByDepartment['department_id']] = round($officeEmployeeCountByDepartment['employee_count'], 2);
                                         //}
                                         $totalServiceEmpCount += $officeEmployeeCountByDepartment['employee_count'];
                                 } else {
                                         /*if($officeEmployeeCountByDepartment['count_type'] == 'FTE') {
-                                                $arrKeyEmployeeCount[$officeEmployeeCountByDepartment['department_type']] = round(($officeEmployeeCountByDepartment['employee_count']*100),2) . '%';
+                                                $arrKeyEmployeeCount[$officeEmployeeCountByDepartment['department_type']] = round(($officeEmployeeCountByDepartment['employee_count']*100), 2) . '%';
                                         } else {*/
-                                                $arrKeyEmployeeCount[$officeEmployeeCountByDepartment['department_type']] = round($officeEmployeeCountByDepartment['employee_count'],2);
+                                                $arrKeyEmployeeCount[$officeEmployeeCountByDepartment['department_type']] = round($officeEmployeeCountByDepartment['employee_count'], 2);
                                         //}
                                         $totalKeyEmpCount += $officeEmployeeCountByDepartment['employee_count'];
                                 }
@@ -1186,14 +1183,14 @@ class ReportsController extends AppController {
                                 } else {
                                         $officeData[$i][$key] = '';
                                 }
-                                
+
                                 if(isset($arrKeyEmployeeCount[$keyDept])) {
                                         $officeData[$i]['count'.$key] = $arrKeyEmployeeCount[$keyDept];
                                 } else {
                                         $officeData[$i]['count'.$key] = '';
                                 }
                         }
-                        $officeData[$i]['totalKeyEmployeeCount'] = round($totalKeyEmpCount,2);
+                        $officeData[$i]['totalKeyEmployeeCount'] = round($totalKeyEmpCount, 2);
 
                         $serviceContacts = array();
                         foreach($office['OfficeServiceContact'] as $officeServiceContact) {
@@ -1205,14 +1202,14 @@ class ReportsController extends AppController {
                                 } else {
                                         $officeData[$i][$service] = '';
                                 }
-                                
+
                                 if(isset($arrServiceEmployeeCount[$serviceId])) {
                                         $officeData[$i]['count'.$service] = $arrServiceEmployeeCount[$serviceId];
                                 } else {
                                         $officeData[$i]['count'.$service] = '';
                                 }
                         }
-                        $officeData[$i]['totalServiceEmployeeCount'] = round($totalServiceEmpCount,2);
+                        $officeData[$i]['totalServiceEmployeeCount'] = round($totalServiceEmpCount, 2);
 
                         $supportedLanguages = array();
                         foreach($office['OfficeLanguage'] as $officeLanguage) {
@@ -1236,8 +1233,7 @@ class ReportsController extends AppController {
                 $arrServices = array(1 => 'Affiliates', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
                 $arrLanguages = $this->Language->find('list', array('fields' => array('Language.id', 'Language.language'), 'order' => 'Language.language Asc'));
 
-                if ($this->request->isPost())
-		{
+                if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()){
                                 $this->autoRender=false;
                         }
@@ -1480,8 +1476,7 @@ class ReportsController extends AppController {
         }
 
         public function delete_office_record() {
-                if ($this->request->isPost())
-		{
+                if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()){
                                 $this->autoRender=false;
                         }
@@ -1516,8 +1511,7 @@ class ReportsController extends AppController {
                 set_time_limit(0);
                 ini_set('memory_limit', '-1');
 
-                if ($this->request->isPost())
-		{
+                if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()){
                                 $this->autoRender=false;
                         }
@@ -1564,7 +1558,7 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->mergeCells('BD1:BE1');
                         $objPHPExcel->getActiveSheet()->mergeCells('BF1:BG1');
                         $objPHPExcel->getActiveSheet()->mergeCells('BI1:BJ1');
-                        
+
                         $objPHPExcel->getActiveSheet()->getStyle("A1:BJ2")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                         //$objPHPExcel->getActiveSheet()->getStyle('A1:BJ999')->getAlignment()->setWrapText(true);
                         $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
@@ -1640,7 +1634,7 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->getColumnDimension("BH")->setWidth(9);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("BI")->setWidth(11);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("BJ")->setWidth(17);
-                        
+
                         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'General Information');
                         $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Contact details');
                         $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'Key management contacts');
@@ -1762,11 +1756,11 @@ class ReportsController extends AppController {
         }
 
         public function associate_records() {
-                
+
         }
 
         public function deassociate_records() {
-                
+
         }
 
 }

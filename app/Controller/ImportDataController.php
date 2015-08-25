@@ -61,8 +61,7 @@ class ImportDataController extends AppController {
 
                 $status = null;
                 $sheetNames = array('Client List');
-                if ($this->request->isPost())
-		{
+                if ($this->request->isPost()) {
                         if(isset($this->request->data['MarketImport'])) {
                                 $status = $this->request->data['MarketImport']['status'];
                         }
@@ -77,8 +76,7 @@ class ImportDataController extends AppController {
                                 } else {
                                         $this->request->data['MarketImport']['excel_file'] = $this->request->data['MarketImport']['excel_file']['tmp_name'];
                                         $status = 'analyse';
-                                        if (isset($this->request->data['MarketImport']['excel_file']) && !empty($this->request->data['MarketImport']['excel_file']))
-                                        {
+                                        if (isset($this->request->data['MarketImport']['excel_file']) && !empty($this->request->data['MarketImport']['excel_file'])) {
                                                 move_uploaded_file($this->request->data['MarketImport']['excel_file'], ROOT . DS . APP_DIR . DS . 'tmp' . DS . $fileName);
                                                 $excelFile = ROOT . DS . APP_DIR . DS . 'tmp' . DS . $fileName;
                                         }
@@ -88,17 +86,17 @@ class ImportDataController extends AppController {
                                         }
                                         $this->set('services', $this->servicesMap);
                                 }
-                        } else if($status == 'analyse') {
+                        } elseif($status == 'analyse') {
                                 $status = 'import';
 
                                 if(isset($this->request->data['ClientAnalyse']['analyse_service'])) {
                                         $excelFile = $this->request->data['ClientAnalyse']['excel_file'];
 
                                         for($cnt = 1; $cnt < $this->request->data['ClientAnalyse']['unknown_service_count']; $cnt++ ) {
-                                                $unknown_service = $this->request->data['ClientAnalyse'][$cnt]['unknown_service'];
+                                                $unknownService = $this->request->data['ClientAnalyse'][$cnt]['unknown_service'];
                                                 if($this->request->data['ClientAnalyse']['ServiceMain'][$cnt]['service_id'] != '') {
                                                         $serviceMainsId = $this->request->data['ClientAnalyse']['ServiceMain'][$cnt]['service_id'];
-                                                        $this->unknownServices[$unknown_service] = $serviceMainsId;
+                                                        $this->unknownServices[$unknownService] = $serviceMainsId;
                                                 }
                                         }
                                 } else {
@@ -132,7 +130,7 @@ class ImportDataController extends AppController {
                                         $this->parse_client_list($data[$sheetName], $status);
                                 }
                         }
-                        
+
                 } catch (Exception $e) {
                         echo 'Could not read the file. Please check file format and try again.<br />';
                         echo $e->getMessage();
@@ -241,22 +239,22 @@ class ImportDataController extends AppController {
 
                                                 if($countryId != null) {
                                                         $arrClient[] = array(
-                                                            'clientName' => $clientName, 
-                                                            'companyName' => $companyName, 
-                                                            'clientSinceYear' => $year, 
-                                                            'verticalId' => $verticalId, 
-                                                            'serviceId' => $serviceId, 
-                                                            'regionId' => $regionId, 
-                                                            'countryId' => $countryId, 
-                                                            'cityId' => $managedCityId, 
+                                                            'clientName' => $clientName,
+                                                            'companyName' => $companyName,
+                                                            'clientSinceYear' => $year,
+                                                            'verticalId' => $verticalId,
+                                                            'serviceId' => $serviceId,
+                                                            'regionId' => $regionId,
+                                                            'countryId' => $countryId,
+                                                            'cityId' => $managedCityId,
                                                             'managingEntity' => $managingEntity,
                                                             'activeMarkets' => $activeMarkets,
-                                                            'fiscalYr' => $fiscalYr, 
-                                                            'clientSinceMonth' => $month, 
-                                                            'revenue' => $revenue, 
-                                                            'agencyOpportunity' => $agencyOpportunity, 
-                                                            'currency' => $currency, 
-                                                            'revenueForecast' => $revenueForecast, 
+                                                            'fiscalYr' => $fiscalYr,
+                                                            'clientSinceMonth' => $month,
+                                                            'revenue' => $revenue,
+                                                            'agencyOpportunity' => $agencyOpportunity,
+                                                            'currency' => $currency,
+                                                            'revenueForecast' => $revenueForecast,
                                                             'pitchStage' => $pitchStage,
                                                             'pitchDate' => $pitchDate,
                                                             'lostDate' => $lostDate,
@@ -308,7 +306,7 @@ class ImportDataController extends AppController {
                                         }
                                 }
                         }
-                        $dataClientList = NULL;
+                        $dataClientList = null;
                 }
         }
 
@@ -324,8 +322,7 @@ class ImportDataController extends AppController {
 
                 $status = null;
                 $sheetNames = array('Offices');
-                if ($this->request->isPost())
-		{
+                if ($this->request->isPost()) {
                         if(isset($this->request->data['MarketImport'])) {
                                 $status = $this->request->data['MarketImport']['status'];
                         }
@@ -337,8 +334,7 @@ class ImportDataController extends AppController {
                                 } else {
                                         $this->request->data['MarketImport']['excel_file'] = $this->request->data['MarketImport']['excel_file']['tmp_name'];
                                         $status = 'analyse';
-                                        if (isset($this->request->data['MarketImport']['excel_file']) && !empty($this->request->data['MarketImport']['excel_file']))
-                                        {
+                                        if (isset($this->request->data['MarketImport']['excel_file']) && !empty($this->request->data['MarketImport']['excel_file'])) {
                                                 move_uploaded_file($this->request->data['MarketImport']['excel_file'], ROOT . DS . APP_DIR . DS . 'tmp' . DS . $fileName);
                                                 $excelFile = ROOT . DS . APP_DIR . DS . 'tmp' . DS . $fileName;
                                         }
@@ -348,17 +344,17 @@ class ImportDataController extends AppController {
                                         }
                                         $this->set('services', $this->servicesMap);
                                 }
-                        } else if($status == 'analyse') {
+                        } elseif($status == 'analyse') {
                                 $status = 'import';
 
                                 if(isset($this->request->data['ClientAnalyse']['analyse_service'])) {
                                         $excelFile = $this->request->data['ClientAnalyse']['excel_file'];
 
                                         for($cnt = 1; $cnt < $this->request->data['ClientAnalyse']['unknown_service_count']; $cnt++ ) {
-                                                $unknown_service = $this->request->data['ClientAnalyse'][$cnt]['unknown_service'];
+                                                $unknownService = $this->request->data['ClientAnalyse'][$cnt]['unknown_service'];
                                                 if($this->request->data['ClientAnalyse']['ServiceMain'][$cnt]['service_id'] != '') {
                                                         $serviceMainsId = $this->request->data['ClientAnalyse']['ServiceMain'][$cnt]['service_id'];
-                                                        $this->unknownServices[$unknown_service] = $serviceMainsId;
+                                                        $this->unknownServices[$unknownService] = $serviceMainsId;
                                                 }
                                         }
                                 } else {
