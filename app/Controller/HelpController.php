@@ -1,16 +1,21 @@
 <?php
+App::uses('CakeEmail', 'Network/Email');
+
 class HelpController extends AppController {
 	public $helpers = array('Html', 'Form');
 
         public $components = array('RequestHandler');
-        
+
         public $uses = array(
             'HelpChapter',
             'HelpQuestion',
-            'UserAskedQuestion'
+            'UserAskedQuestion',
+            'UserLoginRole'
         );
 
         public function beforeFilter() {
+                
+                $this->Auth->allow('login_help');
 
                 $this->Auth->loginAction = array(
                   'controller' => 'users',
@@ -48,8 +53,7 @@ class HelpController extends AppController {
         }
 
         public function save_user_question() {
-                if ($this->request->isPost())
-		{
+                if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()){
                                 $this->autoRender=false;
                         }
@@ -84,8 +88,7 @@ class HelpController extends AppController {
         }
 
         public function save_new_chapter() {
-                if ($this->request->isPost())
-		{
+                if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()){
                                 $this->autoRender=false;
                         }
@@ -114,8 +117,7 @@ class HelpController extends AppController {
         }
 
         public function save_new_question() {
-                if ($this->request->isPost())
-		{
+                if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()){
                                 $this->autoRender=false;
                         }
@@ -138,6 +140,34 @@ class HelpController extends AppController {
                                         )
                                 )
                         );
+                }
+                $result = array();
+                $result['success'] = true;
+                return json_encode($result);
+        }
+        
+        public function login_help() {
+                if($this->RequestHandler->isAjax()){
+                        $this->autoRender=false;
+                }
+                if ($this->request->isPost()) {
+                        $arrData = $this->request->data;
+
+                        $this->UserLoginRole->Behaviors->attach('Containable');
+                        $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global'), 'order' => 'User.display_name'));
+                        $emailTo = array();
+                        foreach($globalUsers as $globalUser) {
+                                $emailTo[] = $globalUser['User']['email_id'];
+                        }
+
+                        $email = new CakeEmail('gmail');
+                        $email->viewVars(array('title_for_layout' => 'Unable to connect', 'type' => 'Login failed', 'data' => $arrData));
+                        $email->template('login_fail', 'default')
+                            ->emailFormat('html')
+                            ->to(array('mathilde.natier@iprospect.com'))
+                            ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
+                            ->subject('User unable to connect')
+                            ->send();
                 }
                 $result = array();
                 $result['success'] = true;
