@@ -18,7 +18,7 @@ echo $this->Form->end('Login');
         <a id="needHelp" href="#" style="text-decoration: none; color: #455560" onmouseover='this.style.color="#6e0000"' onmouseout='this.style.color="#455560"'>Can't connect? Click here for help</a>
 </div>
 
-<div id="popupWindow">
+<div id="popupWindow" style="display: none">
     <div>Unable to connect...</div>
     <div style="overflow: hidden;">
     <div id="divSetting">
