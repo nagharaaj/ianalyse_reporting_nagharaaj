@@ -437,7 +437,8 @@ h2 span {
 
 button#createNew, button#CancelNew, button#SaveNew, button#SaveNewUser, button#UpdateClient, button#CancelUpdate,
 button#clearfilteringbutton, button#exporttoexcelbutton, button#exportButton, button#cancelExportButton,
-button#CancelNewChapter, button#CancelNewQuestion, button#SaveNewChapter, button#SaveNewQuestion, button#addassociation
+button#CancelNewChapter, button#CancelNewQuestion, button#SaveNewChapter, button#SaveNewQuestion, button#addassociation,
+button#selectcurrencybutton, button#changeCurrencyButton, button#cancelCurrencyButton
 {
         border: 1px solid #9ca0a3;
         background-color: #fefefe;
@@ -474,10 +475,14 @@ button#exporttoexcelbutton {
         min-width: 120px;
 }
 
+button#selectcurrencybutton {
+        min-width: 157px;
+}
+
 button#createNew:hover, button#CancelNew:hover, button#SaveNew:hover, button#SaveNewUser:hover, button#CancelUpdate:hover,
 button#UpdateClient:hover, button#clearfilteringbutton:hover, button#exporttoexcelbutton:hover, button#exportButton:hover, button#cancelExportButton:hover,
 button#CancelNewChapter:hover, button#CancelNewQuestion:hover, button#SaveNewChapter:hover, button#SaveNewQuestion:hover,
-button#addassociation:hover
+button#addassociation:hover, button#selectcurrencybutton:hover, button#changeCurrencyButton:hover, button#cancelCurrencyButton:hover
 {
         font-size: 12px;
         font-weight: 600;

@@ -427,6 +427,9 @@ class ReportsController extends AppController {
                 $clientData = array();
                 $i = 0;
                 $condition = null;
+                $revenueCurrency = isset($_GET['revenue_currency']) ? $_GET['revenue_currency'] : 'Actual currencies';
+                $currencies = $this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'));
+                $convertRatio = array_search($revenueCurrency, $currencies);
                 if ($this->Auth->user('role') == 'Regional') {
                         $region = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         //$condition = 'ClientRevenueByService.region_id = ' . $region['UserMarket']['market_id'];
@@ -488,6 +491,43 @@ class ReportsController extends AppController {
                         $clientData[$i]['Service'] = $client[0]['service_name'];
                         $clientData[$i]['Division'] = $client[0]['division'];
                         $clientData[$i]['ActiveMarkets'] = $client['ClientRevenueByService']['active_markets'];
+
+                        $estimatedRevenue = 0;
+                        $actualRevenue = 0;
+                        $currency = '';
+                        if($revenueCurrency == "Actual currencies") {
+                                $estimatedRevenue = $client['ClientRevenueByService']['estimated_revenue'];
+                                $actualRevenue = $client['ClientRevenueByService']['actual_revenue'];
+                                $currency = $client[0]['currency'];
+                        } else {
+                                $currency = $revenueCurrency;
+                                if(is_numeric($client['ClientRevenueByService']['estimated_revenue'])) {
+                                        if($client[0]['currency'] == $revenueCurrency) {
+                                                $estimatedRevenue = $client['ClientRevenueByService']['estimated_revenue'];
+                                        } else {
+                                                $dollarConvertRatio = array_search($client[0]['currency'], $currencies);
+                                                if($revenueCurrency == "USD") {
+                                                     $estimatedRevenue = ($client['ClientRevenueByService']['estimated_revenue'] * $dollarConvertRatio);
+                                                } else {
+                                                     $dollarEstRevenue = ($client['ClientRevenueByService']['estimated_revenue'] * $dollarConvertRatio);
+                                                     $estimatedRevenue = ($dollarEstRevenue / $convertRatio);
+                                                }
+                                        }
+                                }
+                                if(is_numeric($client['ClientRevenueByService']['actual_revenue'])) {
+                                        if($client[0]['currency'] == $revenueCurrency) {
+                                                $actualRevenue = $client['ClientRevenueByService']['actual_revenue'];
+                                        } else {
+                                                $dollarConvertRatio = array_search($client[0]['currency'], $currencies);
+                                                if($revenueCurrency == "USD") {
+                                                     $actualRevenue = ($client['ClientRevenueByService']['actual_revenue'] * $dollarConvertRatio);
+                                                } else {
+                                                     $dollarEstRevenue = ($client['ClientRevenueByService']['actual_revenue'] * $dollarConvertRatio);
+                                                     $actualRevenue = ($dollarEstRevenue / $convertRatio);
+                                                }
+                                        }
+                                }
+                        }
                         if ($this->Auth->user('role') == 'Viewer') {
                                 $clientData[$i]['EstimatedRevenue'] = '';
                                 $clientData[$i]['ActualRevenue'] = '';
@@ -495,9 +535,9 @@ class ReportsController extends AppController {
                         } else {
                                 if ($this->Auth->user('role') == 'Regional') {
                                         if ($region['UserMarket']['market_id'] == $client['ClientRevenueByService']['region_id']) {
-                                                $clientData[$i]['EstimatedRevenue'] = $client['ClientRevenueByService']['estimated_revenue'];
-                                                $clientData[$i]['ActualRevenue'] = $client['ClientRevenueByService']['actual_revenue'];
-                                                $clientData[$i]['Currency'] = $client[0]['currency'];
+                                                $clientData[$i]['EstimatedRevenue'] = $estimatedRevenue;
+                                                $clientData[$i]['ActualRevenue'] = $actualRevenue;
+                                                $clientData[$i]['Currency'] = $currency;
                                         } else {
                                                 $clientData[$i]['EstimatedRevenue'] = '';
                                                 $clientData[$i]['ActualRevenue'] = '';
@@ -505,18 +545,18 @@ class ReportsController extends AppController {
                                         }
                                 } elseif ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                                         if (in_array($client['ClientRevenueByService']['country_id'], $arrCountries)) {
-                                                $clientData[$i]['EstimatedRevenue'] = $client['ClientRevenueByService']['estimated_revenue'];
-                                                $clientData[$i]['ActualRevenue'] = $client['ClientRevenueByService']['actual_revenue'];
-                                                $clientData[$i]['Currency'] = $client[0]['currency'];
+                                                $clientData[$i]['EstimatedRevenue'] = $estimatedRevenue;
+                                                $clientData[$i]['ActualRevenue'] = $actualRevenue;
+                                                $clientData[$i]['Currency'] = $currency;
                                         } else {
                                                 $clientData[$i]['EstimatedRevenue'] = '';
                                                 $clientData[$i]['ActualRevenue'] = '';
                                                 $clientData[$i]['Currency'] = '';
                                         }
                                 } else {
-                                        $clientData[$i]['EstimatedRevenue'] = $client['ClientRevenueByService']['estimated_revenue'];
-                                        $clientData[$i]['ActualRevenue'] = $client['ClientRevenueByService']['actual_revenue'];
-                                        $clientData[$i]['Currency'] = $client[0]['currency'];
+                                        $clientData[$i]['EstimatedRevenue'] = $estimatedRevenue;
+                                        $clientData[$i]['ActualRevenue'] = $actualRevenue;
+                                        $clientData[$i]['Currency'] = $currency;
                                 }
                         }
                         $clientData[$i]['Comments'] = $client['ClientRevenueByService']['comments'];

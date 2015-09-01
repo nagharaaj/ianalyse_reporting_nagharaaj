@@ -345,6 +345,9 @@
             $('#exporttoexcelbutton').jqxButton({ theme: theme });
             $('#exportButton').jqxButton({ theme: theme });
             $('#cancelExportButton').jqxButton({ theme: theme });
+            $('#selectcurrencybutton').jqxButton({ theme: theme });
+            $('#changeCurrencyButton').jqxButton({ theme: theme });
+            $('#cancelCurrencyButton').jqxButton({ theme: theme });
             // clear the filtering.
             $('#clearfilteringbutton').click(function () {
                 $("#jqxgrid").jqxGrid('clearfilters');
@@ -362,6 +365,7 @@
                         $("#popupWindow").jqxWindow({ title: 'Export to excel', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "125px", maxWidth: 400, isModal: true, draggable: false });
                         $('#divSetting').hide();
                         $('#divLoader').show();
+                        $('#divRevenueCurrency').hide();
                         $("#popupWindow").jqxWindow('open');
 
                         var rows = $("#jqxgrid").jqxGrid('getrows');
@@ -389,13 +393,39 @@
                         $("#popupWindow").jqxWindow({ title: 'Export to excel/CSV', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "125px", maxWidth: 400, isModal: true, draggable: false });
                         $('#divSetting').show();
                         $('#divLoader').hide();
+                        $('#divRevenueCurrency').hide();
                         $("#popupWindow").jqxWindow('open');
                 }
+            });
+
+            $('#selectcurrencybutton').click(function () {
+                $("#popupWindow").jqxWindow({ title: 'Select currency for revenue', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelCurrencyButton'), height: "125px", maxWidth: 400, isModal: true, draggable: false });
+                $('#divSetting').hide();
+                $('#divLoader').hide();
+                $('#divRevenueCurrency').show();
+                $("#popupWindow").jqxWindow('open');
+            });
+
+            $('#changeCurrencyButton').click(function () {
+                var revenueCurrency = $("#revenuecurrency option:selected").text();
+                source.data = { revenue_currency : revenueCurrency };
+                $("#exportcurrency option").filter(function() {
+                    //may want to use $.trim in here
+                    return $(this).text() == revenueCurrency;
+                }).prop('selected', true);
+                $("#statscurrency option").filter(function() {
+                    //may want to use $.trim in here
+                    return $(this).text() == revenueCurrency;
+                }).prop('selected', true);
+                dataAdapter.dataBind();
+                calculateStats();
+                $("#popupWindow").jqxWindow('close');
             });
 
             $('#exportButton').click(function () {
                 $('#divSetting').hide();
                 $('#divLoader').show();
+                $('#divRevenueCurrency').hide();
 
                 var rows = $("#jqxgrid").jqxGrid('getrows');
                 var tz = jstz.determine(); // Determines the time zone of the browser client
@@ -426,6 +456,7 @@
             });
             $('#statscurrency').append(toAppend);
             $('#exportcurrency').append(toAppend);
+            $('#revenuecurrency').append(toAppend);
             $('#statscurrency').on('change', function () {
                     calculateStats();
             });
@@ -458,6 +489,7 @@
 <div id='jqxWidget'>
         <div style="margin-right: 7px; margin-bottom: 5px" align="right">
             <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
+            <button style="margin-left: 5px" id="selectcurrencybutton" title="Select currency for report">SELECT CURRENCY</button>
             <button style="margin-left: 5px" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
         </div>
         <div id="jqxgrid"></div>
@@ -500,6 +532,17 @@
                         <div id="divLoader" align="center" style="display: none; padding-top: 25px; padding-left: 90px;">
                                 <div class="jqx-grid-load" style="float: left; overflow: hidden; width: 32px; height: 32px;"></div>
                                 <span style="margin-top: 10px; float: left; display: block; margin-left: 5px;">Please wait...</span>
+                        </div>
+                        <div id="divRevenueCurrency">
+                                <div style="padding: 10px 5px">
+                                        Select currency:
+                                        <select id="revenuecurrency"><option value="default">Actual currencies</option></select>
+                                </div>
+                                <div style="float: right; margin-top: 10px">
+                                    <button style="margin-bottom: 5px;" id="changeCurrencyButton">SUBMIT</button>
+                                    <button id="cancelCurrencyButton">CANCEL</button>
+                                </div>
+                                <br />
                         </div>
                 </div>
         </div>
