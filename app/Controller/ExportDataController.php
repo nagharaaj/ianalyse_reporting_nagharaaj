@@ -71,7 +71,7 @@ class ExportDataController extends AppController {
                         'ClientCategory.dan_mapping',
                     ),
                     'conditions' => array(
-                        "(pitch_stage like 'Live%' or pitch_stage like 'Won%' or pitch_stage like 'Lost%' or pitch_stage='Cancelled')"
+                        "(pitch_stage like 'Live%' or pitch_stage like 'Won%' or pitch_stage like 'Lost%' or pitch_stage='Cancelled') and pitch_stage != 'Lost - archive'"
                     ),
                     'group' => array('ClientRevenueByService.client_name', 'ClientRevenueByService.country_id', 'ClientRevenueByService.pitch_stage'),
                     'order' => 'ClientRevenueByService.client_name asc, ClientRevenueByService.pitch_stage asc, ClientRevenueByService.pitch_date desc'
