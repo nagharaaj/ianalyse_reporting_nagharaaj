@@ -16,7 +16,7 @@ class WeeklyMailsShell extends AppShell {
                 $weeklyStats = $this->weeklyChanges();
                 $monthlyStats = $this->monthlyChanges();
                 $questions = $this->weeklyUserQuestions();
-                
+
                 $arrData = array(
                     'weeklyStats' => $weeklyStats,
                     'monthlyStats' => $monthlyStats,
@@ -24,7 +24,7 @@ class WeeklyMailsShell extends AppShell {
                 );
 
                 /*$this->UserLoginRole->Behaviors->attach('Containable');
-                $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global'), 'order' => 'User.display_name'));
+                $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global', 'User.weekly_summary_mail' => 1), 'order' => 'User.display_name'));
 
                 $emailTo = array();
                 foreach($globalUsers as $globalUser) {
@@ -46,42 +46,42 @@ class WeeklyMailsShell extends AppShell {
                 $currDt = date('Y-m-d');
                 $lastWeekDt = date('Y-m-d', strtotime('-7 days'));
 
-                $weekNoOfChanges = $this->ClientRevenueByService->find('all', array('fields' => array('COUNT(ClientRevenueByService.id) as no_of_changes', 'Country.country'), 'conditions' => ('ClientRevenueByService.created between \'' . $lastWeekDt . '\' and \'' . $currDt . '\' or ClientRevenueByService.modified between \'' . $lastWeekDt . '\' and \'' . $currDt . '\''), 'group' => array('Country.country'), 'order' => 'no_of_changes DESC'));
+                $weekNoOfChanges = $this->ClientRevenueByService->find('all', array('fields' => array('COUNT(ClientRevenueByService.id) as no_of_changes', 'Country.country', 'Country.id'), 'conditions' => ('ClientRevenueByService.created between \'' . $lastWeekDt . '\' and \'' . $currDt . '\' or ClientRevenueByService.modified between \'' . $lastWeekDt . '\' and \'' . $currDt . '\''), 'group' => array('Country.country'), 'order' => 'no_of_changes DESC'));
                 //echo '<pre>'; print_r($weekNoOfChanges);
 
                 $arrCountries = array();
                 foreach($weekNoOfChanges as $weekNoOfChange) {
-                        $arrCountries[] = $weekNoOfChange['Country']['country'];
+                        $arrCountries[] = $weekNoOfChange['Country']['id'];
                 }
 
-                $weekNoChangeCountries = $this->Market->find('list', array('conditions' => array('market NOT IN (\'' . implode('\',\'', $arrCountries) . '\')')));
+                $weekNoChangeCountries = $this->Market->find('list', array('conditions' => array('Market.country_id NOT IN (\'' . implode('\',\'', $arrCountries) . '\')')));
                 //echo '<pre>'; print_r($weekNoChangeCountries);
-                
+
                 return array('weekNoOfChanges' => $weekNoOfChanges, 'weekNoChangeCountries' => $weekNoChangeCountries);
 
         }
 
         public function monthlyChanges() {
-                
+
                 $currDt = date('Y-m-d');
                 $lastMonthDt = date('Y-m-d', strtotime('-30 days'));
 
-                $monthNoOfChanges = $this->ClientRevenueByService->find('all', array('fields' => array('COUNT(ClientRevenueByService.id) as no_of_changes', 'Country.country'), 'conditions' => ('ClientRevenueByService.created between \'' . $lastMonthDt . '\' and \'' . $currDt . '\' or ClientRevenueByService.modified between \'' . $lastMonthDt . '\' and \'' . $currDt . '\''), 'group' => array('Country.country'), 'order' => 'no_of_changes DESC'));
+                $monthNoOfChanges = $this->ClientRevenueByService->find('all', array('fields' => array('COUNT(ClientRevenueByService.id) as no_of_changes', 'Country.country', 'Country.id'), 'conditions' => ('ClientRevenueByService.created between \'' . $lastMonthDt . '\' and \'' . $currDt . '\' or ClientRevenueByService.modified between \'' . $lastMonthDt . '\' and \'' . $currDt . '\''), 'group' => array('Country.country'), 'order' => 'no_of_changes DESC'));
                 //echo '<pre>'; print_r($monthNoOfChanges);
 
                 $arrCountries = array();
                 foreach($monthNoOfChanges as $monthNoOfChange) {
-                        $arrCountries[] = $monthNoOfChange['Country']['country'];
+                        $arrCountries[] = $monthNoOfChange['Country']['id'];
                 }
 
-                $monthNoChangeCountries = $this->Market->find('list', array('conditions' => array('market NOT IN (\'' . implode('\',\'', $arrCountries) . '\')')));
+                $monthNoChangeCountries = $this->Market->find('list', array('conditions' => array('Market.country_id NOT IN (\'' . implode('\',\'', $arrCountries) . '\')')));
                 //echo '<pre>'; print_r($monthNoChangeCountries);
 
                 return array('monthNoOfChanges' => $monthNoOfChanges, 'monthNoChangeCountries' => $monthNoChangeCountries);
         }
 
         public function weeklyUserQuestions() {
-                
+
                 $currDt = date('Y-m-d');
                 $lastWeekDt = date('Y-m-d', strtotime('-7 days'));
 
