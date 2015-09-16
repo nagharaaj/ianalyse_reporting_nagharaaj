@@ -1278,6 +1278,8 @@ class ReportsController extends AppController {
                                 $this->autoRender=false;
                         }
                         $arrData = $this->request->data;
+                        $region = $this->Region->findByRegion(trim($arrData['Region']));
+                        $country = $this->Country->findByCountry(trim($arrData['Country']));
                         if(!empty($arrData['RecordId'])) {
                                 $officeId = $arrData['RecordId'];
 
@@ -1285,9 +1287,18 @@ class ReportsController extends AppController {
                                 $this->Office->save(
                                         array(
                                                 'Office' => array(
+                                                        'region_id' => $region['Region']['id'],
                                                         'year_established' => $arrData['YearEstablished'],
                                                         'employee_count' => $arrData['EmployeeCount'],
                                                         'address' => $arrData['Address']
+                                                )
+                                        )
+                                );
+                                $marketExists = $this->Market->find('first', array('conditions' => array('region_id' => $region['Region']['id'], 'country_id' => $country['Country']['id'])));
+                                $this->Market->id = $marketExists['Market']['id'];
+                                $this->Market->save(
+                                        array('Market' => array(
+                                                        'region_id' => $region['Region']['id'],
                                                 )
                                         )
                                 );
@@ -1298,8 +1309,6 @@ class ReportsController extends AppController {
                                 $this->OfficeEmployeeCountByDepartment->query('DELETE FROM `office_employee_count_by_departments` WHERE `office_id` = ' . $officeId);
                                 $this->OfficeLanguage->query('DELETE FROM `office_languages` WHERE `office_id` = ' . $officeId);
                         } else {
-                                $region = $this->Region->findByRegion(trim($arrData['Region']));
-                                $country = $this->Country->findByCountry(trim($arrData['Country']));
                                 $marketExists = $this->Market->find('count', array('conditions' => array('region_id' => $region['Region']['id'], 'country_id' => $country['Country']['id'])));
                                 if($marketExists == 0) {
                                         $this->Market->create();
