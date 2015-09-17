@@ -122,7 +122,7 @@ class ReportsController extends AppController {
 
                 $searchResult = array();
                 if (!empty($arrData['name_startsWith'])) {
-                        $clients = $this->ClientRevenueByService->find('all', array('fields' => array('client_name', 'parent_company'), 'conditions' => ('client_name like \'' . $arrData['name_startsWith'] . '%\''), 'order' => 'client_name ASC'));
+                        $clients = $this->ClientRevenueByService->find('all', array('fields' => array('DISTINCT client_name', 'parent_company'), 'conditions' => ('client_name like \'' . $arrData['name_startsWith'] . '%\''), 'order' => 'client_name ASC'));
                         foreach ($clients as $client) {
                                 $searchResult[] = array('advertiser_name' => $client['ClientRevenueByService']['client_name'], 'parent_company' => $client['ClientRevenueByService']['parent_company']);
                         }
@@ -255,6 +255,7 @@ class ReportsController extends AppController {
                                 )
                         );
                 }
+                $result = array();
                 if ($arrData) {
                         $this->UserLoginRole->Behaviors->attach('Containable');
                         $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global'), 'order' => 'User.display_name'));
@@ -264,16 +265,19 @@ class ReportsController extends AppController {
                                 $emailTo[] = $globalUser['User']['email_id'];
                         }
 
-                        $email = new CakeEmail('gmail');
-                        $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'New Pitch', 'data' => $arrData));
-                        $email->template('new_pitch', 'default')
-                            ->emailFormat('html')
-                            ->to(array('mathilde.natier@iprospect.com'))
-                            ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
-                            ->subject('New pitch added')
-                            ->send();
+                        try {
+                                $email = new CakeEmail('gmail');
+                                $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'New Pitch', 'data' => $arrData));
+                                $email->template('new_pitch', 'default')
+                                    ->emailFormat('html')
+                                    ->to(array('mathilde.natier@iprospect.com'))
+                                    ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
+                                    ->subject('New pitch added')
+                                    ->send();
+                        } catch (Exception $e) {
+                                $result['mailError'] = $e->getMessage();
+                        }
                 }
-                $result = array();
                 $result['success'] = true;
                 return json_encode($result);
         }
@@ -284,6 +288,7 @@ class ReportsController extends AppController {
                                 $this->autoRender=false;
                         }
 
+                        $result = array();
                         $arrData = $this->request->data;
                         $clientRecord = $this->ClientRevenueByService->findById($arrData['RecordId']);
                         $clientRecord['loggedUser']['display_name'] = $this->Session->read('loggedUser.displayName');
@@ -325,17 +330,20 @@ class ReportsController extends AppController {
                                                 )
                                         );
 
-                                        $email = new CakeEmail('gmail');
-                                        $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
-                                        $email->template('delete_pitch', 'default')
-                                            ->emailFormat('html')
-                                            ->to(array('mathilde.natier@iprospect.com'))
-                                            ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
-                                            ->subject('Pitch is deleted')
-                                            ->send();
+                                        try {
+                                                $email = new CakeEmail('gmail');
+                                                $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
+                                                $email->template('delete_pitch', 'default')
+                                                    ->emailFormat('html')
+                                                    ->to(array('mathilde.natier@iprospect.com'))
+                                                    ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
+                                                    ->subject('Pitch is deleted')
+                                                    ->send();
+                                        } catch (Exception $e) {
+                                                $result['mailError'] = $e->getMessage();
+                                        }
                                 }
 
-                                $result = array();
                                 $result['success'] = true;
                                 return json_encode($result);
                         }
@@ -793,6 +801,7 @@ class ReportsController extends AppController {
                                 );
                         }
                 }
+                $result = array();
                 if ($arrData) {
                         if(preg_match('/Live/', $existingStatus['ClientRevenueByService']['pitch_stage']) && !preg_match('/Live/', $pitchStage)
                                 && $existingStatus['ClientRevenueByService']['pitch_stage'] != $pitchStage) {
@@ -811,17 +820,20 @@ class ReportsController extends AppController {
                                         $emailTo[] = $globalUser['User']['email_id'];
                                 }
 
-                                $email = new CakeEmail('gmail');
-                                $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Pitch updated', 'data' => $arrData));
-                                $email->template($template, 'default')
-                                    ->emailFormat('html')
-                                    ->to(array('mathilde.natier@iprospect.com'))
-                                    ->from(array('connectiprospect@gmail.com' => 'iProspect Connect'))
-                                    ->subject('iProspect Connect: ' . $subject)
-                                    ->send();
+                                try {
+                                        $email = new CakeEmail('gmail');
+                                        $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Pitch updated', 'data' => $arrData));
+                                        $email->template($template, 'default')
+                                            ->emailFormat('html')
+                                            ->to(array('mathilde.natier@iprospect.com'))
+                                            ->from(array('connectiprospect@gmail.com' => 'iProspect Connect'))
+                                            ->subject('iProspect Connect: ' . $subject)
+                                            ->send();
+                                } catch (Exception $e) {
+                                        $result['mailError'] = $e->getMessage();
+                                }
                         }
                 }
-                $result = array();
                 $result['success'] = true;
                 return json_encode($result);
         }

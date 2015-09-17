@@ -817,6 +817,7 @@
                     var recordid = $("#jqxgrid").jqxGrid('getCellValue', rowIndex, 'RecordId');
                     var row = { RecordId: recordid };
                     if(confirm('Are you sure to delete this record?')) {
+                        var state = $("#jqxgrid").jqxGrid('savestate');
                         $.ajax({
                             type: "POST",
                             url: "/reports/delete_client_record/",
@@ -827,6 +828,9 @@
                                 if(result.success == true) {
                                     alert("Data deleted successfully...");
                                     $("#jqxgrid").jqxGrid('updateBoundData');
+                                    if (state) {
+                                        $("#jqxgrid").jqxGrid('loadstate', state);
+                                    }
                                 } else {
                                     alert(result.errors);
                                     return false;
