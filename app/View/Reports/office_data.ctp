@@ -448,6 +448,7 @@
                 var recordid = $("#jqxgrid").jqxGrid('getCellValue', rowIndex, 'RecordId');
                 var row = { RecordId: recordid };
                 if(confirm('Are you sure to delete this record?')) {
+                    var state = $("#jqxgrid").jqxGrid('savestate');
                     $.ajax({
                         type: "POST",
                         url: "/reports/delete_office_record/",
@@ -458,6 +459,9 @@
                             if(result.success == true) {
                                 alert("Data deleted successfully...");
                                 $("#jqxgrid").jqxGrid('updateBoundData');
+                                if (state) {
+                                    $("#jqxgrid").jqxGrid('loadstate', state);
+                                }
                             } else {
                                 alert(result.errors);
                                 return false;
@@ -759,6 +763,7 @@
                         return false;
                 }
                 $("#SaveNew").attr('disabled', true);
+                var state = $("#jqxgrid").jqxGrid('savestate');
                 
                 var keyContacts = [];
                 var executiveContacts = [];
@@ -878,6 +883,9 @@
                     success : function(result) {
                         if(result.success == true) {
                             $("#jqxgrid").jqxGrid('updateBoundData');
+                            if (state) {
+                                $("#jqxgrid").jqxGrid('loadstate', state);
+                            }
                             $("#SaveNew").attr('disabled', false);
                             $("#popupWindow").jqxWindow('hide');
                         } else {
