@@ -27,6 +27,8 @@
              var arrMonths = ['Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)'];
              var currMonth = '<?php echo $currMonth; ?>';
              var currYear = '<?php echo $currYear; ?>';
+             var localizationobj = {};
+             localizationobj.loadtext = "Processing";
 
              var months = [
                      {value: 1, label: "Jan (1)"}, 
@@ -307,6 +309,7 @@
                     }
             });
             $('#jqxgrid').jqxGrid({ rendered: function() {
+                    $("#jqxgrid").jqxGrid('localizestrings', localizationobj);
                     var paginginfo = $("#jqxgrid").jqxGrid('getpaginginformation');
                     if(paginginfo.pagescount <= 1) {
                         $('#pagerjqxgrid').hide();
@@ -814,10 +817,12 @@
                     if (isNaN(rowIndex)) {
                         return;
                     }
+                    var id = $("#jqxgrid").jqxGrid('getrowid', rowIndex);
                     var recordid = $("#jqxgrid").jqxGrid('getCellValue', rowIndex, 'RecordId');
                     var row = { RecordId: recordid };
                     if(confirm('Are you sure to delete this record?')) {
-                        var state = $("#jqxgrid").jqxGrid('savestate');
+                        //var state = $("#jqxgrid").jqxGrid('savestate');
+                        $('#jqxgrid').jqxGrid('showloadelement');
                         $.ajax({
                             type: "POST",
                             url: "/reports/delete_client_record/",
@@ -826,11 +831,8 @@
                             dataType: "json",
                             success : function(result) {
                                 if(result.success == true) {
-                                    alert("Data deleted successfully...");
-                                    $("#jqxgrid").jqxGrid('updateBoundData');
-                                    if (state) {
-                                        $("#jqxgrid").jqxGrid('loadstate', state);
-                                    }
+                                    var commit = $("#jqxgrid").jqxGrid('deleterow', id);
+                                    $('#jqxgrid').jqxGrid('hideloadelement');
                                 } else {
                                     alert(result.errors);
                                     return false;
