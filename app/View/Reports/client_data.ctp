@@ -1100,6 +1100,7 @@
                         return false;
                 }
                 $("#SaveNew").attr('disabled', true);
+                var state = $("#jqxgrid").jqxGrid('savestate');
                 
                 var row = { ClientName: $("#advertisername").val(), ParentCompany: $("#parentcompany").val(), Region: $("#region").val(),
                     Country: $("#nameofentity").val(), City: $("#city").val(), LeadAgency: $("#agency").val(), ClientCategory: $("#category").val(), 
@@ -1118,6 +1119,9 @@
                         if(result.success == true) {
                             //alert("Data saved successfully...");
                             $("#jqxgrid").jqxGrid('updateBoundData');
+                            if (state) {
+                                $("#jqxgrid").jqxGrid('loadstate', state);
+                            }
                             $("#SaveNew").attr('disabled', false);
                             $("#popupWindow").jqxWindow('hide');
                         } else {
