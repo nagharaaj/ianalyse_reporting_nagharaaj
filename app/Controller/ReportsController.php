@@ -27,7 +27,8 @@ class ReportsController extends AppController {
             'PitchStage',
             'Division',
             'UserLoginRole',
-            'ClientDeleteLog'
+            'ClientDeleteLog',
+            'UserMailNotificationClient'
         );
 
         public $unwanted_array = array( 'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
@@ -258,11 +259,19 @@ class ReportsController extends AppController {
                 $result = array();
                 if ($arrData) {
                         $this->UserLoginRole->Behaviors->attach('Containable');
-                        $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global'), 'order' => 'User.display_name'));
+                        $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id', 'User.id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global', 'User.client_specific_mail' => 1), 'order' => 'User.display_name'));
 
                         $emailTo = array();
                         foreach($globalUsers as $globalUser) {
-                                $emailTo[] = $globalUser['User']['email_id'];
+                                $isSpecificClientAlert = $this->UserMailNotificationClient->find('count', array('conditions' => array('user_id' => $globalUser['User']['id'])));
+                                if($isSpecificClientAlert > 0) {
+                                        $isClientAlert = $this->UserMailNotificationClient->find('count', array('conditions' => array('user_id' => $globalUser['User']['id'], 'client_name' => $arrData['ClientName'])));
+                                        if($isClientAlert > 0) {
+                                                $emailTo[] = $globalUser['User']['email_id'];
+                                        }
+                                } else {
+                                        $emailTo[] = $globalUser['User']['email_id'];
+                                }
                         }
 
                         try {
@@ -270,7 +279,7 @@ class ReportsController extends AppController {
                                 $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'New Pitch', 'data' => $arrData));
                                 $email->template('new_pitch', 'default')
                                     ->emailFormat('html')
-                                    ->to(array('mathilde.natier@iprospect.com'))
+                                    ->to($emailTo)
                                     ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
                                     ->subject('New pitch added')
                                     ->send();
@@ -813,11 +822,19 @@ class ReportsController extends AppController {
                                         $template = 'won_pitch';
                                 }
                                 $this->UserLoginRole->Behaviors->attach('Containable');
-                                $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global'), 'order' => 'User.display_name'));
+                                $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global', 'User.client_specific_mail' => 1), 'order' => 'User.display_name'));
 
                                 $emailTo = array();
                                 foreach($globalUsers as $globalUser) {
-                                        $emailTo[] = $globalUser['User']['email_id'];
+                                        $isSpecificClientAlert = $this->UserMailNotificationClient->find('count', array('conditions' => array('user_id' => $globalUser['User']['id'])));
+                                        if($isSpecificClientAlert > 0) {
+                                                $isClientAlert = $this->UserMailNotificationClient->find('count', array('conditions' => array('user_id' => $globalUser['User']['id'], 'client_name' => $arrData['ClientName'])));
+                                                if($isClientAlert > 0) {
+                                                        $emailTo[] = $globalUser['User']['email_id'];
+                                                }
+                                        } else {
+                                                $emailTo[] = $globalUser['User']['email_id'];
+                                        }
                                 }
 
                                 try {
@@ -825,7 +842,7 @@ class ReportsController extends AppController {
                                         $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Pitch updated', 'data' => $arrData));
                                         $email->template($template, 'default')
                                             ->emailFormat('html')
-                                            ->to(array('mathilde.natier@iprospect.com'))
+                                            ->to($emailTo)
                                             ->from(array('connectiprospect@gmail.com' => 'iProspect Connect'))
                                             ->subject('iProspect Connect: ' . $subject)
                                             ->send();

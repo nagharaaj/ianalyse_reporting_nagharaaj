@@ -23,19 +23,19 @@ class WeeklyMailsShell extends AppShell {
                     'questions' => $questions
                 );
 
-                /*$this->UserLoginRole->Behaviors->attach('Containable');
+                $this->UserLoginRole->Behaviors->attach('Containable');
                 $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global', 'User.weekly_summary_mail' => 1), 'order' => 'User.display_name'));
 
                 $emailTo = array();
                 foreach($globalUsers as $globalUser) {
                         $emailTo[] = $globalUser['User']['email_id'];
-                }*/
+                }
 
                 $email = new CakeEmail('gmail');
                 $email->viewVars(array('title_for_layout' => 'Weekly change log summary', 'type' => 'Client data', 'data' => $arrData));
                 $email->template('weekly_updates', 'default')
                     ->emailFormat('html')
-                    ->to(array('helena.snowdon@iprospect.com', 'mathilde.natier@iprospect.com'))
+                    ->to($emailTo)
                     ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
                     ->subject('Weekly change log summary')
                     ->send();

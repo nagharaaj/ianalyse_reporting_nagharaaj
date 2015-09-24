@@ -135,7 +135,7 @@
         {
             window.location.href='/users/logout';
         }
-        
+
         $.fn.serializeObject = function() {
            var o = {};
            var a = this.serializeArray();
