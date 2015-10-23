@@ -714,10 +714,10 @@
                         $("#pitchstart").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                         $("#pitchstage").jqxDropDownList({ source: stages }).val(pitchstage);
                         if(pitchstage != 'Current client') {
-                                $("#update_pitchstage").jqxDropDownList('disableItem',"Current client");
+                                $("#pitchstage").jqxDropDownList('disableItem',"Current client");
                         }
                         if(!pitchstage.match(/Lost/g)) {
-                                $("#update_pitchstage").jqxDropDownList('disableItem',"Lost - archive");
+                                $("#pitchstage").jqxDropDownList('disableItem',"Lost - archive");
                         }
                         $("#clientsince").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                         $("#lostdate").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
