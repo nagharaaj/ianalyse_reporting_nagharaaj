@@ -625,9 +625,13 @@
                                                 $("#trUpdateLostSince").hide();
                                         }
                                         else if(item.label.match(/Lost/g)) {
-                                                $("#trUpdateClientSince").show();
                                                 $("#trUpdateLostSince").show();
                                                 $("#trUpdatePitchedDate").show();
+                                                 if (item.label.match(/current/g)) {
+                                                        $("#trUpdateClientSince").show();
+                                                 } else {
+                                                        $("#trUpdateClientSince").hide();
+                                                 }
                                         }
                                         else if(item.label == 'Cancelled') {
                                                 $("#trUpdateLostSince").show();
@@ -647,8 +651,12 @@
                                 $("#trUpdateLostSince").hide();
                         }
                         else if(pitchstage.match(/Lost/g)) {
-                                $("#trUpdateClientSince").show();
                                 $("#trUpdateLostSince").show();
+                                if (pitchstage.match(/current/g)) {
+                                        $("#trUpdateClientSince").show();
+                                } else {
+                                        $("#trUpdateClientSince").hide();
+                                }
                         }
                         else if(pitchstage == 'Cancelled') {
                                 $("#trUpdateLostSince").show();
@@ -777,9 +785,13 @@
                                                 $("#trLostSince").hide();
                                         }
                                         else if(item.label.match(/Lost/g)) {
-                                                $("#trClientSince").show();
                                                 $("#trLostSince").show();
                                                 $("#trPitchedDate").show();
+                                                if (item.label.match(/current/g)) {
+                                                        $("#trClientSince").show();
+                                                 } else {
+                                                        $("#trClientSince").hide();
+                                                 }
                                         }
                                         else if(item.label == 'Cancelled') {
                                                 $("#trLostSince").show();
@@ -799,8 +811,12 @@
                                 $("#trLostSince").hide();
                         }
                         else if(pitchstage.match(/Lost/g)) {
-                                $("#trClientSince").show();
                                 $("#trLostSince").show();
+                                if (pitchstage.match(/current/g)) {
+                                        $("#trClientSince").show();
+                                } else {
+                                        $("#trClientSince").hide();
+                                }
                         }
                         else if(pitchstage == 'Cancelled') {
                                 $("#trLostSince").show();
@@ -969,24 +985,25 @@
                                 if(item.label.match(/Won/g) || item.label == "Current client") {
                                         $("#trClientSince").show();
                                         $("#trPitchedDate").show();
-                                        
                                         $("#trLostSince").hide();
                                 }
                                 else if(item.label.match(/Live/g)) {
                                         $("#trPitchedDate").show();
-                                        
                                         $("#trClientSince").hide();
                                         $("#trLostSince").hide();
                                 }
                                 else if(item.label.match(/Lost/g)) {
-                                        $("#trClientSince").show();
                                         $("#trLostSince").show();
                                         $("#trPitchedDate").show();
+                                        if (item.label.match(/current/g)) {
+                                                $("#trClientSince").show();
+                                        } else {
+                                                $("#trClientSince").hide();
+                                        }
                                 }
                                 else if(item.label == 'Cancelled') {
                                         $("#trLostSince").show();
                                         $("#trPitchedDate").show();
-                                        
                                         $("#trClientSince").show();
                                 }
                         }

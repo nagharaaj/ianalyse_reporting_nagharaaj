@@ -204,13 +204,17 @@ class ReportsController extends AppController {
                         $pitchStart = explode('/', $arrData['PitchStart']);
                         $pitchDate = $pitchStart[1] . '-' . $pitchStart[0] . '-01';
                         //$pitchLeader = $arrData['PitchLeader'];
+                        $clientSinceMonth = null;
+                        $clientSinceYear = null;
                         if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled') {
-                                $clientSince = explode('/', $arrData['ClientSince']);
-                                $clientSinceMonth = $clientSince[0];
-                                $clientSinceYear = $clientSince[1];
-                        } else {
-                                $clientSinceMonth = null;
-                                $clientSinceYear = null;
+                            if(preg_match('/Lost - new/', $pitchStage)) {
+                                    $clientSinceMonth = null;
+                                    $clientSinceYear = null;
+                            } else {
+                                    $clientSince = explode('/', $arrData['ClientSince']);
+                                    $clientSinceMonth = $clientSince[0];
+                                    $clientSinceYear = $clientSince[1];
+                            }
                         }
                         if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled') {
                                 $lost = explode('/', $arrData['LostDate']);
@@ -663,18 +667,17 @@ class ReportsController extends AppController {
                         $pitchStart = explode('/', trim($arrData['PitchStart']));
                         $pitchDate = $pitchStart[1] . '-' . $pitchStart[0] . '-01';
                         //$pitchLeader = trim($arrData['PitchLeader']);
+                        $clientMonth = null;
+                        $clientYear = null;
                         if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled') {
-                                if($arrData['ClientSince'] != null) {
+                                if (preg_match('/Lost - new/', $pitchStage)) {
+                                        $clientMonth = null;
+                                        $clientYear = null;
+                                } else if($arrData['ClientSince'] != null) {
                                         $clientSince = explode('/', $arrData['ClientSince']);
                                         $clientMonth = $clientSince[0];
                                         $clientYear = $clientSince[1];
-                                } else {
-                                        $clientMonth = null;
-                                        $clientYear = null;
                                 }
-                        } else {
-                                $clientMonth = null;
-                                $clientYear = null;
                         }
                         if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled') {
                                 $lost = explode('/', trim($arrData['LostDate']));
