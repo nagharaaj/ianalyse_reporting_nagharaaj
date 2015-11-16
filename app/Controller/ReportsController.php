@@ -31,6 +31,8 @@ class ReportsController extends AppController {
             'UserMailNotificationClient'
         );
 
+        public $serviceMap = array(1 => 'Affiliates', 19 => 'Attribution', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
+
         public $unwanted_array = array( 'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
                             'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
                             'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
@@ -1116,7 +1118,7 @@ class ReportsController extends AppController {
         public function office_data() {
 
                 $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
-                $arrServices = array(1 => 'Affiliates', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
+                $arrServices = $this->serviceMap;
                 $countries = $this->Country->find('list', array('fields' => array('Country.country', 'Country.country'), 'order' => 'Country.country Asc'));
                 $this->set('countries', json_encode($countries, JSON_HEX_APOS));
                 $arrRegions = array();
@@ -1152,7 +1154,7 @@ class ReportsController extends AppController {
 
                 $officeData = array();
                 $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
-                $arrServices = array(1 => 'Affiliates', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
+                $arrServices = $this->serviceMap;
                 $arrLanguages = $this->Language->find('list', array('fields' => array('Language.id', 'Language.language'), 'order' => 'Language.language Asc'));
 
                 $i = 0;
@@ -1302,7 +1304,7 @@ class ReportsController extends AppController {
 
         public function save_office_record() {
                 $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
-                $arrServices = array(1 => 'Affiliates', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
+                $arrServices = $this->serviceMap;
                 $arrLanguages = $this->Language->find('list', array('fields' => array('Language.id', 'Language.language'), 'order' => 'Language.language Asc'));
 
                 if ($this->request->isPost()) {
@@ -1638,20 +1640,21 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->mergeCells('BB1:BC1');
                         $objPHPExcel->getActiveSheet()->mergeCells('BD1:BE1');
                         $objPHPExcel->getActiveSheet()->mergeCells('BF1:BG1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('BI1:BJ1');
+                        $objPHPExcel->getActiveSheet()->mergeCells('BH1:BI1');
+                        $objPHPExcel->getActiveSheet()->mergeCells('BK1:BL1');
 
-                        $objPHPExcel->getActiveSheet()->getStyle("A1:BJ2")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                        $objPHPExcel->getActiveSheet()->getStyle("A1:BL2")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                         //$objPHPExcel->getActiveSheet()->getStyle('A1:BJ999')->getAlignment()->setWrapText(true);
                         $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getStyle('F1:J1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
                         $objPHPExcel->getActiveSheet()->getStyle('K1:Y1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('Z1:BH1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        $objPHPExcel->getActiveSheet()->getStyle('BI1:BJ1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
+                        $objPHPExcel->getActiveSheet()->getStyle('Z1:BJ1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
+                        $objPHPExcel->getActiveSheet()->getStyle('BK1:BL1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getStyle('A2:E2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getStyle('F2:J2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
                         $objPHPExcel->getActiveSheet()->getStyle('K2:Y2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('Z2:BH2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        $objPHPExcel->getActiveSheet()->getStyle('BI2:BJ2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
+                        $objPHPExcel->getActiveSheet()->getStyle('Z2:BJ2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
+                        $objPHPExcel->getActiveSheet()->getStyle('BK2:BL2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
 
                         $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(11);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(11);
@@ -1712,32 +1715,35 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->getColumnDimension("BE")->setWidth(9);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("BF")->setWidth(28);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("BG")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BH")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BI")->setWidth(11);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BJ")->setWidth(17);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("BH")->setWidth(28);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("BI")->setWidth(9);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("BJ")->setWidth(9);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("BK")->setWidth(11);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("BL")->setWidth(17);
 
                         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'General Information');
                         $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Contact details');
                         $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'Key management contacts');
                         $objPHPExcel->getActiveSheet()->SetCellValue('Z1', 'Affiliates');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AB1', 'Content');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AD1', 'Conversion Opt.');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AF1', 'Data and Insights');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AH1', 'Development');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AJ1', 'Display');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AL1', 'Feeds');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AN1', 'Lead Gen');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AP1', 'Mobile');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AR1', 'STB');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AT1', 'Search - PPC');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AV1', 'SEO');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AX1', 'Social - Paid');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AZ1', 'Social - Management');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BB1', 'Strategy');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BD1', 'Technology');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BF1', 'Video');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BH1', '');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BI1', 'Languages');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AB1', 'Attribution');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AD1', 'Content');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AF1', 'Conversion Opt.');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AH1', 'Data and Insights');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AJ1', 'Development');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AL1', 'Display');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AN1', 'Feeds');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AP1', 'Lead Gen');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AR1', 'Mobile');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AT1', 'STB');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AV1', 'Search - PPC');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AX1', 'SEO');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('AZ1', 'Social - Paid');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BB1', 'Social - Management');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BD1', 'Strategy');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BF1', 'Technology');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BH1', 'Video');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BJ1', '');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BK1', 'Languages');
 
                         $objPHPExcel->getActiveSheet()->SetCellValue('A2', 'Region');
                         $objPHPExcel->getActiveSheet()->SetCellValue('B2', 'Market');
@@ -1798,9 +1804,11 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->SetCellValue('BE2', '# employees or FTE');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BF2', 'Key contact (Name/title/email address)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('BG2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BH2', 'Total # management employees');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BI2', '# of supported languages');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BJ2', 'List supported languages');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BH2', 'Key contact (Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BI2', '# employees or FTE');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BJ2', 'Total # management employees');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BK2', '# of supported languages');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('BL2', 'List supported languages');
 
                         $i = 2;
                         $arrDataExcel = array();
@@ -1809,7 +1817,7 @@ class ReportsController extends AppController {
                                     $data['TotalEmployee'], $data['Address'], $data['Telephone'], $data['GeneralEmail'], $data['Website'], $data['SocialAccount'],
                                     strip_tags(str_replace('<br/>', "\n", $data['Executive'])), $data['countExecutive'], strip_tags(str_replace('<br/>', "\n", $data['FinanceHead'])), $data['countFinanceHead'], strip_tags(str_replace('<br/>', "\n", $data['ProductHead'])), $data['countProductHead'],
                                     strip_tags(str_replace('<br/>', "\n", $data['StrategyHead'])), $data['countStrategyHead'], strip_tags(str_replace('<br/>', "\n", $data['ClientHead'])), $data['countClientHead'], strip_tags(str_replace('<br/>', "\n", $data['BusinessHead'])), $data['countBusinessHead'],
-                                    strip_tags(str_replace('<br/>', "\n", $data['MarketingHead'])), $data['countMarketingHead'], $data['totalKeyEmployeeCount'], strip_tags(str_replace('<br/>', "\n", $data['Affiliates'])), $data['countAffiliates'],
+                                    strip_tags(str_replace('<br/>', "\n", $data['MarketingHead'])), $data['countMarketingHead'], $data['totalKeyEmployeeCount'], strip_tags(str_replace('<br/>', "\n", $data['Affiliates'])), $data['countAffiliates'], strip_tags(str_replace('<br/>', "\n", $data['Attribution'])), $data['countAttribution'],
                                     strip_tags(str_replace('<br/>', "\n", $data['Content'])), $data['countContent'], strip_tags(str_replace('<br/>', "\n", $data['Conversion'])), $data['countConversion'], strip_tags(str_replace('<br/>', "\n", $data['Data'])), $data['countData'],
                                     strip_tags(str_replace('<br/>', "\n", $data['Development'])), $data['countDevelopment'], strip_tags(str_replace('<br/>', "\n", $data['Display'])), $data['countDisplay'], strip_tags(str_replace('<br/>', "\n", $data['Feeds'])), $data['countFeeds'],
                                     strip_tags(str_replace('<br/>', "\n", $data['Lead'])), $data['countLead'], strip_tags(str_replace('<br/>', "\n", $data['Mobile'])), $data['countMobile'], strip_tags(str_replace('<br/>', "\n", $data['RTB'])), $data['countRTB'], strip_tags(str_replace('<br/>', "\n", $data['Search'])), $data['countSearch'],
@@ -1819,9 +1827,9 @@ class ReportsController extends AppController {
                                 $i++;
                         }
                         if(!empty($arrDataExcel)) {
-                                $objPHPExcel->getActiveSheet()->getStyle('A3:BJ'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                $objPHPExcel->getActiveSheet()->getStyle('A3:BL'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                                 $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A3');
-                                $objPHPExcel->getActiveSheet()->setAutoFilter('A2:BJ'.$i);
+                                $objPHPExcel->getActiveSheet()->setAutoFilter('A2:BL'.$i);
                         }
 
                         // Rename sheet

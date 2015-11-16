@@ -55,6 +55,8 @@
                     { name: 'totalKeyEmployeeCount', type: 'number' },
                     { name: 'Affiliates', type: 'string' },
                     { name: 'countAffiliates', type: 'number' },
+                    { name: 'Attribution', type: 'string' },
+                    { name: 'countAttribution', type: 'number' },
                     { name: 'Content', type: 'string' },
                     { name: 'countContent', type: 'number' },
                     { name: 'Conversion', type: 'string' },
@@ -316,6 +318,8 @@
                   { text: 'Total # employees', datafield: 'totalKeyEmployeeCount', width: 110, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Affiliates', datafield: 'Affiliates', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: '# of employee<br/>or FTE', columngroup: 'Affiliates', datafield: 'countAffiliates', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: 'Key contact', columngroup: 'Attribution', datafield: 'Attribution', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
+                  { text: '# of employee<br/>or FTE', columngroup: 'Attribution', datafield: 'countAttribution', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Content', datafield: 'Content', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: '# of employee<br/>or FTE', columngroup: 'Content', datafield: 'countContent', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Key contact', columngroup: 'Conversion', datafield: 'Conversion', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
@@ -362,6 +366,7 @@
                   { text: 'Contact details', align: 'center', name: 'ContactDetails' },
                   { text: 'Key management contacts', align: 'center', name: 'KeyContacts' },
                   { text: 'Affiliates', align: 'center', name: 'Affiliates' },
+                  { text: 'Attribution', align: 'center', name: 'Attribution' },
                   { text: 'Content', align: 'center', name: 'Content' },
                   { text: 'Conversion opt.', align: 'center', name: 'Conversion' },
                   { text: 'Data & insights', align: 'center', name: 'Data' },
@@ -492,9 +497,9 @@
                 $(".contact-row-count").val('0');
 
                 var rules = [];
-                
+
                 $("#recordid").val((rowData ? rowData.RecordId : ''));
-                
+
                 $("#divRegion").html('');
                 var inpRegion = $("<div id=\"region\"></div>");
                 $("#divRegion").append(inpRegion);
@@ -512,7 +517,7 @@
                 $("#divCity").append(inpLocation);
                 $("#city").jqxInput({ height: 25, width: 175 }).val((rowData ? rowData.City : ''));
                 rules.push(validator.city);
-                
+
                 $("#divYear").html('');
                 var inpYearEstablished = $("<input type=\"text\" id=\"year_established\" />");
                 $("#divYear").append(inpYearEstablished);
@@ -522,7 +527,7 @@
                 var inpEmpCount = $("<input type=\"text\" id=\"employee_count\" />");
                 $("#divEmployeeCount").append(inpEmpCount);
                 $("#employee_count").jqxInput({ height: 25, width: 100 }).val((rowData ? rowData.TotalEmployee : ''));
-                
+
                 $("#divAddress").html('');
                 var inpAddress = $("<input type=\"text\" id=\"address\" />");
                 $("#divAddress").append(inpAddress);
@@ -532,22 +537,22 @@
                 var inpTelephone = $("<input type=\"text\" id=\"telephone\" />");
                 $("#divTelephone").append(inpTelephone);
                 $("#telephone").jqxInput({ height: 25, width: 150 }).val((rowData ? rowData.Telephone : ''));
-                
+
                 $("#divEmail").html('');
                 var inpEmail = $("<input type=\"text\" id=\"contact_email\" />");
                 $("#divEmail").append(inpEmail);
                 $("#contact_email").jqxInput({ height: 25, width: 200 }).val((rowData ? rowData.GeneralEmail : ''));
-                
+
                 $("#divWebsite").html('');
                 var inpWebsite = $("<input type=\"text\" id=\"website\" />");
                 $("#divWebsite").append(inpWebsite);
                 $("#website").jqxInput({ height: 25, width: 200 }).val((rowData ? rowData.Website : ''));
-                
+
                 $("#divSocialAccount").html('');
                 var inpSocialAccount = $("<input type=\"text\" id=\"social_account\" />");
                 $("#divSocialAccount").append(inpSocialAccount);
                 $("#social_account").jqxInput({ height: 25, width: 250 }).val((rowData ? rowData.SocialAccount : ''));
-                
+
                 if(rowData && rowData.Executive) {
                         arrExecutive = rowData.Executive.split("<br/>-------------------------<br/>");
                         $.each(arrExecutive, function(index, value) {
@@ -569,7 +574,7 @@
                 var inpExecutiveEmpCount = $("<input type=\"text\" id=\"executive_employee_count\" />");
                 $("#divExecutiveEmpCount").append(inpExecutiveEmpCount);
                 $("#executive_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countExecutive ? rowData.countExecutive : ''));
-                
+
                 if(rowData && rowData.FinanceHead) {
                         arrFinanceHead = rowData.FinanceHead.split("<br/>-------------------------<br/>");
                         $.each(arrFinanceHead, function(index, value) {
@@ -591,7 +596,7 @@
                 var inpFinanceHeadEmpCount = $("<input type=\"text\" id=\"finance_employee_count\" />");
                 $("#divFinanceHeadEmpCount").append(inpFinanceHeadEmpCount);
                 $("#finance_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countFinanceHead ? rowData.countFinanceHead : ''));
-                
+
                 if(rowData && rowData.ProductHead) {
                         arrProductHead = rowData.ProductHead.split("<br/>-------------------------<br/>");
                         $.each(arrProductHead, function(index, value) {
@@ -613,7 +618,7 @@
                 var inpProductHeadEmpCount = $("<input type=\"text\" id=\"product_employee_count\" />");
                 $("#divProductHeadEmpCount").append(inpProductHeadEmpCount);
                 $("#product_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countProductHead ? rowData.countProductHead : ''));
-                
+
                 if(rowData && rowData.StrategyHead) {
                         arrStrategyHead = rowData.StrategyHead.split("<br/>-------------------------<br/>");
                         $.each(arrStrategyHead, function(index, value) {
@@ -635,7 +640,7 @@
                 var inpStrategyHeadEmpCount = $("<input type=\"text\" id=\"strategy_employee_count\" />");
                 $("#divStrategyHeadEmpCount").append(inpStrategyHeadEmpCount);
                 $("#strategy_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countStrategyHead ? rowData.countStrategyHead : ''));
-                
+
                 if(rowData && rowData.ClientHead) {
                         arrClientHead = rowData.ClientHead.split("<br/>-------------------------<br/>");
                         $.each(arrClientHead, function(index, value) {
@@ -701,7 +706,7 @@
                 var inpMarketingHeadEmpCount = $("<input type=\"text\" id=\"marketing_employee_count\" />");
                 $("#divMarketingHeadEmpCount").append(inpMarketingHeadEmpCount);
                 $("#marketing_employee_count").jqxInput({ height: 25, width: 110, placeHolder: "Ex: 1, 2.5, 0.2" }).val((rowData && rowData.countMarketingHead ? rowData.countMarketingHead : ''));
-                
+
                 for (i = 0; i < arrServices.length; i++) {
                         if(rowData && rowData[arrServices[i]]) {
                                 arrServiceContact = rowData[arrServices[i]].split("<br/>-------------------------<br/>");
@@ -743,7 +748,7 @@
                 var inpLanguagesCount = $("<input type=\"text\" id=\"languages_count\" readonly class=\"readonly\" />");
                 $("#divLanguagesCount").append(inpLanguagesCount);
                 $("#languages_count").jqxInput({ height: 25, width: 100 }).val((rowData && rowData.countSupportedLanguages ? rowData.countSupportedLanguages : ''));
-                
+
                 $("#languages").on('checkChange', function (event) {
                         var args = event.args;
                         if (args) {
@@ -751,7 +756,7 @@
                                 $("#languages_count").val(checkedItems.length);
                         }
                 });
-                
+
                 $('#testForm').jqxValidator({ position: 'right', rules: rules});
                 // show the popup window.
                 $("#popupWindow").jqxWindow('open');
@@ -764,7 +769,7 @@
                 }
                 $("#SaveNew").attr('disabled', true);
                 var state = $("#jqxgrid").jqxGrid('savestate');
-                
+
                 var keyContacts = [];
                 var executiveContacts = [];
                 for (var i = 0; i <= parseInt($("#executiveHeadCount").val()); i++) {
@@ -850,7 +855,7 @@
                 item['dept_contacts'] = marketingContacts;
                 item['dept_emp_count'] = $("#marketing_employee_count").val();
                 keyContacts.push(item);
-                
+
                 var serviceContacts = [];
                 for (i = 0; i < arrServices.length; i++) {
                         var serviceContact = [];
@@ -866,7 +871,7 @@
                         item['service_emp_count'] = $("#" + arrServices[i] + "_employee_count").val();
                         serviceContacts.push(item);
                 }
-                
+
                 var row = {
                         RecordId: $("#recordid").val(), Region: $("#region").val(), Country: $("#country").val(), City: $("#city").val(),
                         YearEstablished: $("#year_established").val(), EmployeeCount: $("#employee_count").val(), Address: $("#address").val(), 
@@ -922,7 +927,7 @@
                         } 
                 }
             }
-            
+
         });
         var addContactRow = function (rowType, serviceFlag, data) {
                 if(data) {
@@ -934,7 +939,7 @@
                 if(serviceFlag) {
                         var rowsCnt = parseInt($("#" + rowType + "Count").val());
                         rowsCnt++;
-                        
+
                         var html = "<tr class=\"more-contacts\">"
                                  +  "<td align=\"left\"><input type=\"text\" id=\"" + rowType + "_contact_name_" + rowsCnt + "\" autocomplete=\"off\"/></td>"
                                  +  "<td align=\"left\"><input type=\"text\" id=\"" + rowType + "_contact_title_" + rowsCnt + "\" autocomplete=\"off\"/></td>"
