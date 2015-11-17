@@ -477,6 +477,14 @@
                                 if(!pitchstage.match(/Lost/g)) {
                                         $("#update_pitchstage").jqxDropDownList('disableItem',"Lost - archive");
                                 }
+                                if(pitchstage.match(/Live/g)) {
+                                        if(pitchstage == 'Live - aggressive') {
+                                                $("#update_pitchstage").jqxDropDownList('disableItem',"Live - defensive");
+                                        }
+                                        if(pitchstage == 'Live - defensive') {
+                                                $("#update_pitchstage").jqxDropDownList('disableItem',"Live - aggressive");
+                                        }
+                                }
                                 rules.push(validator.pitchstage);
                         }
                         if(pitchstage.match(/Lost/g) || pitchstage == 'Cancelled') {
