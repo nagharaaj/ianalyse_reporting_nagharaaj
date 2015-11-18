@@ -47,9 +47,9 @@ class DashboardController extends AppController {
         public function global_growth() {
                 $this->set('loggedUser', $this->Auth->user());
                 if($this->Auth->user('role') == 'Regional') {
-                        $userRegion = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
-                        $region = $this->Region->findById($userRegion['UserMarket']['market_id']);
-                        $this->set('userRegion', $region['Region']['region']);
+                        $userRegions = $this->UserMarket->find('list', array('fields' => array('UserMarket.id', 'UserMarket.market_id'), 'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                        $regions = $this->Region->find('list', array('conditions' => array('Region.id in (' . implode(',', $userRegions) . ')'), 'order' => 'Region.region Asc'));
+                        $this->set('userRegions', $regions);
                 }
         }
 

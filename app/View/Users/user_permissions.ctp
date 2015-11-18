@@ -149,7 +149,7 @@
                 var offset = $("#dataTable").offset();
                 $("#popupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 20, y: parseInt(offset.top) + 20 }, height: "350px", maxWidth: 1200, isModal: true });
                 if(rowData) {
-                        $('#popupWindow').jqxWindow('setTitle', 'Edit location');
+                        $('#popupWindow').jqxWindow('setTitle', 'Update Existing User');
                         $("#SaveNewUser").html('UPDATE USER');
                 } else {
                         $("#SaveNewUser").html('ADD USER');
@@ -231,7 +231,7 @@
                     if(rowData.permission == "Global") {
                         $("#nameofentity").jqxDropDownList({ source: ['Global'], checkboxes: false, selectedIndex: 0 });
                     } else if(rowData.permission == "Regional") {
-                        $("#nameofentity").jqxDropDownList({ source: regions, checkboxes: false, selectedIndex: -1 });
+                        $("#nameofentity").jqxDropDownList({ source: regions, checkboxes: true, selectedIndex: -1 });
                         $('#testForm').jqxValidator('validateInput', '#nameofentity');
                     } else if(rowData.permission == "Country" || rowData.permission == "Country - Viewer") {
                         $("#nameofentity").jqxDropDownList({ source: markets, checkboxes: true, selectedIndex: -1 });
@@ -240,7 +240,7 @@
                         $("#nameofentity").jqxDropDownList({ source: ['/'], checkboxes: false, selectedIndex: 0 });
                     }
                     $("#permission").jqxDropDownList('selectItem', rowData.permission);
-                    if(rowData.permission == 'Country' || rowData.permission == "Country - Viewer") {
+                    if(rowData.permission == 'Regional' || rowData.permission == 'Country' || rowData.permission == "Country - Viewer") {
                         nameOfEntities = rowData.nameofentity.split(',');
                         for (i=0; i<nameOfEntities.length; i++) {
                             $("#nameofentity").jqxDropDownList('checkItem', nameOfEntities[i]);
@@ -274,7 +274,7 @@
                         if(item.label == "Global") {
                                 $("#nameofentity").jqxDropDownList({ source: ['Global'], checkboxes: false, selectedIndex: 0 });
                         } else if(item.label == "Regional") {
-                                $("#nameofentity").jqxDropDownList({ source: regions, checkboxes: false, selectedIndex: -1 });
+                                $("#nameofentity").jqxDropDownList({ source: regions, checkboxes: true, selectedIndex: -1 });
                                 $('#testForm').jqxValidator('validateInput', '#nameofentity');
                         } else if(item.label == "Country" || item.label == "Country - Viewer") {
                                 $("#nameofentity").jqxDropDownList({ source: markets, checkboxes: true, selectedIndex: -1 });

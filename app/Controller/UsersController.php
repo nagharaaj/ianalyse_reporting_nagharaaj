@@ -187,18 +187,19 @@ class UsersController extends AppController {
                         );
 
                         if($arrData['permission'] == 'Regional' && isset($arrData['nameofentity'])) {
-                                $region = $this->Region->findByRegion($arrData['nameofentity']);
-                                $regionId = $region['Region']['id'];
-                                $this->UserMarket->create();
-                                $this->UserMarket->save(
-                                        array(
-                                                'UserMarket' => array(
-                                                    'user_id' => $userId,
-                                                    'market_id' => $regionId,
-                                                    'active' => $isActive
+                                $regions = $this->Region->find('all', array('conditions' => array('Region.region in (\'' . str_replace(",", "','", $arrData['nameofentity']) . '\')')));
+                                foreach($regions as $region) {
+                                        $this->UserMarket->create();
+                                        $this->UserMarket->save(
+                                                array(
+                                                        'UserMarket' => array(
+                                                            'user_id' => $userId,
+                                                            'market_id' => $region['Region']['id'],
+                                                            'active' => $isActive
+                                                        )
                                                 )
-                                        )
-                                );
+                                        );
+                                }
                         }
 
                         if(($arrData['permission'] == 'Country' || $arrData['permission'] == 'Country - Viewer') && isset($arrData['nameofentity'])) {
@@ -256,9 +257,13 @@ class UsersController extends AppController {
                         $userData[$i]['permission'] = $userLoginRole['LoginRole']['name'];
 
                         if($userLoginRole['LoginRole']['name'] == 'Regional') {
-                                $userMarket = $this->UserMarket->find('first', array('conditions' => array('UserMarket.user_id' => $user['User']['id'])));
-                                $region = $this->Region->find('first', array('conditions' => array('Region.id' => $userMarket['UserMarket']['market_id'])));
-                                $userData[$i]['nameofentity'] = $region['Region']['region'];
+                                $arrRegions = array();
+                                $userMarkets = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $user['User']['id'])));
+                                foreach($userMarkets as $userMarket) {
+                                        $region = $this->Region->find('first', array('conditions' => array('Region.id' => $userMarket['UserMarket']['market_id'])));
+                                        $arrRegions[] = $region['Region']['region'];
+                                }
+                                $userData[$i]['nameofentity'] = implode(",", $arrRegions);
                         } elseif($userLoginRole['LoginRole']['name'] == 'Country' || $userLoginRole['LoginRole']['name'] == 'Country - Viewer') {
                                 $arrCountries = array();
                                 $userMarkets = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $user['User']['id'])));
@@ -342,18 +347,19 @@ class UsersController extends AppController {
 
                                 if($arrData['permission'] == 'Regional') {
                                         if(!empty($arrData['nameofentity'])) {
-                                                $region = $this->Region->findByRegion($arrData['nameofentity']);
-                                                $regionId = $region['Region']['id'];
-                                                $this->UserMarket->create();
-                                                $this->UserMarket->save(
-                                                        array(
-                                                                'UserMarket' => array(
-                                                                    'user_id' => $userId,
-                                                                    'market_id' => $regionId,
-                                                                    'active' => $isActive
+                                                $regions = $this->Region->find('all', array('conditions' => array('Region.region in (\'' . str_replace(",", "','", $arrData['nameofentity']) . '\')')));
+                                                foreach($regions as $region) {
+                                                        $this->UserMarket->create();
+                                                        $this->UserMarket->save(
+                                                                array(
+                                                                        'UserMarket' => array(
+                                                                            'user_id' => $userId,
+                                                                            'market_id' => $region['Region']['id'],
+                                                                            'active' => $isActive
+                                                                        )
                                                                 )
-                                                        )
-                                                );
+                                                        );
+                                                }
                                         } else {
                                                 $result = array();
                                                 $result['success'] = false;
