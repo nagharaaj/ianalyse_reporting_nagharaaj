@@ -142,7 +142,7 @@ class CLdapLogin {
     
       if ($this->bind) {
         $base_dn  = 'DC=media,DC=global,DC=loc';
-        $filter   = "(&(objectCategory=*) (displayName=$strSearch*))";
+        $filter   = "(&(objectCategory=*) (|(displayName=$strSearch*) (givenName=$strSearch*) (sn=$strSearch*)))";
         //$filter   = "(sAMAccountName=$this->user_name)";
 
         $fields   = array("samaccountname", "mail", "memberof", "member", "department", "displayname", "telephonenumber", "primarygroupid", "objectsid", "physicalDeliveryOfficeName", "title", "l", "st", "co", "mailNickname", "userPrincipalName"); 
