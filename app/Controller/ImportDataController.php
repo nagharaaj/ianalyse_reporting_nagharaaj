@@ -9,6 +9,7 @@ class ImportDataController extends AppController {
             'ClientCategory',
             'Country',
             'Currency',
+            'Division',
             'LeadAgency',
             'Market',
             'Region',
@@ -153,17 +154,18 @@ class ImportDataController extends AppController {
                                 $searchRow = 2;
                                 $endOfList = 0;
                                 for($i = $searchRow; $i <= $arrCnt; $i++) {
-                                        if(!empty($dataClientList[$i]['B'])) {
+                                        if(!empty($dataClientList[$i]['D'])) {
                                                 $endOfList = 0;
-                                                if(!array_search(trim(str_replace('&', 'and', $dataClientList[$i]['K'])), $arrServices)) {
-                                                        if(!in_array(trim(str_replace('&', 'and', $dataClientList[$i]['K'])), $this->unknownServices)) {
-                                                                $this->unknownServices[] = trim($dataClientList[$i]['K']);
+                                                if(!array_search(trim(str_replace('&', 'and', $dataClientList[$i]['I'])), $arrServices)) {
+                                                        if(!in_array(trim(str_replace('&', 'and', $dataClientList[$i]['I'])), $this->unknownServices)) {
+                                                                $this->unknownServices[] = trim($dataClientList[$i]['I']);
                                                         }
                                                 }
 
-                                                $vertical = $this->ClientCategory->findByCategory(trim(str_replace('&', 'and', $dataClientList[$i]['D'])));
-                                                $country = $this->Market->findAllByMarket(trim($dataClientList[$i]['H']));
-                                                $managedCity = $this->City->findByCity(trim($dataClientList[$i]['I']));
+                                                $vertical = $this->ClientCategory->findByCategory(trim(str_replace('&', 'and', $dataClientList[$i]['F'])));
+                                                $country = $this->Market->findAllByMarket(trim($dataClientList[$i]['B']));
+                                                $managedCity = $this->City->findByCity(trim($dataClientList[$i]['C']));
+                                                $division = $this->Division->findByDivision(trim($dataClientList[$i]['J']));
 
                                                 if(array_search(trim(str_replace('&', 'and', $dataClientList[$i]['G'])), $opportunities)) {
                                                         $agencyOpportunity = array_search(trim(str_replace('&', 'and', $dataClientList[$i]['G'])), $opportunities);
@@ -171,8 +173,8 @@ class ImportDataController extends AppController {
                                                         $agencyOpportunity = null;
                                                 }
 
-                                                if(array_search(trim($dataClientList[$i]['L']), $currencies)) {
-                                                        $currency = array_search(trim($dataClientList[$i]['L']), $currencies);
+                                                if(array_search(trim($dataClientList[$i]['O']), $currencies)) {
+                                                        $currency = array_search(trim($dataClientList[$i]['O']), $currencies);
                                                 } else {
                                                         $currency = null;
                                                 }
@@ -182,11 +184,11 @@ class ImportDataController extends AppController {
                                                 } else {
                                                         $verticalId = null;
                                                 }
-                                                if(array_search(trim(str_replace('&', 'and', $dataClientList[$i]['K'])), $arrServices)) {
-                                                        $serviceId = array_search(trim(str_replace('&', 'and', $dataClientList[$i]['K'])), $arrServices);
+                                                if(array_search(trim(str_replace('&', 'and', $dataClientList[$i]['I'])), $arrServices)) {
+                                                        $serviceId = array_search(trim(str_replace('&', 'and', $dataClientList[$i]['I'])), $arrServices);
                                                 } else {
-                                                        if(isset($this->unknownServices[trim(str_replace('&', 'and', $dataClientList[$i]['K']))])) {
-                                                                $serviceId = $this->unknownServices[trim(str_replace('&', 'and', $dataClientList[$i]['K']))];
+                                                        if(isset($this->unknownServices[trim(str_replace('&', 'and', $dataClientList[$i]['I']))])) {
+                                                                $serviceId = $this->unknownServices[trim(str_replace('&', 'and', $dataClientList[$i]['I']))];
                                                         } else {
                                                                 $serviceId = 0;
                                                         }
@@ -205,19 +207,25 @@ class ImportDataController extends AppController {
                                                 } else {
                                                         $managedCityId =null;
                                                 }
+                                                if(!empty($division)) {
+                                                        $divisionId = $division['Division']['id'];
+                                                } else {
+                                                        $divisionId =null;
+                                                }
                                                 //$month = array_search(trim($dataClientList[$i]['E']), $this->months);
-                                                $month = trim($dataClientList[$i]['E']);
-                                                $year = trim($dataClientList[$i]['F']);
-                                                $companyName = trim($dataClientList[$i]['C']);
-                                                $clientName = trim($dataClientList[$i]['B']);
-                                                $activeMarkets = trim($dataClientList[$i]['J']);
-                                                $revenue = $dataClientList[$i]['N'];
-                                                $revenueForecast = $dataClientList[$i]['M'];
-                                                if(!empty($dataClientList[$i]['P'])) {
-                                                        $pitchStage = trim($dataClientList[$i]['P']);
-                                                        if(!empty($dataClientList[$i]['O'])) {
-                                                                $arrPitchDate = explode('/', $this->ExcelReader->readDateFromExcel((trim($dataClientList[$i]['O'])+1)));
-                                                                $pitchDate = $arrPitchDate[2].'-'.$arrPitchDate[0].'-'.$arrPitchDate[1];
+                                                //$month = trim($dataClientList[$i]['E']);
+                                                //$year = trim($dataClientList[$i]['F']);
+                                                $companyName = trim($dataClientList[$i]['E']);
+                                                $clientName = trim($dataClientList[$i]['D']);
+                                                $activeMarkets = trim($dataClientList[$i]['N']);
+                                                $revenue = $dataClientList[$i]['Q'];
+                                                $revenueForecast = $dataClientList[$i]['P'];
+                                                if(!empty($dataClientList[$i]['H'])) {
+                                                        $pitchStage = trim($dataClientList[$i]['H']);
+                                                        if(!empty($dataClientList[$i]['M'])) {
+                                                                //$arrPitchDate = explode('/', $this->ExcelReader->readDateFromExcel((trim($dataClientList[$i]['M']))));
+                                                                $arrPitchDate = explode('/', trim($dataClientList[$i]['M']));
+                                                                $pitchDate = $arrPitchDate[1].'-'.$arrPitchDate[0].'-01';
                                                         } else {
                                                                 $pitchDate = '0000-00-00';
                                                         }
@@ -225,16 +233,40 @@ class ImportDataController extends AppController {
                                                         $pitchStage = 'Current client';
                                                         $pitchDate = '0000-00-00';
                                                 }
-                                                if(!empty($dataClientList[$i]['R']) && $dataClientList[$i]['R'] != '-') {
-                                                        $arrLostDate = explode('/', $this->ExcelReader->readDateFromExcel((trim($dataClientList[$i]['R'])+1)));
-                                                        $lostDate = $arrLostDate[2].'-'.$arrLostDate[0].'-'.$arrLostDate[1];
+                                                if(!empty($dataClientList[$i]['L']) && $dataClientList[$i]['L'] != '-') {
+                                                        //$arrLostDate = explode('/', $this->ExcelReader->readDateFromExcel((trim($dataClientList[$i]['L']))));
+                                                        $arrLostDate = explode('/', trim($dataClientList[$i]['L']));
+                                                        $lostDate = $arrLostDate[1].'-'.$arrLostDate[0].'-01';
                                                 } else {
                                                         $lostDate = '0000-00-00';
                                                 }
-                                                if(!empty($dataClientList[$i]['Q'])) {
-                                                        $notes = trim($dataClientList[$i]['Q']);
+                                                if(!empty($dataClientList[$i]['K']) && $dataClientList[$i]['K'] != '-') {
+                                                        //$arrClientSince = explode('/', $this->ExcelReader->readDateFromExcel((trim($dataClientList[$i]['K']))));
+                                                        $arrClientSince = explode('/', trim($dataClientList[$i]['K']));
+                                                        $month = $arrClientSince[0];
+                                                        $year = $arrClientSince[1];
+                                                } else {
+                                                        $month = 0;
+                                                        $year = 0;
+                                                }
+                                                if(!empty($dataClientList[$i]['R'])) {
+                                                        $notes = trim($dataClientList[$i]['R']);
                                                 } else {
                                                         $notes = null;
+                                                }
+                                                if(!empty($dataClientList[$i]['S']) && $dataClientList[$i]['S'] != '-') {
+                                                        //$arrCreatedDate = explode('/', $this->ExcelReader->readDateFromExcel((trim($dataClientList[$i]['S']))));
+                                                        $arrCreatedDate = explode('/', trim($dataClientList[$i]['S']));
+                                                        $createdDate = $arrCreatedDate[2].'-'.$arrCreatedDate[0].'-'.$arrCreatedDate[1];
+                                                } else {
+                                                        $createdDate = date('Y-m-d');
+                                                }
+                                                if(!empty($dataClientList[$i]['T']) && $dataClientList[$i]['T'] != '-') {
+                                                        //$arrModifiedDate = explode('/', $this->ExcelReader->readDateFromExcel((trim($dataClientList[$i]['T']))));
+                                                        $arrModifiedDate = explode('/', trim($dataClientList[$i]['T']));
+                                                        $modifiedDate = $arrModifiedDate[2].'-'.$arrModifiedDate[0].'-'.$arrModifiedDate[1];
+                                                } else {
+                                                        $modifiedDate = date('Y-m-d');
                                                 }
 
                                                 if($countryId != null) {
@@ -247,6 +279,7 @@ class ImportDataController extends AppController {
                                                             'regionId' => $regionId,
                                                             'countryId' => $countryId,
                                                             'cityId' => $managedCityId,
+                                                            'divisionId' => $divisionId,
                                                             'managingEntity' => $managingEntity,
                                                             'activeMarkets' => $activeMarkets,
                                                             'fiscalYr' => $fiscalYr,
@@ -258,7 +291,9 @@ class ImportDataController extends AppController {
                                                             'pitchStage' => $pitchStage,
                                                             'pitchDate' => $pitchDate,
                                                             'lostDate' => $lostDate,
-                                                            'comments' => $notes
+                                                            'comments' => $notes,
+                                                            'createdDate' => $createdDate,
+                                                            'modifiedDate' => $modifiedDate
                                                         );
                                                 }
                                         } else {
@@ -288,6 +323,7 @@ class ImportDataController extends AppController {
                                                                         'managing_entity' => $client['managingEntity'],
                                                                         'country_id' => $client['countryId'],
                                                                         'city_id' => $client['cityId'],
+                                                                        'division_id' => $client['divisionId'],
                                                                         'active_markets' => $client['activeMarkets'],
                                                                         'service_id' => $client['serviceId'],
                                                                         'currency_id' => $client['currency'],
@@ -299,7 +335,9 @@ class ImportDataController extends AppController {
                                                                         'pitch_stage' => $client['pitchStage'],
                                                                         'pitch_date' => $client['pitchDate'],
                                                                         'lost_date' => $client['lostDate'],
-                                                                        'comments' => $client['comments']
+                                                                        'comments' => $client['comments'],
+                                                                        'created' => $client['createdDate'],
+                                                                        'modified' => $client['modifiedDate']
                                                                 )
                                                         )
                                                 );
