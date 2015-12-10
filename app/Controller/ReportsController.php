@@ -208,7 +208,7 @@ class ReportsController extends AppController {
                         //$pitchLeader = $arrData['PitchLeader'];
                         $clientSinceMonth = null;
                         $clientSinceYear = null;
-                        if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled') {
+                        if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled' && $pitchStage != 'Declined') {
                             if(preg_match('/Lost - new/', $pitchStage)) {
                                     $clientSinceMonth = null;
                                     $clientSinceYear = null;
@@ -218,7 +218,7 @@ class ReportsController extends AppController {
                                     $clientSinceYear = $clientSince[1];
                             }
                         }
-                        if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled') {
+                        if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled' || $pitchStage == 'Declined') {
                                 $lost = explode('/', $arrData['LostDate']);
                                 $lostDate = $lost[1] . '-' . $lost[0] . '-01';
                         } else {
@@ -679,7 +679,7 @@ class ReportsController extends AppController {
                         //$pitchLeader = trim($arrData['PitchLeader']);
                         $clientMonth = null;
                         $clientYear = null;
-                        if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled') {
+                        if(!preg_match('/Live/', $pitchStage) && $pitchStage != 'Cancelled' && $pitchStage != 'Declined') {
                                 if (preg_match('/Lost - new/', $pitchStage)) {
                                         $clientMonth = null;
                                         $clientYear = null;
@@ -689,7 +689,7 @@ class ReportsController extends AppController {
                                         $clientYear = $clientSince[1];
                                 }
                         }
-                        if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled') {
+                        if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled' || $pitchStage == 'Declined') {
                                 $lost = explode('/', trim($arrData['LostDate']));
                                 $lostDate = $lost[1] . '-' . $lost[0] . '-01';
                         } else {
@@ -827,7 +827,7 @@ class ReportsController extends AppController {
                 if ($arrData) {
                         if(preg_match('/Live/', $existingStatus['ClientRevenueByService']['pitch_stage']) && !preg_match('/Live/', $pitchStage)
                                 && $existingStatus['ClientRevenueByService']['pitch_stage'] != $pitchStage) {
-                                if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled') {
+                                if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled' || $pitchStage == 'Declined') {
                                         $subject = 'Pitch is lost';
                                         $template = 'lost_pitch';
                                 } else {

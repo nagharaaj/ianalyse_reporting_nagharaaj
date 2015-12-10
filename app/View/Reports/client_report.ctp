@@ -52,7 +52,7 @@
                                         lostCurrentYear++;
                                 }
                         }
-                        if(dataRows[i].PitchStage == 'Cancelled') {
+                        if(dataRows[i].PitchStage == 'Cancelled' || dataRows[i].PitchStage == 'Declined') {
                                 cancelledCount++;
                         }
                         if(!isNaN(parseFloat(dataRows[i].EstimatedRevenue))) {
@@ -503,7 +503,7 @@
                         <div id="no_of_clients" style="padding-bottom: 5px">Clients <span style="display: inline-block; width: 110px;"></span></div>
                         <div id="no_of_pitches" style="padding-bottom: 5px">Pitches <span style="display: inline-block; width: 110px;"></span></div>
                         <div id="no_of_lost" style="padding-bottom: 5px">Lost <span style="display: inline-block; width: 110px;"></span></div>
-                        <div id="no_of_cancelled" style="padding-bottom: 5px">Cancelled <span style="display: inline-block; width: 110px;"></span></div>
+                        <div id="no_of_cancelled" style="padding-bottom: 5px">Cancelled/Declined <span style="display: inline-block; width: 110px;"></span></div>
                         <div style="padding-bottom: 5px; <?php if ($userRole == 'Viewer') { echo 'display: none;'; }?>">Select stat currency <select id="statscurrency"></select></div>
                         <div id="sum_est_revenue" style="padding-bottom: 5px; <?php if ($userRole == 'Viewer') { echo 'display: none;'; }?>">Sum of est revenue <span style="display: inline-block; width: 110px;"></span></div>
                         <div id="sum_act_revenue" style="padding-bottom: 5px; <?php if ($userRole == 'Viewer') { echo 'display: none;'; }?>">Sum of actual revenue <span style="display: inline-block; width: 110px;"></span></div>

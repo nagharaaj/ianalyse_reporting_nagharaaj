@@ -480,14 +480,18 @@
                                 if(pitchstage.match(/Live/g)) {
                                         if(pitchstage == 'Live - aggressive') {
                                                 $("#update_pitchstage").jqxDropDownList('disableItem',"Live - defensive");
+                                                $("#update_pitchstage").jqxDropDownList('disableItem',"Lost - current client");
+                                                $("#update_pitchstage").jqxDropDownList('disableItem',"Won - retained");
                                         }
                                         if(pitchstage == 'Live - defensive') {
                                                 $("#update_pitchstage").jqxDropDownList('disableItem',"Live - aggressive");
+                                                $("#update_pitchstage").jqxDropDownList('disableItem',"Lost - new business");
+                                                $("#update_pitchstage").jqxDropDownList('disableItem',"Won - new business");
                                         }
                                 }
                                 rules.push(validator.pitchstage);
                         }
-                        if(pitchstage.match(/Lost/g) || pitchstage == 'Cancelled') {
+                        if(pitchstage.match(/Lost/g) || pitchstage == 'Cancelled' || pitchstage == 'Declined') {
                                 $("#divClientSince").text('');
                         } else {
                                 $("#divClientSince").html('');
@@ -641,7 +645,7 @@
                                                         $("#trUpdateClientSince").hide();
                                                  }
                                         }
-                                        else if(item.label == 'Cancelled') {
+                                        else if(item.label == 'Cancelled' || item.label == 'Declined') {
                                                 $("#trUpdateLostSince").show();
                                                 $("#trUpdatePitchedDate").show();
 
@@ -666,7 +670,7 @@
                                         $("#trUpdateClientSince").hide();
                                 }
                         }
-                        else if(pitchstage == 'Cancelled') {
+                        else if(pitchstage == 'Cancelled' || pitchstage == 'Declined') {
                                 $("#trUpdateLostSince").show();
 
                                 $("#trUpdateClientSince").hide();
@@ -801,7 +805,7 @@
                                                         $("#trClientSince").hide();
                                                  }
                                         }
-                                        else if(item.label == 'Cancelled') {
+                                        else if(item.label == 'Cancelled' || item.label == 'Declined') {
                                                 $("#trLostSince").show();
                                                 $("#trPitchedDate").show();
 
@@ -826,7 +830,7 @@
                                         $("#trClientSince").hide();
                                 }
                         }
-                        else if(pitchstage == 'Cancelled') {
+                        else if(pitchstage == 'Cancelled' || pitchstage == 'Declined') {
                                 $("#trLostSince").show();
 
                                 $("#trClientSince").hide();
@@ -1009,7 +1013,7 @@
                                                 $("#trClientSince").hide();
                                         }
                                 }
-                                else if(item.label == 'Cancelled') {
+                                else if(item.label == 'Cancelled' || item.label == 'Declined') {
                                         $("#trLostSince").show();
                                         $("#trPitchedDate").show();
                                         $("#trClientSince").show();
