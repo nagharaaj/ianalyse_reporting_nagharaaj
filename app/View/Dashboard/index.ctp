@@ -28,9 +28,9 @@
 ?>
         <div class="brand-container" brandId="<?php echo $brand_detail['id']; ?>" brandNo="<?php echo $brandCnt; ?>">
         <?php if($brand_detail['brand_logo'] != null) {?>
-            <div class="brand-logo" title="Click to change logo"><img class="brand-logo-img" src="<?php echo $brand_detail['brand_logo']?>" height="50px" width="180px"></div>
+            <div class="brand-logo" <?php if($loggedUserRole == 'Global') {?>title="Click to change logo"<?php }?>><img class="brand-logo-img" src="<?php echo $brand_detail['brand_logo']?>" height="50px" width="180px"></div>
         <?php } else {?>
-            <div class="brand-logo" title="Click to upload logo">LOGO</div>
+            <div class="brand-logo" <?php if($loggedUserRole == 'Global') {?>title="Click to upload logo"<?php }?>>LOGO</div>
         <?php }?>
             <div class="brand-client" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>><?php echo $brand_detail['brand_name']; ?></div>
             <div class="brand-service" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>><?php echo $brand_detail['brand_services']; ?></div>
@@ -51,7 +51,7 @@
         } else {
 ?>
         <div class="brand-container" brandNo="1">
-            <div class="brand-logo" title="Click to upload logo">LOGO</div>
+            <div class="brand-logo" <?php if($loggedUserRole == 'Global') {?>title="Click to upload logo"<?php }?>>LOGO</div>
             <div class="brand-client" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>>CLIENT NAME</div>
             <div class="brand-service" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>>SERVICES</div>
             <div class="brand-market" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>>MARKETS</div>
@@ -75,7 +75,7 @@
             TITLE
         </div>
         <div class="brand-container" brandNo="1">
-            <div class="brand-logo" title="Click to upload logo">LOGO</div>
+            <div class="brand-logo" <?php if($loggedUserRole == 'Global') {?>title="Click to upload logo"<?php }?>>LOGO</div>
             <div class="brand-client" contenteditable="true">CLIENT NAME</div>
             <div class="brand-service" contenteditable="true">SERVICES</div>
             <div class="brand-market" contenteditable="true">MARKETS</div>
@@ -432,7 +432,9 @@ $(document).ready(function () {
             });
         });
     }
-    $('.brand-logo').on('click', addBrandLogo);
+    if(loggedUserRole == "Global") {
+        $('.brand-logo').on('click', addBrandLogo);
+    }
 });
 </script>
 <?php } ?>
