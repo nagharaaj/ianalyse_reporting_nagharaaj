@@ -125,11 +125,11 @@ class DashboardController extends AppController {
                         }
                         
                         $brands = array_slice($arrData['brandData'], 1);
-                        $this->OverviewSectionBrand->query('DELETE FROM `overview_section_brands` WHERE section_id=' . $sectionId);
+                        $arrBrands = array();
                         foreach($brands as $brand) {
                                 if($brand['clientName'] != "CLIENT NAME") {
                                         if(isset($brand['brandId']) && $brand['brandId'] != null) {
-                                                $this->OverviewSectionBrand->id = $brand['sectionId'];
+                                                $this->OverviewSectionBrand->id = $brand['brandId'];
                                                 $this->OverviewSectionBrand->save(
                                                         array(
                                                                 'OverviewSectionBrand' => array(
@@ -142,6 +142,7 @@ class DashboardController extends AppController {
                                                                 )
                                                         )
                                                 );
+                                                $arrBrands[$brand['brandNo']] = $brand['brandId'];
                                         } else {
                                                 $this->OverviewSectionBrand->create();
                                                 $this->OverviewSectionBrand->save(
@@ -156,6 +157,7 @@ class DashboardController extends AppController {
                                                                 )
                                                         )
                                                 );
+                                                $arrBrands[$brand['brandNo']] = $this->OverviewSectionBrand->getLastInsertId();
                                         }
                                 }
                         }
@@ -163,35 +165,48 @@ class DashboardController extends AppController {
                 $result = array();
                 $result['success'] = true;
                 $result['sectionId'] = $sectionId;
+                $result['brandIds'] = $arrBrands;
                 return json_encode($result);
         }
         
         public function brand_logo_upload() {
                 $this->autoRender=false;
+                
+                $sectionId = $_GET['sectionId'];
+                $brandId = $_GET['brandId'];
 
-                if(isset($_FILES["file"]["type"]))
+                $data = array();
+                if(isset($_FILES[0]["type"]))
                 {
                         $validextensions = array("jpeg", "jpg", "png");
-                        $temporary = explode(".", $_FILES["file"]["name"]);
+                        $temporary = explode(".", $_FILES[0]["name"]);
                         $file_extension = end($temporary);
-                        if ((($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/jpeg")
-                        ) && ($_FILES["file"]["size"] < 1048576)//Approx. 1MB files can be uploaded.
+                        if ((($_FILES[0]["type"] == "image/png") || ($_FILES[0]["type"] == "image/jpg") || ($_FILES[0]["type"] == "image/jpeg")
+                        ) && ($_FILES[0]["size"] < 1048576)//Approx. 1MB files can be uploaded.
                         && in_array($file_extension, $validextensions)) {
-                                if ($_FILES["file"]["error"] > 0) {
-                                        echo "Return Code: " . $_FILES["file"]["error"] . "<br/><br/>";
+                                if ($_FILES[0]["error"] > 0) {
+                                        $data["error"] = $_FILES[0]["error"];
                                 } else {
-                                        if (file_exists("upload/" . $_FILES["file"]["name"])) {
-                                                echo $_FILES["file"]["name"] . " <span id='invalid'><b>already exists.</b></span> ";
-                                        } else {
-                                                $sourcePath = $_FILES['file']['tmp_name']; // Storing source path of the file in a variable
-                                                $targetPath = 'files/' . $_FILES['file']['name']; // Target path where file is to be stored
-                                                move_uploaded_file($sourcePath,$targetPath) ; // Moving Uploaded file
-                                                echo 'files/' . $_FILES["file"]["name"];
+                                        if (file_exists("files/overview_page/" . $_FILES[0]["name"])) {
+                                                unlink("files/overview_page/" . $_FILES[0]["name"]);
+                                                //echo $_FILES[0]["name"] . " <span id='invalid'><b>already exists.</b></span> ";
                                         }
+                                        $sourcePath = $_FILES[0]['tmp_name']; // Storing source path of the file in a variable
+                                        $targetPath = 'files/overview_page/' . 'Logo_' . $sectionId . '_' . $brandId . '.' . $file_extension; // Target path where file is to be stored
+                                        move_uploaded_file($sourcePath,$targetPath) ; // Moving Uploaded file
+                                        $this->OverviewSectionBrand->id = $brandId;
+                                        $this->OverviewSectionBrand->save(
+                                                array('OverviewSectionBrand' => array(
+                                                        'brand_logo' => '/' . $targetPath
+                                                ))
+                                        );
+                                        $data["success"] = 'image uploaded successfully!!!';
+                                        $data["filepath"] = '/' . $targetPath;
                                 }
                         } else {
-                                echo "<span id='invalid'>***Invalid file Size or Type***<span>";
+                                $data["error"] = "***Invalid file Size (Max 1MB) or Type (jpeg, jpg, png)***";
                         }
                 }
+                return json_encode($data);
         }
 }

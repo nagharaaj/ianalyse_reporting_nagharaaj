@@ -713,3 +713,95 @@ button.btn-create-chapter:hover, button.btn-create-question:hover, button.btn-li
 .login-help-questions {
     padding-bottom: 7px;
 }
+
+.announcements-container {
+    background: #6EA096;
+    min-height: 150px;
+    color: #ffffff;
+    text-align: center;
+    width: 100%;
+}
+
+.announcement-title {
+    font-size: 120%;
+    margin-bottom: 15px;
+}
+
+.announcement-detail {
+    font-family: Calibri,Verdana,Tahoma,Arial,sans-serif !important;
+    font-size: 100% !important;
+    color: #ffffff !important;
+    min-height: 100px;
+}
+
+.section-container {
+    font-family: Calibri,Verdana,Tahoma,Arial,sans-serif;
+    width: 90%;
+    margin: 25px auto 0px;
+}
+
+.section-title {
+    font-family: Calibri,Verdana,Tahoma,Arial,sans-serif !important;
+    color: #9E9A95 !important;
+    font-size: 120% !important;
+}
+
+.brand-logo {
+    cursor: pointer;
+    height: 50px;
+    padding-bottom: 10px;
+}
+
+.brand-container {
+    margin: 15px 20px 15px 20px;
+    width: 16%;
+    text-align: center;
+    display: inline-block;
+}
+
+.brand-client, .brand-service, .brand-market {
+    font-family: Calibri,Verdana,Tahoma,Arial,sans-serif !important;
+    color: #ffffff !important;
+    background: #3E7771;
+    min-height: 25px;
+    border: 1px solid #3E7771;
+    margin-bottom: 10px;
+    font-size: 100% !important;
+}
+
+.brand-synopsis {
+    min-height: 100px;
+    border: solid 1px #3E7771;
+    color: #3E7771 !important;
+}
+
+.synopsis-title {
+    font-size: 100%;
+}
+
+.synopsis-detail {
+    color: #3E7771 !important;
+    font-family: Calibri,Verdana,Tahoma,Arial,sans-serif !important;
+    font-size: 90% !important;
+    min-height: 70px;
+}
+
+.btn-add-brand {
+    cursor: pointer;
+    font-size: 120%;
+    color: #3E7771;
+    display: inline-block;
+    text-align: center;
+    line-height: 150px;
+    vertical-align: top;
+    margin-left: 15px;
+}
+
+.btn-add-section {
+    cursor: pointer;
+    font-size: 120%;
+    color: #3E7771;
+    margin: 25px auto 0px;
+    padding-bottom: 45px;
+    width: 90%;
+}

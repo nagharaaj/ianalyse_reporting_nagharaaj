@@ -79,7 +79,7 @@
                                                         $className = 'blue';
                                                 } else if ($navHead == 'HELP') {
                                                         $className = 'red';
-                                                } else if ($navHead == 'OVERVIEW') {
+                                                } else if ($navHead == 'GLOBAL STRATEGY') {
                                                         $className = 'light-grey';
                                                 } else if ($navHead == 'DASHBOARD') {
                                                         $className = 'light-torquoise';

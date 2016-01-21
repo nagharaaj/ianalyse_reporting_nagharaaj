@@ -98,7 +98,7 @@
 <script>
 $(document).ready(function () {
     var loggedUserRole = "<?php echo $loggedUserRole; ?>";
-    
+
     if(loggedUserRole == "Global") {
         $('.announcement-detail').jqxEditor({
             tools: 'bold italic underline | left center right | link'
@@ -132,7 +132,7 @@ $(document).ready(function () {
         if(brandCnt >= 10) {
             $(this).hide();
         }
-        
+
         $(newBrandElm).find('.brand-logo').on('click', addBrandLogo);
         $(newBrandElm).find('.brand-client').text('CLIENT NAME').jqxEditor({
             tools: ''
@@ -161,13 +161,13 @@ $(document).ready(function () {
         newSectionElm.attr('sectionNo', sectionCnt);
         $(newSectionElm).find('.brand-container').slice(1).remove();
         sectionElm.after(newSectionElm);
-        
+
         $(newSectionElm).find('.btn-add-brand').show().bind('click', brandClick);
 
         $(newSectionElm).find('.section-title').text('TITLE').jqxEditor({
             tools: ''
         });
-        
+
         $(newSectionElm).find('.brand-logo').on('click', addBrandLogo);
         $(newSectionElm).find('.brand-client').text('CLIENT NAME').jqxEditor({
             tools: ''
@@ -185,6 +185,7 @@ $(document).ready(function () {
         $(newSectionElm).find('.brand-client, .brand-service, .brand-market').on('change', saveBrandDetail);
         $(newSectionElm).find('.synopsis-detail').on('change', saveBrandSynopsis);
         $(newSectionElm).attr('sectionId', '');
+        $(newSectionElm).find('.brand-container').attr('brandId', '');
     });
 
     $('.announcement-detail').on('change', function (event) {
@@ -225,7 +226,7 @@ $(document).ready(function () {
             var services = $(this).find('.brand-service').text();
             var markets = $(this).find('.brand-market').text();
             var synopsis = $(this).find('.synopsis-detail').text();
-            
+
             brandData[brandNo] = {
                 brandId: brandId,
                 brandNo: brandNo,
@@ -266,7 +267,7 @@ $(document).ready(function () {
         var sectionTitle = $(sectionContainer).find('.section-title').text();
         var sectionId = $(sectionContainer).attr('sectionId');
         var sectionNo = $(sectionContainer).attr('sectionNo');
-        
+
         var brandData = new Array();
         $(sectionContainer).find('.brand-container').each(function () {
             var brandId = $(this).attr('brandId');
@@ -301,6 +302,9 @@ $(document).ready(function () {
             success : function(result) {
                 if(result.success == true) {
                     $(sectionContainer).attr('sectionId', result.sectionId);
+                    $.each(result.brandIds, function (index, value) {
+                        $(sectionContainer).find('.brand-container[brandNo='+index+']').attr('brandId', value);
+                    });
                     return true;
                 } else {
                     alert(result.errors);
@@ -360,31 +364,69 @@ $(document).ready(function () {
         });
     }
     $('.synopsis-detail').on('change', saveBrandSynopsis);
-    
+
     var addBrandLogo = function (event) {
+        $(this).unbind( "click" );
         var logoContainer = $(this);
+        // Variable to store your files
+        var files;
+        var brandId = $(this).parent().attr('brandId');
+        var sectionId = $(this).parent().parent().attr('sectionId');
+
+        if(brandId == '') {
+            alert('Enter CLIENT NAME first...!');
+            return false;
+        }
+
         $(logoContainer).empty();
-        $(logoContainer).append('<input type="file" id="logo_image" accept="image/*"/><button id="cancel-logo-upload">Cancel</button>');
+        $(logoContainer).append('<form id="logoUploadForm" action="#" enctype="multipart/form-data" method="post"></form>');
+        $('#logoUploadForm').append('<input type="file" name="logo_image" id="logo_image" accept="image/*">');
+        $('#logoUploadForm').append('<button id="save-logo-upload">Upload</button>');
+        $('#logoUploadForm').append('<button id="cancel-logo-upload">Cancel</button>');
 
         $('#cancel-logo-upload').on('click', function (event) {
                 event.stopPropagation();
                 $(logoContainer).empty();
                 $(logoContainer).text('LOGO');
+                $('.brand-logo').on('click', addBrandLogo);
         });
-        
-        $('#logo_image').change(function (event) {
+
+        // Add events
+        $('#logo_image').on('change', prepareUpload);
+        // Grab the files and set them to our variable
+        function prepareUpload(event) {
+            files = event.target.files;
+        }
+
+        $('#save-logo-upload').on('click', function (event) {
+            event.stopPropagation(); // Stop stuff happening
+            event.preventDefault(); // Totally stop stuff happening
+
+            // Create a formdata object and add the files
+            var data = new FormData();
+            $.each(files, function(key, value) {
+                data.append(key, value);
+            });
             $.ajax({
-                url: "/dashboard/brand_logo_upload", // Url to which the request is send
+                url: "/dashboard/brand_logo_upload?sectionId=" + sectionId + "&brandId=" + brandId, // Url to which the request is send
                 type: "POST",             // Type of request to be send, called as method
-                data: new FormData(this), // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+                data: data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
                 contentType: false,       // The content type used when sending data to the server.
                 cache: false,             // To unable request pages to be cached
+                dataType: 'json',
                 processData:false,        // To send DOMDocument or non processed data file it is set to false
                 success: function(data)   // A function to be called if request succeeds
                 {
-                    $(logoContainer).empty();
-                    $(logoContainer).append('<img class="brand-logo-img" height="50px" width="180px">');
-                    $(logoContainer).find('.brand-logo-img').attr('src', data);
+                    //console.log(data);
+                    if(data.success) {
+                        alert(data.success);
+                        $(logoContainer).empty();
+                        $(logoContainer).append('<img class="brand-logo-img" height="50px" width="180px">');
+                        $(logoContainer).find('.brand-logo-img').attr('src', data.filepath);
+                        $(logoContainer).find('.brand-logo').on('click', addBrandLogo);
+                    } else {
+                        alert(data.error);
+                    }
                 }
             });
         });
