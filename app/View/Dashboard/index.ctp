@@ -385,10 +385,11 @@ $(document).ready(function () {
         $('#logoUploadForm').append('<button id="cancel-logo-upload">Cancel</button>');
 
         $('#cancel-logo-upload').on('click', function (event) {
-                event.stopPropagation();
-                $(logoContainer).empty();
-                $(logoContainer).text('LOGO');
-                $('.brand-logo').on('click', addBrandLogo);
+            event.stopPropagation(); // Stop stuff happening
+            event.preventDefault(); // Totally stop stuff happening
+            $(logoContainer).empty();
+            $(logoContainer).text('LOGO');
+            $('.brand-logo').on('click', addBrandLogo);
         });
 
         // Add events
