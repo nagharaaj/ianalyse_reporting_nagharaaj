@@ -805,3 +805,16 @@ button.btn-create-chapter:hover, button.btn-create-question:hover, button.btn-li
     padding-bottom: 45px;
     width: 90%;
 }
+
+.btn-remove-brand, .btn-remove-section {
+    text-align: center;
+    display: none;
+    position: absolute;
+    background: #3E7771;
+    color: #ffffff !important;
+    margin-top: -25px;
+    height: 25px;
+    width: 120px;
+    line-height: 25px;
+    cursor: pointer;
+}

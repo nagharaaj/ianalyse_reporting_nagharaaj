@@ -21,12 +21,14 @@
         $brandCnt = 1;
 ?>
     <div class="section-container" sectionId="<?php echo $section_detail['OverviewSection']['id']; ?>" sectionNo="<?php echo $sectionCnt; ?>">
+        <div class="btn-remove-section" style="display: none; position: absolute;">Remove section</div>
         <div class="section-title" <?php if($loggedUserRole == 'Global') {?>contenteditable="true"<?php }?>><?php echo $section_detail['OverviewSection']['section_title']; ?></div>
 <?php
         if(isset($section_detail['OverviewSectionBrand']) && !empty($section_detail['OverviewSectionBrand'])) {
             foreach($section_detail['OverviewSectionBrand'] as $brand_detail) {
 ?>
         <div class="brand-container" brandId="<?php echo $brand_detail['id']; ?>" brandNo="<?php echo $brandCnt; ?>">
+            <div class="btn-remove-brand" style="display: none; position: absolute;">Remove brand</div>
         <?php if($brand_detail['brand_logo'] != null) {?>
             <div class="brand-logo" <?php if($loggedUserRole == 'Global') {?>title="Click to change logo"<?php }?>><img class="brand-logo-img" src="<?php echo $brand_detail['brand_logo']?>" height="50px" width="180px"></div>
         <?php } else {?>
@@ -43,11 +45,6 @@
 <?php
                 $brandCnt++;
             }
-            if($loggedUserRole == 'Global' && $brandCnt < 10) {
-?>
-        <div class="btn-add-brand">Add new brand...</div>
-<?php
-            }
         } else {
 ?>
         <div class="brand-container" brandNo="1">
@@ -62,6 +59,11 @@
                 </div>
             </div>
         </div>
+<?php
+        }
+        if($loggedUserRole == 'Global' && $brandCnt < 10) {
+?>
+        <div class="btn-add-brand">Add new brand...</div>
 <?php
         }
 ?>
@@ -133,7 +135,7 @@ $(document).ready(function () {
             $(this).hide();
         }
 
-        $(newBrandElm).find('.brand-logo').on('click', addBrandLogo);
+        $(newBrandElm).find('.brand-logo').empty().text('LOGO').on('click', addBrandLogo);
         $(newBrandElm).find('.brand-client').text('CLIENT NAME').jqxEditor({
             tools: ''
         });
@@ -149,6 +151,7 @@ $(document).ready(function () {
         $(newBrandElm).find('.brand-client, .brand-service, .brand-market').on('change', saveBrandDetail);
         $(newBrandElm).find('.synopsis-detail').on('change', saveBrandSynopsis);
         $(newBrandElm).attr('brandId', '');
+        $(newBrandElm).find('.btn-remove-brand').on('click', removeBrand);
     }
 
     $('.btn-add-brand').click(brandClick);
@@ -167,6 +170,7 @@ $(document).ready(function () {
         $(newSectionElm).find('.section-title').text('TITLE').jqxEditor({
             tools: ''
         });
+        $(newSectionElm).find('.btn-remove-section').on('click', removeSection);
 
         $(newSectionElm).find('.brand-logo').on('click', addBrandLogo);
         $(newSectionElm).find('.brand-client').text('CLIENT NAME').jqxEditor({
@@ -269,6 +273,7 @@ $(document).ready(function () {
         var sectionNo = $(sectionContainer).attr('sectionNo');
 
         var brandData = new Array();
+        var index = 0;
         $(sectionContainer).find('.brand-container').each(function () {
             var brandId = $(this).attr('brandId');
             var brandNo = $(this).attr('brandNo');
@@ -277,7 +282,7 @@ $(document).ready(function () {
             var markets = $(this).find('.brand-market').text();
             var synopsis = $(this).find('.synopsis-detail').text();
 
-            brandData[brandNo] = {
+            brandData[index] = {
                 brandId: brandId,
                 brandNo: brandNo,
                 clientName: clientName,
@@ -285,6 +290,7 @@ $(document).ready(function () {
                 markets: markets,
                 synopsis: synopsis
             };
+            index++;
         });
 
         var data = {
@@ -373,7 +379,7 @@ $(document).ready(function () {
         var brandId = $(this).parent().attr('brandId');
         var sectionId = $(this).parent().parent().attr('sectionId');
 
-        if(brandId == '') {
+        if(brandId == '' || brandId == undefined) {
             alert('Enter CLIENT NAME first...!');
             return false;
         }
@@ -434,6 +440,93 @@ $(document).ready(function () {
     }
     if(loggedUserRole == "Global") {
         $('.brand-logo').on('click', addBrandLogo);
+    }
+    
+    if(loggedUserRole == "Global") {
+        $(document).on('mouseenter', '.brand-container', function () {
+            $(this).find(".btn-remove-brand").show(700);
+        }).on('mouseleave', '.brand-container', function () {
+            $(this).find(".btn-remove-brand").hide(700);
+        });
+        
+        $(document).on('mouseenter', '.section-container', function () {
+            $(this).find(".btn-remove-section").show(700);
+        }).on('mouseleave', '.section-container', function () {
+            $(this).find(".btn-remove-section").hide(700);
+        });
+    }
+    var removeBrand = function (event) {
+        var brandContainer = $(this).parent();
+        var sectionContainer = $(brandContainer).parent();
+        var brandId = $(brandContainer).attr('brandid');
+        var sectionId = $(sectionContainer).attr('sectionid');
+        
+        if(brandId == '' || brandId == undefined) {
+            $(brandContainer).remove();
+        } else {
+            if(confirm('Are you sure?')) {
+                var data = {
+                    sectionId: sectionId,
+                    brandId: brandId
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '/dashboard/remove_brand',
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success : function(result) {
+                        if(result.success == true) {
+                            $(brandContainer).remove();
+                            $.each(result.brandCnts, function (index, value) {
+                                $(sectionContainer).find('.brand-container[brandid='+index+']').attr('brandno', value);
+                            });
+                            return true;
+                        } else {
+                            alert(result.errors);
+                            return false;
+                        }
+                    }
+                });
+            }
+        }
+    }
+    if(loggedUserRole == "Global") {
+        $(".btn-remove-brand").on('click', removeBrand);
+    }
+    
+    var removeSection = function (event) {
+        var sectionContainer = $(this).parent();
+        var sectionId = $(sectionContainer).attr('sectionid');
+        
+        if(sectionId == '' || sectionId == undefined) {
+            $(sectionContainer).remove();
+        } else {
+            if(confirm('Are you sure?')) {
+                var data = {
+                    sectionId: sectionId
+                }
+                $.ajax({
+                    type: "POST",
+                    url: '/dashboard/remove_section',
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success : function(result) {
+                        if(result.success == true) {
+                            $(sectionContainer).remove();
+                            return true;
+                        } else {
+                            alert(result.errors);
+                            return false;
+                        }
+                    }
+                });
+            }
+        }
+    }
+    if(loggedUserRole == "Global") {
+        $(".btn-remove-section").on('click', removeSection);
     }
 });
 </script>

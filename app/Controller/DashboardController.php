@@ -97,7 +97,7 @@ class DashboardController extends AppController {
                 $arrData = $this->request->data;
                 
                 if(isset($arrData)) {
-                        $brandCnt = count($arrData['brandData'])-1;
+                        $brandCnt = count($arrData['brandData']);
                         if(isset($arrData['sectionId']) && $arrData['sectionId'] != null) {
                                 $this->OverviewSection->id = $arrData['sectionId'];
                                 $this->OverviewSection->save(
@@ -124,7 +124,7 @@ class DashboardController extends AppController {
                                 $sectionId = $this->OverviewSection->getLastInsertId();
                         }
                         
-                        $brands = array_slice($arrData['brandData'], 1);
+                        $brands = $arrData['brandData'];
                         $arrBrands = array();
                         foreach($brands as $brand) {
                                 if($brand['clientName'] != "CLIENT NAME") {
@@ -206,6 +206,60 @@ class DashboardController extends AppController {
                         } else {
                                 $data["error"] = "***Invalid file Size (Max 1MB) or Type (jpeg, jpg, png)***";
                         }
+                }
+                return json_encode($data);
+        }
+        
+        public function remove_brand() {
+                $this->autoRender=false;
+                $data = array();
+
+                $arrData = $this->request->data;
+                if($arrData) {
+                        $this->OverviewSectionBrand->delete($arrData['brandId']);
+
+                        $brandCnt = 1;
+                        $arrBrands = array();
+                        $brands = $this->OverviewSectionBrand->find("all", array('conditions' => array('OverviewSectionBrand.section_id' => $arrData['sectionId'])));
+                        foreach($brands as $brand) {
+                                $this->OverviewSectionBrand->id = $brand['OverviewSectionBrand']['id'];
+                                $this->OverviewSectionBrand->save(
+                                        array(
+                                                'OverviewSectionBrand' => array(
+                                                        'brand_no' => $brandCnt
+                                                )
+                                        )
+                                );
+                                $arrBrands[$brand['OverviewSectionBrand']['id']] = $brandCnt;
+                                $brandCnt++;
+                        }
+
+                        $this->OverviewSection->id = $arrData['sectionId'];
+                        $this->OverviewSection->save(
+                                array(
+                                        'OverviewSection' => array(
+                                                'brand_cnt' => ($brandCnt-1)
+                                        )
+                                )
+                        );
+                        
+                        $data["success"] = true;
+                        $data['brandCnts'] = $arrBrands;
+                }
+                return json_encode($data);
+        }
+        
+        public function remove_section() {
+                $this->autoRender=false;
+                $data = array();
+
+                $arrData = $this->request->data;
+                if($arrData) {
+                        $this->OverviewSectionBrand->deleteAll(array('section_id' => $arrData['sectionId']));
+
+                        $this->OverviewSection->delete($arrData['sectionId']);
+                        
+                        $data["success"] = true;
                 }
                 return json_encode($data);
         }
