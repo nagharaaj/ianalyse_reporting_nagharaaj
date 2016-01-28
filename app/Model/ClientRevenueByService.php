@@ -61,4 +61,25 @@ class ClientRevenueByService extends AppModel {
 			'order' => ''
 		)
 	);
+
+/**
+ * hasMany associations
+ *
+ * @var array
+ */
+        public $hasMany = array(
+                'ClientActualRevenueByYear' => array(
+			'className' => 'ClientActualRevenueByYear',
+			'foreignKey' => 'client_service_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+        );
 }

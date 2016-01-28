@@ -437,7 +437,7 @@ class ReportsController extends AppController {
                         $clientData[$i]['Division'] = $client[0]['division'];
                         $clientData[$i]['ActiveMarkets'] = $client['ClientRevenueByService']['active_markets'];
                         $clientData[$i]['Currency'] = $client[0]['currency'];
-                        $clientData[$i]['EstimatedRevenue'] = $client['ClientRevenueByService']['estimated_revenue'];
+                        $clientData[$i]['EstimatedRevenue'] = (($client['ClientRevenueByService']['estimated_revenue'] == 0) ? '' : $client['ClientRevenueByService']['estimated_revenue']);
                         $clientData[$i]['ActualRevenue'] = $client['ClientRevenueByService']['actual_revenue'];
                         $clientData[$i]['Comments'] = $client['ClientRevenueByService']['comments'];
                         $clientData[$i]['Year'] = $client['ClientRevenueByService']['year'];
@@ -566,7 +566,7 @@ class ReportsController extends AppController {
                         } else {
                                 if ($this->Auth->user('role') == 'Regional') {
                                         if (in_array($client['ClientRevenueByService']['region_id'], $arrRegions)) {
-                                                $clientData[$i]['EstimatedRevenue'] = $estimatedRevenue;
+                                                $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
                                                 $clientData[$i]['ActualRevenue'] = $actualRevenue;
                                                 $clientData[$i]['Currency'] = $currency;
                                         } else {
@@ -576,7 +576,7 @@ class ReportsController extends AppController {
                                         }
                                 } elseif ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                                         if (in_array($client['ClientRevenueByService']['country_id'], $arrCountries)) {
-                                                $clientData[$i]['EstimatedRevenue'] = $estimatedRevenue;
+                                                $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
                                                 $clientData[$i]['ActualRevenue'] = $actualRevenue;
                                                 $clientData[$i]['Currency'] = $currency;
                                         } else {
@@ -585,7 +585,7 @@ class ReportsController extends AppController {
                                                 $clientData[$i]['Currency'] = '';
                                         }
                                 } else {
-                                        $clientData[$i]['EstimatedRevenue'] = $estimatedRevenue;
+                                        $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
                                         $clientData[$i]['ActualRevenue'] = $actualRevenue;
                                         $clientData[$i]['Currency'] = $currency;
                                 }
@@ -1001,7 +1001,7 @@ class ReportsController extends AppController {
                         } else {
                                 $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Currency');
                                 $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'iP estimated revenue');
-                                $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'iP 2014 Actual revenue');
+                                $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'iP '.(date('Y')-1).' Actual revenue');
                                 $objPHPExcel->getActiveSheet()->SetCellValue('R1', 'Comments');
                                 $objPHPExcel->getActiveSheet()->SetCellValue('S1', 'Created on');
                                 $objPHPExcel->getActiveSheet()->SetCellValue('T1', 'Last modified on');
@@ -1077,7 +1077,7 @@ class ReportsController extends AppController {
                                         $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'],
                                             $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
                                             $data['PitchStage'], $data['Service'], $data['Division'], $clientSince, $lostDate, $pitchDate,
-                                            $data['ActiveMarkets'], $currency, $estimatedRevenue, $actualRevenue, $data['Comments'],
+                                            $data['ActiveMarkets'], $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue), $actualRevenue, $data['Comments'],
                                             $createdDate, $modifiedDate);
                                 } else {
                                         $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'],
