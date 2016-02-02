@@ -1000,8 +1000,8 @@ class ReportsController extends AppController {
                                 $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Comments');
                         } else {
                                 $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Currency');
-                                $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'iP estimated revenue');
-                                $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'iP '.(date('Y')-1).' Actual revenue');
+                                $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'iP '.date('Y').' Estimated Revenue');
+                                $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'iP '.(date('Y')-1).' Actual Revenue');
                                 $objPHPExcel->getActiveSheet()->SetCellValue('R1', 'Comments');
                                 $objPHPExcel->getActiveSheet()->SetCellValue('S1', 'Created on');
                                 $objPHPExcel->getActiveSheet()->SetCellValue('T1', 'Last modified on');

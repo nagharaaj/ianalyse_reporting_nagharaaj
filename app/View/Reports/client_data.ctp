@@ -4,7 +4,8 @@
          $(document).ready(function () {
 
              var userRole = '<?php echo $userRole; ?>';
-             var actualRevenueColumnTitle = '<?php echo 'iP '. (date('Y')-1) . ' Actual revenue';?>';
+             var estimatedRevenueColumnTitle = '<?php echo 'iP '. date('Y') . ' Estimated Revenue';?>';
+             var actualRevenueColumnTitle = '<?php echo 'iP '. (date('Y')-1) . ' Actual Revenue';?>';
              var cities = jQuery.parseJSON('<?php echo $cities; ?>');
              var arrCities = $.map(cities, function(el) { return el; });
              var categories = jQuery.parseJSON('<?php echo $categories; ?>');
@@ -257,7 +258,7 @@
                   /*{ text: 'Pitch Leader', columngroup: 'PitchLeader', datafield: 'PitchLeader', width: 150, cellClassName: cellclass, editable: false },*/
                   { text: 'Active Markets', datafield: 'ActiveMarkets', width: 250, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
-                  { text: 'iP estimated revenue', datafield: 'EstimatedRevenue', width: 130, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
+                  { text: estimatedRevenueColumnTitle, datafield: 'EstimatedRevenue', width: 160, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
                   { text: actualRevenueColumnTitle, datafield: 'ActualRevenue', width: 150, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
                   { text: 'Comments', datafield: 'Comments', width: 200, cellClassName: cellclass, editable: false }
                 ]

@@ -9,7 +9,8 @@
              var numberrenderer = function (row, column, value) {
                  return '<div style="text-align: center; margin-top: 5px;">' + (1 + value) + '</div>';
              }
-             var actualRevenueColumnTitle = '<?php echo 'iP '. (date('Y')-1) . ' Actual revenue';?>';
+             var estimatedRevenueColumnTitle = '<?php echo 'iP '. date('Y') . ' Estimated Revenue';?>';
+             var actualRevenueColumnTitle = '<?php echo 'iP '. (date('Y')-1) . ' Actual Revenue';?>';
              var cities = jQuery.parseJSON('<?php echo $cities; ?>');
              var arrCities = $.map(cities, function(el) { return el; });
              var markets = jQuery.parseJSON('<?php echo $markets; ?>');
@@ -284,7 +285,7 @@
                   /*{ text: 'Pitch Leader', columngroup: 'PitchLeader', datafield: 'PitchLeader', width: 150, cellClassName: cellclass },*/
                   { text: 'Active Markets', columngroup: 'ActiveMarkets', datafield: 'ActiveMarkets', width: 200, cellClassName: cellclass, filtertype: 'checkedlist' },
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', hidden: ((userRole == 'Viewer') ? true : false) },
-                  { text: 'iP estimated revenue', columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 130, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
+                  { text: estimatedRevenueColumnTitle, columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 160, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
                   { text: actualRevenueColumnTitle, columngroup: 'ActualRevenue', datafield: 'ActualRevenue', width: 150, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
                   { text: 'Comments', columngroup: 'Comments', datafield: 'Comments', width: 200, cellClassName: cellclass }
                 ],
