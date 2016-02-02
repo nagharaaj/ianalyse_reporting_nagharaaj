@@ -350,7 +350,7 @@ class ReportsController extends AppController {
                                                 $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
                                                 $email->template('delete_pitch', 'default')
                                                     ->emailFormat('html')
-                                                    ->to(array('mathilde.natier@iprospect.com'))
+                                                    ->to(array('mathilde.natier@iprospect.com', 'ama.hughes@iprospect.com'))
                                                     ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
                                                     ->subject('Pitch is deleted')
                                                     ->send();
