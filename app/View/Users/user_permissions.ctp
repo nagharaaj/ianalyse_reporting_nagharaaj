@@ -40,6 +40,7 @@
                     { name: 'permission', type: 'string' },
                     { name: 'nameofentity', type: 'string' },
                     { name: 'active', type: 'boolean' },
+                    { name: 'dailysyncmail', type: 'boolean' },
                     { name: 'weeklysummarymail', type: 'boolean' },
                     { name: 'clientpitchmail', type: 'boolean' },
                     { name: 'targetclients', type: 'string' }
@@ -85,6 +86,7 @@
                 enableHover: false,
                 editSettings: { saveOnPageChange: true, saveOnBlur: false, saveOnSelectionChange: false, cancelOnEsc: true, saveOnEnter: true, editOnDoubleClick: false, editOnF2: false },
                 columns: [
+                  { text: '', hidden: true, dataField: 'dailysyncmail' },
                   { text: '', hidden: true, dataField: 'weeklysummarymail' },
                   { text: '', hidden: true, dataField: 'clientpitchmail' },
                   { text: '', hidden: true, dataField: 'targetclients' },
@@ -147,7 +149,7 @@
             });
             function openPopup(rowData) {
                 var offset = $("#dataTable").offset();
-                $("#popupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 20, y: parseInt(offset.top) + 20 }, height: "350px", maxWidth: 1200, isModal: true });
+                $("#popupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 20, y: parseInt(offset.top) + 20 }, height: "360px", maxWidth: 1200, isModal: true });
                 if(rowData) {
                         $('#popupWindow').jqxWindow('setTitle', 'Update Existing User');
                         $("#SaveNewUser").html('UPDATE USER');
@@ -222,6 +224,7 @@
                 $("#nameofentity").jqxDropDownList({ selectedIndex: -1 });
                 $("#active").jqxCheckBox({ checked: (rowData ? rowData.active : true) });
 
+                $("#dailySyncMails").jqxCheckBox({ checked: (rowData ? rowData.dailysyncmail : false) });
                 $("#weeklySummaryMails").jqxCheckBox({ checked: (rowData ? rowData.weeklysummarymail : false) });
                 $("#clientPitchMails").jqxCheckBox({ checked: (rowData ? rowData.clientpitchmail : false) });
                 $("#targetClients").jqxDropDownList({ selectedIndex: -1, width: 300, filterable: true, checkboxes: true, source: clientListDataAdapter, displayMember: "display_name", valueMember: "client_name" });
@@ -249,6 +252,7 @@
                         $("#nameofentity").jqxDropDownList('selectItem', rowData.nameofentity);
                     }
                     if(rowData.permission == "Global") {
+                        $("#dailySyncMails").jqxCheckBox('enable');
                         $("#weeklySummaryMails").jqxCheckBox('enable');
                         $("#clientPitchMails").jqxCheckBox('enable');
                         $("#targetClients").jqxDropDownList({ disabled: false });
@@ -259,6 +263,7 @@
                             }
                         }
                     } else {
+                        $("#dailySyncMails").jqxCheckBox('disable');
                         $("#weeklySummaryMails").jqxCheckBox('disable');
                         $("#clientPitchMails").jqxCheckBox('disable');
                         $("#targetClients").jqxDropDownList({ disabled: true });
@@ -284,10 +289,12 @@
                         }
 
                         if(item.label == "Global") {
+                                $("#dailySyncMails").jqxCheckBox('enable');
                                 $("#weeklySummaryMails").jqxCheckBox('enable');
                                 $("#clientPitchMails").jqxCheckBox('enable');
                                 $("#targetClients").jqxDropDownList({ disabled: false });
                         } else {
+                                $("#dailySyncMails").jqxCheckBox('disable');
                                 $("#weeklySummaryMails").jqxCheckBox('disable');
                                 $("#clientPitchMails").jqxCheckBox('disable');
                                 $("#targetClients").jqxDropDownList({ disabled: true });
@@ -333,8 +340,8 @@
                 }
                 var row = { displayname: $("#name").val(), username: $("#username").val(), title: $("#title").val(),
                     location: $("#location").val(), email: $("#email").val(), permission: $("#permission").val(),
-                    nameofentity: $("#nameofentity").val(), activeflag: $("#active").val(), weeklysummarymails: $("#weeklySummaryMails").val(),
-                    clientpitchmails: $("#clientPitchMails").val(), targetclients: $("#targetClients").val()
+                    nameofentity: $("#nameofentity").val(), activeflag: $("#active").val(), dailysyncmails: $("#dailySyncMails").val(),
+                    weeklysummarymails: $("#weeklySummaryMails").val(), clientpitchmails: $("#clientPitchMails").val(), targetclients: $("#targetClients").val()
                 };
                 $.ajax({
                     type: "POST",
@@ -398,6 +405,9 @@
             <table width="99%" cellpadding="5">
                 <tr style="height: 25px; border-color: #aaa; background: none repeat scroll 0 0 #e8e8e8; border-style: solid; border-width: 0 1px 0 0; font-family: Verdana,Arial,sans-serif; font-size: 13px; font-style: normal;">
                     <td>Manage email notifications (Global permission only)</td>
+                </tr>
+                <tr>
+                    <td><div style="display: inline-block" id="dailySyncMails">&nbsp;Receive NBR daily sync and reconciliation notification</div></td>
                 </tr>
                 <tr>
                     <td><div style="display: inline-block" id="weeklySummaryMails">&nbsp;Receive weekly summary notification</div></td>

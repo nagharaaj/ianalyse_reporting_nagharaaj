@@ -60,7 +60,7 @@ class UsersController extends AppController {
 
                 if ($this->request->is('post')) {
                         $username = $this->request->data['User']['username'];
-						$password = $this->request->data['User']['password'];
+                        $password = $this->request->data['User']['password'];
 
                         $ldap = new CLdapLogin('AMDC2DCM05.media.global.loc', '3268', $domain, $username, $password);
                         if (true == $ldap->login()) {
@@ -165,6 +165,7 @@ class UsersController extends AppController {
                                         'location' => $arrData['location'],
                                         'email_id' => $arrData['email'],
                                         'is_active' => $isActive,
+                                        'daily_sync_mail' => $arrData['dailysyncmails'],
                                         'weekly_summary_mail' => $arrData['weeklysummarymails'],
                                         'client_specific_mail' => $arrData['clientpitchmails']
                                 )
@@ -286,6 +287,7 @@ class UsersController extends AppController {
                         }
 
                         $userData[$i]['active'] = $user['User']['is_active'];
+                        $userData[$i]['dailysyncmail'] = $user['User']['daily_sync_mail'];
                         $userData[$i]['weeklysummarymail'] = $user['User']['weekly_summary_mail'];
                         $userData[$i]['clientpitchmail'] = $user['User']['client_specific_mail'];
 
@@ -315,6 +317,7 @@ class UsersController extends AppController {
                                                         'title' => $arrData['title'],
                                                         'location' => $arrData['location'],
                                                         'is_active' => $isActive,
+                                                        'daily_sync_mail' => $arrData['dailysyncmails'],
                                                         'weekly_summary_mail' => $arrData['weeklysummarymails'],
                                                         'client_specific_mail' => $arrData['clientpitchmails']
                                                 )
