@@ -479,9 +479,9 @@
             $("#popupWindow").jqxWindow({
                 width: 1100, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelNew"), maxWidth: 1200, maxHeight: 750, showCloseButton: false 
             });
-            if($("#createNew").is(':visible')) {
-                $("#createNew").jqxButton({ theme: theme });
-                $("#createNew").click(function () {
+            if($(".createNew").is(':visible')) {
+                $(".createNew").jqxButton({ theme: theme });
+                $(".createNew").click(function () {
                     openPopup();
                 });
             }
@@ -980,7 +980,14 @@
             <div id="-reports-client-data" class="light-grey selected">
                     <a href="/reports/office_data">UPDATE YOUR RECORDS</a>
             </div>
+        
+         <?php if($userRole == 'Global') { ?>
+        <div style='float: right; padding-right: 7px; padding-bottom: 30px; margin-top: 20px;'>
+            <button value="Add a new record" class='createNew'>ADD NEW LOCATION</button>
+        </div>
+        <?php } ?>
     </div>
+    
 <script type="text/javascript">
         $(document).ready(function() {
                 $('#tab-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
@@ -992,10 +999,9 @@
         <div id="jqxgrid"></div>
             <div style='margin-top: 20px;'>
         </div>
-        
-        <?php if($userRole == 'Global') { ?>
+         <?php if($userRole == 'Global') { ?>
         <div style='float: right; padding-right: 7px; padding-bottom: 30px'>
-            <button value="Add a new record" id='createNew'>ADD NEW LOCATION</button>
+            <button value="Add a new record" class='createNew'>ADD NEW LOCATION</button>
         </div>
         <?php } ?>
 

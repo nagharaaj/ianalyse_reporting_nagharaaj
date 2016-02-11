@@ -898,8 +898,8 @@
             $("#updateWindow").jqxWindow({
                 width: 600, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelUpdate"), maxWidth: 700, maxHeight: 750, showCloseButton: false 
             });
-            $("#createNew").jqxButton({ theme: theme });
-            $("#createNew").click(function () {
+            $(".createNew").jqxButton({ theme: theme });
+            $(".createNew").click(function () {
                 var offset = $("#jqxgrid").offset();
                 $("#popupWindow").jqxWindow({ position: { x: 'center', y: 'top' }, height: "750px", maxWidth: 700, isModal: true });
                 $("#parentrecordid").val('');
@@ -1463,6 +1463,11 @@
             <div id="-reports-client-data" class="light-grey selected">
                     <a href="/reports/client_data">CREATE/UPDATE YOUR RECORDS</a>
             </div>
+           
+            <div style='float: right; padding-right: 7px; padding-bottom: 10px; margin-top: 20px;'>
+            <button value="Add a new record" class='createNew'>ADD A NEW RECORD</button>
+            
+            </div>
     </div>
 <script type="text/javascript">
         $(document).ready(function() {
@@ -1470,15 +1475,14 @@
                 $('#nav-menu div#-reports-client_report').addClass('selected');
         });
 </script>
-<div id='jqxWidget'>
         <!--<div style="margin-right: 7px; margin-bottom: 5px" align="right">
             <button style="margin-left: 5px" value="Manage Association" id="addassociation">MANAGE ASSOCIATIONS</button>
         </div>-->
-
+<div id='jqxWidget'>
         <div id="jqxgrid"></div>
         <div style='margin-top: 20px;'></div>
         <div style='float: right; padding-right: 7px; padding-bottom: 30px'>
-            <button value="Add a new record" id='createNew'>ADD A NEW RECORD</button>
+            <button value="Add a new record" class='createNew'>ADD A NEW RECORD</button>
         </div>
 
     <div id="popupWindow">
@@ -1689,6 +1693,7 @@
                 </tr>
             </table>
         </form>
+        
         <div style="padding-top: 20px;" align="right"><button style="margin-right: 15px;" id="UpdateClient">UPDATE EXISTING RECORD</button></div>
         </div>
    </div>
