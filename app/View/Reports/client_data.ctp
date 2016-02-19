@@ -260,6 +260,11 @@
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: estimatedRevenueColumnTitle, datafield: 'EstimatedRevenue', width: 160, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
                   { text: actualRevenueColumnTitle, datafield: 'ActualRevenue', width: 150, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
+                  { text: 'Expand Data', cellsAlign: 'center', align: "center", columnType: 'none', width: 80, editable: false, sortable: false, dataField: null,
+                      cellsRenderer: function (row, column, value) {
+                          return "<div  align='center' style='margin-top:15px'><button data-row='" + row + "' class='expandButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onclick=expandClick(event)>+</button></div>";
+                      }
+                  },
                   { text: 'Comments', datafield: 'Comments', width: 200, cellClassName: cellclass, editable: false }
                 ]
             });
@@ -891,6 +896,51 @@
                     }
                     $("#jqxgrid").jqxGrid('applyfilters');
                 }*/
+
+                $("#revenueWindow").jqxWindow({position:'center',
+                        height:200, width: 400, resizable: false,  isModal: true, autoOpen: false, showCloseButton: true
+                });
+
+                expandClick = function (event) {
+                        var target = $(event.target);
+                        // get button's value.
+                        var value = target.val();
+                        // get clicked row.
+                        var rowIndex = parseInt(event.target.getAttribute('data-row'));
+                        if (isNaN(rowIndex)) {
+                                return;
+                        }
+                        var data = $('#jqxgrid').jqxGrid('getrowdata', rowIndex);
+                        $('#revClientname').text(data.ClientName);
+                        $("#revService").text(data.Service);
+                        $('#revCurrency').text(data.Currency);
+
+                        var row = {RecordId: data.RecordId};
+                        $("#actualRevenue span").empty();
+                        $.ajax({
+                                type: 'POST',
+                                data:JSON.stringify(row),
+                                url: "/reports/get_actual_revenue/",
+                                contentType: "application/json; charset=utf-8",
+                                dataType: 'json',
+                                success: function (result) {
+                                        if (result.success==true) {
+                                                if(result.data=='') {
+                                                        alert("No data found");
+                                                } else {
+                                                        var table = $('<table>').css({"margin-left" : "4px", "border-collapse" :"collapse"}).attr('border', 1).attr('width', 300);
+                                                        $.each(result.data, function (index, value) {
+                                                                var tr ='<tr><td>iP '+index+' Actual Revenue</td><td align="right">'+Math.round(value*100)/100 +'</td></tr>';
+                                                                $(table).prepend(tr);
+                                                        });
+                                                        $("#actualRevenue span").append(table);
+                                                        //Appending the actual revenue table
+                                                        $("#revenueWindow").jqxWindow('open');
+                                                }
+                                        }
+                                } 
+                        });
+                }
 
             $("#popupWindow").jqxWindow({
                 width: 600, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelNew"), maxWidth: 700, maxHeight: 750, showCloseButton: false 
@@ -1696,5 +1746,30 @@
         
         <div style="padding-top: 20px;" align="right"><button style="margin-right: 15px;" id="UpdateClient">UPDATE EXISTING RECORD</button></div>
         </div>
-   </div>
+    </div>
+    <div id="revenueWindow">
+        <div>Revenue values for Previous years</div>
+        <div style="overflow: hidden;" align="center">
+        <div style="padding-bottom: 10px;" align="right">
+                <table align="center">
+                    <tr>
+                        <td align="right" style="padding-bottom: 5px; padding-right: 5px">Client Name</td>
+                        <td align="left" style="padding-bottom: 5px;"><div id="revClientname"></div></td>
+                        <td style="width: 150px"></td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="padding-bottom: 5px; padding-right: 5px">Service</td>
+                        <td align="left" style="padding-bottom: 5px;"><div id="revService"></div></td>
+                        <td style="width: 150px"></td>
+                    </tr>
+                    <tr>
+                        <td align="right" style="padding-bottom: 5px; padding-right: 5px">Currency</td>
+                        <td align="left" style="padding-bottom: 5px;"><div id="revCurrency"></div></td>
+                        <td style="width: 150px"></td>
+                    </tr>
+                    <tr><td colspan="3"><div id="actualRevenue"><span  width:150px;></span></div></td></tr>
+               </table>
+        </div>
+        </div>
+    </div>
 </div>

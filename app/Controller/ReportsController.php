@@ -28,7 +28,8 @@ class ReportsController extends AppController {
             'Division',
             'UserLoginRole',
             'ClientDeleteLog',
-            'UserMailNotificationClient'
+            'UserMailNotificationClient',
+            'ClientActualRevenueByYear'
         );
 
         public $serviceMap = array(1 => 'Affiliates', 19 => 'Attribution', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
@@ -350,7 +351,7 @@ class ReportsController extends AppController {
                                                 $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
                                                 $email->template('delete_pitch', 'default')
                                                     ->emailFormat('html')
-                                                    ->to(array('mathilde.natier@iprospect.com', 'ama.hughes@iprospect.com'))
+                                                    ->to(array( 'ama.hughes@iprospect.com'))    //'mathilde.natier@iprospect.com',
                                                     ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
                                                     ->subject('Pitch is deleted')
                                                     ->send();
@@ -1868,4 +1869,16 @@ class ReportsController extends AppController {
 
         }
 
+        public function get_actual_revenue() {
+                if($this->RequestHandler->isAjax()) {
+                        $this->autoRender=false;
+                }
+                $arrData = $this->request->data;
+                $recordId = $arrData['RecordId'];
+                $arrRevenue = $this->ClientActualRevenueByYear->find('list', array('fields' => array('ClientActualRevenueByYear.fin_year','ClientActualRevenueByYear.actual_revenue'),'conditions' => array('ClientActualRevenueByYear.client_service_id' => $recordId),'order' => 'ClientActualRevenueByYear.fin_year desc'));
+                $result = array();
+                $result['success'] = true;
+                $result['data'] = $arrRevenue;
+                return json_encode($result);
+        }
 }
