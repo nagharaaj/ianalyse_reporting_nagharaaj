@@ -1,4 +1,4 @@
-    <script type="text/javascript">
+<script type="text/javascript">
          $(document).ready(function () {
 
              var theme = 'base';
@@ -196,7 +196,7 @@
                 filterbutton.click(function () {
                     var filtergroup = new $.jqx.filter();
                     var filter_or_operator = 1;
-                    var filtervalue = textInput.val();
+                    var filtervalue = removeSpecialChars(textInput.val());
                     var filtercondition = 'contains';
                     var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);            
                     filtergroup.addfilter(filter_or_operator, filter1);

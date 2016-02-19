@@ -44,6 +44,7 @@
                 echo $this->Html->script('jqwidgets/jqxgrid.storage.js');
                 echo $this->Html->script('jqwidgets/jqxgrid.columnsresize.js');
                 echo $this->Html->script('jqwidgets/jqxgrid.export.js');
+                echo $this->Html->script('common.js');
 	?>
                 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 </head>
