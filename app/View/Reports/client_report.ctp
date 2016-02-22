@@ -241,6 +241,8 @@
                 editable: false,
                 autoRowHeight: true,
                 columnsresize: true,
+                autoshowfiltericon:false,
+                autoshowcolumnsmenubutton: false,
                 showpinnedcolumnbackground: false,
                 enablehover: false,
                 columnmenuopening: function (menu, datafield, height) {
@@ -279,15 +281,15 @@
                   { text: 'Status', columntype: 'template', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist' },
                   { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist' },
                   { text: 'Division', datafield: 'Division', width: 150, cellClassName: cellclass, filtertype: 'checkedlist' },
-                  { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 125, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy' },
-                  { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 100, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy' },
-                  { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 100, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy' },
+                  { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy' },
+                  { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy' },
+                  { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy' },
                   /*{ text: 'Pitch Leader', columngroup: 'PitchLeader', datafield: 'PitchLeader', width: 150, cellClassName: cellclass },*/
-                  { text: 'Active Markets', columngroup: 'ActiveMarkets', datafield: 'ActiveMarkets', width: 200, cellClassName: cellclass, filtertype: 'checkedlist' },
+                  { text: 'Active Markets', columngroup: 'ActiveMarkets', datafield: 'ActiveMarkets', width: 160, cellClassName: cellclass, filtertype: 'checkedlist' },
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', hidden: ((userRole == 'Viewer') ? true : false) },
-                  { text: estimatedRevenueColumnTitle, columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 160, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
-                  { text: actualRevenueColumnTitle, columngroup: 'ActualRevenue', datafield: 'ActualRevenue', width: 150, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
-                  { text: 'Comments', columngroup: 'Comments', datafield: 'Comments', width: 200, cellClassName: cellclass }
+                  { text: estimatedRevenueColumnTitle, columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
+                  { text: actualRevenueColumnTitle, columngroup: 'ActualRevenue', datafield: 'ActualRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
+                  { text: 'Comments', columngroup: 'Comments', datafield: 'Comments', width: 230, cellClassName: cellclass }
                 ],
                 ready: calculateStats
             });

@@ -205,6 +205,8 @@
                 filterable: true,
                 editable: true,
                 autoRowHeight: true,
+                autoshowfiltericon:false,
+                autoshowcolumnsmenubutton: false,
                 selectionmode: 'none',
                 columnsresize: true,
                 showpinnedcolumnbackground: false,
@@ -252,15 +254,15 @@
                   { text: 'Status', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Division', datafield: 'Division', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
-                  { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 110, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
-                  { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 100, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
-                  { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 100, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
+                  { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
+                  { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
+                  { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
                   /*{ text: 'Pitch Leader', columngroup: 'PitchLeader', datafield: 'PitchLeader', width: 150, cellClassName: cellclass, editable: false },*/
-                  { text: 'Active Markets', datafield: 'ActiveMarkets', width: 250, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
+                  { text: 'Active Markets', datafield: 'ActiveMarkets', width: 160, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
-                  { text: estimatedRevenueColumnTitle, datafield: 'EstimatedRevenue', width: 160, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
-                  { text: actualRevenueColumnTitle, datafield: 'ActualRevenue', width: 150, align: 'center', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
-                  { text: 'Expand Data', cellsAlign: 'center', align: "center", columnType: 'none', width: 80, editable: false, sortable: false, dataField: null,
+                  { text: estimatedRevenueColumnTitle, datafield: 'EstimatedRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
+                  { text: actualRevenueColumnTitle, datafield: 'ActualRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
+                  { text: 'Expand Data', cellsAlign: 'center', align: "left", columnType: 'none', width: 110, editable: false, sortable: false, dataField: null,filterable:false,autoshowcolumnsmenubutton: true,
                       cellsRenderer: function (row, column, value) {
                           return "<div  align='center' style='margin-top:15px'><button data-row='" + row + "' class='expandButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onclick=expandClick(event)>+</button></div>";
                       }
