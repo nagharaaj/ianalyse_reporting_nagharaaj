@@ -190,27 +190,30 @@
                     textInput.val("");
                 });
              }
-
+//
              // initialize jqxGrid
              $("#jqxgrid").jqxGrid(
              {
                 width: (parseInt(screen.availWidth) - 30),
-                autoheight: true,
+                autoheight:true,
+                //rowsheight:45,
+                //height:'600',
                 source: dataAdapter,
                 enablemousewheel: false,
-                pageable: true,
+                pageable:true,
                 pageSize: 20,
                 pagerMode: 'simple',
                 sortable: true,
                 filterable: true,
                 editable: true,
-                autoRowHeight: true,
-                autoshowfiltericon:false,
+                autoRowHeight:true,
+                autoshowfiltericon:true,
                 autoshowcolumnsmenubutton: false,
                 selectionmode: 'none',
                 columnsresize: true,
                 showpinnedcolumnbackground: false,
-                enablehover: false,
+                enablehover: true,
+                
                 columnmenuopening: function (menu, datafield, height) {
                     var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                     if (column.filtertype === "custom") {

@@ -97,6 +97,7 @@
 }
 .jqx-popup {
     box-sizing: content-box;
+/*     position:fixed;*/
 }
 .jqx-position-reset {
     position: static !important; 
@@ -289,13 +290,14 @@ button.jqx-button, input[type=button].jqx-button,  input[type=submit].jqx-button
 }
  /*applied to the column's button.*/
  .jqx-grid-column-menubutton {
-    border-style: solid;
+/*    border-style: solid;*/
     border-width: 0px 0px 0px 1px;
     border-color: transparent;
-    background-image: url('images/menubutton.png');
+    background-image: url('images/filter.png') !important;
     background-repeat: no-repeat;
     background-position: center;
     cursor: pointer;
+ 
  }
 .jqx-grid-column-menubutton-rtl {
     border-width: 0px 1px 0px 0px;
@@ -307,6 +309,7 @@ button.jqx-button, input[type=button].jqx-button,  input[type=submit].jqx-button
     background-repeat: no-repeat;
     background-position: center;
     cursor: pointer;
+    display: block;
  }
  /*applied to the column's sort button when the sort order is descending.*/
   .jqx-grid-column-sortdescbutton {
@@ -315,10 +318,12 @@ button.jqx-button, input[type=button].jqx-button,  input[type=submit].jqx-button
     background-repeat: no-repeat;
     background-position: center;
     cursor: pointer;
+      display: block;
  }
   /*applied to the column's filter button.*/
   .jqx-grid-column-filterbutton
  {
+    display: none;
     border: none;
     background-image: url('images/filter.png');
     background-repeat: no-repeat;
@@ -519,7 +524,7 @@ button.jqx-button, input[type=button].jqx-button,  input[type=submit].jqx-button
     margin-bottom: 1px;
     border-color: transparent;  
     background: #fff;
-    white-space: nowrap;
+    white-space: normal;
     font-weight: normal; 
     font-size: inherit;
     overflow: hidden; 
@@ -845,6 +850,7 @@ button.jqx-button, input[type=button].jqx-button,  input[type=submit].jqx-button
     padding: 0px;
     overflow: hidden;
     text-align: left;
+   
 }
 .jqx-menu-dropdown-column
 {
@@ -878,6 +884,7 @@ button.jqx-button, input[type=button].jqx-button,  input[type=submit].jqx-button
     border-width: 1px;
     text-align: left;
     padding: 2px;
+    position: fixed;
 }
 /*applied to the sub menu's ul elements.*/
 .jqx-menu-dropdown ul
@@ -2979,12 +2986,14 @@ of the horizontal scrollbar.*/
     background-image: url('images/icon-up.png');
     background-repeat: no-repeat;
     background-position: center;
+    display:block;
 }
 .jqx-icon-arrow-down, .jqx-icon-arrow-down-hover, .jqx-icon-arrow-down-selected
 {
     background-image: url('images/icon-down.png');
     background-repeat: no-repeat;
     background-position: center;
+    display: block;
 }
 .jqx-icon-arrow-left, .jqx-icon-arrow-left-hover, .jqx-icon-arrow-left-selected
 {

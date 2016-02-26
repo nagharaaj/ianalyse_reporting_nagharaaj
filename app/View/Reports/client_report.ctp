@@ -230,7 +230,9 @@
              $("#jqxgrid").jqxGrid(
              {
                 width: (parseInt(screen.availWidth) - 30),
-                autoheight: true,
+                rowsheight:45,
+                //height:'600',
+                autoheight:true,
                 source: dataAdapter,
                 enablemousewheel: false,
                 pageable: true,
@@ -241,7 +243,7 @@
                 editable: false,
                 autoRowHeight: true,
                 columnsresize: true,
-                autoshowfiltericon:false,
+                autoshowfiltericon:true,
                 autoshowcolumnsmenubutton: false,
                 showpinnedcolumnbackground: false,
                 enablehover: false,
@@ -254,7 +256,7 @@
                         }, 25);
                     }
                     else menu.height(height);
-                },
+                },              
                 columns: [
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'ParentId', datafield: 'ParentId', hidden: true },
