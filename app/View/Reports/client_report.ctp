@@ -1,6 +1,5 @@
 <script type="text/javascript">
          $(document).ready(function () {
-
              var theme = 'base';
              var classWon = 'stage-won';
              var classLost = 'stage-lost';
@@ -28,14 +27,6 @@
                 $('#no_of_records span').text(rowscount);
                 var clientsCount = 0;
                 var pitchesCount = 0;
-                var wonCount = 0;
-                var lostCount = 0;
-                var cancelledCount = 0;
-                var lostCurrentYear = 0;
-                var sumEstRevenue = 0;
-                var sumActRevenue = 0;
-                var statsCurrency = $("#statscurrency option:selected").text();
-                var convert_ratio = $("#statscurrency").val();
                 for(var i = 0; i < rowscount; i++) {
                         if(dataRows[i].PitchStage.match(/Won/g) || dataRows[i].PitchStage == 'Current client') {
                                 if(dataRows[i].ParentId == 0 || dataRows[i].ParentId == null || dataRows[i].ParentId == '') {
@@ -45,67 +36,11 @@
                         if(dataRows[i].PitchStage.match(/Live/g)) {
                                 pitchesCount++;
                         }
-                        if(dataRows[i].PitchStage.match(/Won/g)) {
-                                wonCount++;
-                        }
-                        if(dataRows[i].PitchStage.match(/Lost/g)) {
-                                lostCount++;
-                                if(dataRows[i].PitchStage != 'Lost - archive') {
-                                        lostCurrentYear++;
-                                }
-                        }
-                        if(dataRows[i].PitchStage == 'Cancelled' || dataRows[i].PitchStage == 'Declined') {
-                                cancelledCount++;
-                        }
-                        if(!isNaN(parseFloat(dataRows[i].EstimatedRevenue))) {
-                                if(dataRows[i].Currency == statsCurrency) {
-                                        sumEstRevenue = sumEstRevenue + parseFloat(dataRows[i].EstimatedRevenue);
-                                } else {
-                                        $.each(currencies,function(value,symbol){
-                                                if(symbol == dataRows[i].Currency) {
-                                                        DollarConvertRatio = value;
-                                                }
-                                        });
-                                        if(statsCurrency == "USD") {
-                                             sumEstRevenue = sumEstRevenue + parseFloat(dataRows[i].EstimatedRevenue * DollarConvertRatio);
-                                        } else {
-                                             dollarEstRevenue = parseFloat(dataRows[i].EstimatedRevenue * DollarConvertRatio);
-                                             sumEstRevenue = sumEstRevenue + parseFloat(dollarEstRevenue / convert_ratio);
-                                        }
-                                }
-                        }
-                        if(!isNaN(parseFloat(dataRows[i].ActualRevenue))) {
-                                if(dataRows[i].Currency == statsCurrency) {
-                                        sumActRevenue = sumActRevenue + parseFloat(dataRows[i].ActualRevenue);
-                                } else {
-                                        $.each(currencies,function(value,symbol){
-                                                if(symbol == dataRows[i].Currency) {
-                                                        DollarConvertRatio = value;
-                                                }
-                                        });
-                                        if(statsCurrency == "USD") {
-                                             sumActRevenue = sumActRevenue + parseFloat(dataRows[i].ActualRevenue * DollarConvertRatio);
-                                        } else {
-                                             dollarEstRevenue = parseFloat(dataRows[i].ActualRevenue * DollarConvertRatio);
-                                             sumActRevenue = sumActRevenue + parseFloat(dollarEstRevenue / convert_ratio);
-                                        }
-                                }
-                        }
-                }
+                    }
                 $('#no_of_clients span').text(clientsCount);
                 $('#no_of_pitches span').text(pitchesCount);
-                $('#no_of_lost span').text(lostCount);
-                $('#no_of_cancelled span').text(cancelledCount);
-                if(wonCount > 0 || lostCurrentYear > 0) {
-                        var conversion_rate = (wonCount/(wonCount+lostCurrentYear))*100;
-                } else {
-                        var conversion_rate = 0;
-                }
-                $('#conversion_rate span').text(Math.round(conversion_rate) + '%');
-                $('#sum_est_revenue span').text(Math.round(sumEstRevenue/1000) + 'K');
-                $('#sum_act_revenue span').text(Math.round(sumActRevenue/1000) + 'K');
              }
-
+             
              var source =
              {
                 dataType: "json",
@@ -231,17 +166,16 @@
              {
                 width: (parseInt(screen.availWidth) - 30),
                 rowsheight:45,
-                //height:'600',
-                autoheight:true,
+                height:'600',
                 source: dataAdapter,
                 enablemousewheel: false,
-                pageable: true,
+                pageable: false,
                 pageSize: 20,
                 pagerMode: 'simple',
                 sortable: true,
                 filterable: true,
                 editable: false,
-                autoRowHeight: true,
+                autoRowHeight: false,
                 columnsresize: true,
                 autoshowfiltericon:true,
                 autoshowcolumnsmenubutton: false,
@@ -256,8 +190,8 @@
                         }, 25);
                     }
                     else menu.height(height);
-                },              
-                columns: [
+                },
+             columns: [
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'ParentId', datafield: 'ParentId', hidden: true },
                   { text: 'Created', datafield: 'Created', hidden: true },
@@ -466,7 +400,7 @@
             $('#statscurrency').on('change', function () {
                     calculateStats();
             });
-        });
+   });
     </script>
     <div id="tab-menu" align="left">
         <?php
@@ -497,26 +431,19 @@
             <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
             <button style="margin-left: 5px" id="selectcurrencybutton" title="Select currency for report">SELECT CURRENCY</button>
             <button style="margin-left: 5px" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
-        </div>
-        <div id="jqxgrid"></div>
-            <div style='margin-top: 20px;'>
-        </div>
-
         <div style="margin-right: 5px; margin-top: 5px" align="right">
                 <fieldset style="width: 260px">
-                        <legend>Quick stats</legend>
+                        <legend>QUICK STATS</legend>
                         <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 110px;"></span></div>
                         <div id="no_of_clients" style="padding-bottom: 5px">Clients <span style="display: inline-block; width: 110px;"></span></div>
                         <div id="no_of_pitches" style="padding-bottom: 5px">Pitches <span style="display: inline-block; width: 110px;"></span></div>
-                        <div id="no_of_lost" style="padding-bottom: 5px">Lost <span style="display: inline-block; width: 110px;"></span></div>
-                        <div id="no_of_cancelled" style="padding-bottom: 5px">Cancelled/Declined <span style="display: inline-block; width: 110px;"></span></div>
-                        <div style="padding-bottom: 5px; <?php if ($userRole == 'Viewer') { echo 'display: none;'; }?>">Select stat currency <select id="statscurrency"></select></div>
-                        <div id="sum_est_revenue" style="padding-bottom: 5px; <?php if ($userRole == 'Viewer') { echo 'display: none;'; }?>">Sum of est revenue <span style="display: inline-block; width: 110px;"></span></div>
-                        <div id="sum_act_revenue" style="padding-bottom: 5px; <?php if ($userRole == 'Viewer') { echo 'display: none;'; }?>">Sum of actual revenue <span style="display: inline-block; width: 110px;"></span></div>
-                        <div id="conversion_rate">Conversion rate <span style="display: inline-block; width: 110px;"></span></div>
                 </fieldset>
         </div>
-
+               <div style='margin-top: 20px;margin-bottom: 5px'>
+                     <div id="jqxgrid"></div>
+        </div>
+</div>
+    
         <div id="popupWindow">
                 <div>Export to excel</div>
                 <div style="overflow: hidden;">

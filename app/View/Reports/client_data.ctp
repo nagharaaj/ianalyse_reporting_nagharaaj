@@ -2,7 +2,6 @@
          var editClick;
          var deleteClick;
          $(document).ready(function () {
-
              var userRole = '<?php echo $userRole; ?>';
              var estimatedRevenueColumnTitle = '<?php echo 'iP '. date('Y') . ' Estimated Revenue';?>';
              var actualRevenueColumnTitle = '<?php echo 'iP '. (date('Y')-1) . ' Actual Revenue';?>';
@@ -195,18 +194,18 @@
              $("#jqxgrid").jqxGrid(
              {
                 width: (parseInt(screen.availWidth) - 30),
-                autoheight:true,
-                //rowsheight:45,
-                //height:'600',
+                autoheight:false,
+                rowsheight:45,
+                height:'600',
                 source: dataAdapter,
                 enablemousewheel: false,
-                pageable:true,
+                pageable:false,
                 pageSize: 20,
                 pagerMode: 'simple',
                 sortable: true,
                 filterable: true,
                 editable: true,
-                autoRowHeight:true,
+                autoRowHeight:false,
                 autoshowfiltericon:true,
                 autoshowcolumnsmenubutton: false,
                 selectionmode: 'none',
