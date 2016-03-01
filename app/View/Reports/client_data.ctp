@@ -211,7 +211,7 @@
                 selectionmode: 'none',
                 columnsresize: true,
                 showpinnedcolumnbackground: false,
-                enablehover: true,
+                enablehover: false,
                 
                 columnmenuopening: function (menu, datafield, height) {
                     var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
