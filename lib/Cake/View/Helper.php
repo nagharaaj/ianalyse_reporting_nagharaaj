@@ -1,18 +1,12 @@
 <?php
 /**
- * Backend for helpers.
- *
- * Internal methods for the Helpers.
- *
- * PHP 5
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       Cake.View
  * @since         CakePHP(tm) v 0.2.9
@@ -136,6 +130,31 @@ class Helper extends Object {
 	protected $_entityPath;
 
 /**
+ * Minimized attributes
+ *
+ * @var array
+ */
+	protected $_minimizedAttributes = array(
+		'compact', 'checked', 'declare', 'readonly', 'disabled', 'selected',
+		'defer', 'ismap', 'nohref', 'noshade', 'nowrap', 'multiple', 'noresize',
+		'autoplay', 'controls', 'loop', 'muted'
+	);
+
+/**
+ * Format to attribute
+ *
+ * @var string
+ */
+	protected $_attributeFormat = '%s="%s"';
+
+/**
+ * Format to attribute
+ *
+ * @var string
+ */
+	protected $_minimizedAttributeFormat = '%s="%s"';
+
+/**
  * Default Constructor
  *
  * @param View $View The View this helper is being attached to.
@@ -212,7 +231,7 @@ class Helper extends Object {
  *
  * Returns a URL pointing at the provided parameters.
  *
- * @param mixed $url Either a relative string url like `/products/view/23` or
+ * @param string|array $url Either a relative string url like `/products/view/23` or
  *    an array of url parameters.  Using an array for urls will allow you to leverage
  *    the reverse routing features of CakePHP.
  * @param boolean $full If true, the full base URL will be prepended to the result
@@ -243,11 +262,11 @@ class Helper extends Object {
 				$file = str_replace('/', '\\', $file);
 			}
 
-			if (file_exists(Configure::read('App.www_root') . 'theme' . DS . $this->theme . DS  . $file)) {
+			if (file_exists(Configure::read('App.www_root') . 'theme' . DS . $this->theme . DS . $file)) {
 				$webPath = "{$this->request->webroot}theme/" . $theme . $asset[0];
 			} else {
 				$themePath = App::themePath($this->theme);
-				$path = $themePath . 'webroot' . DS  . $file;
+				$path = $themePath . 'webroot' . DS . $file;
 				if (file_exists($path)) {
 					$webPath = "{$this->request->webroot}theme/" . $theme . $asset[0];
 				}
@@ -257,6 +276,69 @@ class Helper extends Object {
 			return str_replace('//', '/', $webPath . $asset[1]);
 		}
 		return $webPath . $asset[1];
+	}
+
+/**
+ * Generate url for given asset file. Depending on options passed provides full url with domain name.
+ * Also calls Helper::assetTimestamp() to add timestamp to local files
+ *
+ * @param string|array Path string or url array
+ * @param array $options Options array. Possible keys:
+ *   `fullBase` Return full url with domain name
+ *   `pathPrefix` Path prefix for relative urls
+ *   `ext` Asset extension to append
+ *   `plugin` False value will prevent parsing path as a plugin
+ * @return string Generated url
+ */
+	public function assetUrl($path, $options = array()) {
+		if (is_array($path)) {
+			return $this->url($path, !empty($options['fullBase']));
+		}
+		if (strpos($path, '://') !== false) {
+			return $path;
+		}
+		if (!array_key_exists('plugin', $options) || $options['plugin'] !== false) {
+			list($plugin, $path) = $this->_View->pluginSplit($path, false);
+		}
+		if (!empty($options['pathPrefix']) && $path[0] !== '/') {
+			$path = $options['pathPrefix'] . $path;
+		}
+		if (
+			!empty($options['ext']) &&
+			strpos($path, '?') === false &&
+			substr($path, -strlen($options['ext'])) !== $options['ext']
+		) {
+			$path .= $options['ext'];
+		}
+		if (isset($plugin)) {
+			$path = Inflector::underscore($plugin) . '/' . $path;
+		}
+		$path = $this->_encodeUrl($this->assetTimestamp($this->webroot($path)));
+
+		if (!empty($options['fullBase'])) {
+			$base = $this->url('/', true);
+			$len = strlen($this->request->webroot);
+			if ($len) {
+				$base = substr($base, 0, -$len);
+			}
+			$path = $base . $path;
+		}
+		return $path;
+	}
+
+/**
+ * Encodes a URL for use in HTML attributes.
+ *
+ * @param string $url The url to encode.
+ * @return string The url encoded for both URL & HTML contexts.
+ */
+	protected function _encodeUrl($url) {
+		$path = parse_url($url, PHP_URL_PATH);
+		$encoded = implode('/', array_map(
+			'rawurlencode',
+			explode('/', $path)
+		));
+		return h(str_replace($path, $encoded, $url));
 	}
 
 /**
@@ -274,20 +356,26 @@ class Helper extends Object {
 			$filepath = preg_replace('/^' . preg_quote($this->request->webroot, '/') . '/', '', $path);
 			$webrootPath = WWW_ROOT . str_replace('/', DS, $filepath);
 			if (file_exists($webrootPath)) {
+				//@codingStandardsIgnoreStart
 				return $path . '?' . @filemtime($webrootPath);
+				//@codingStandardsIgnoreEnd
 			}
 			$segments = explode('/', ltrim($filepath, '/'));
 			if ($segments[0] === 'theme') {
 				$theme = $segments[1];
 				unset($segments[0], $segments[1]);
 				$themePath = App::themePath($theme) . 'webroot' . DS . implode(DS, $segments);
+				//@codingStandardsIgnoreStart
 				return $path . '?' . @filemtime($themePath);
+				//@codingStandardsIgnoreEnd
 			} else {
 				$plugin = Inflector::camelize($segments[0]);
 				if (CakePlugin::loaded($plugin)) {
 					unset($segments[0]);
 					$pluginPath = CakePlugin::path($plugin) . 'webroot' . DS . implode(DS, $segments);
+					//@codingStandardsIgnoreStart
 					return $path . '?' . @filemtime($pluginPath);
+					//@codingStandardsIgnoreEnd
 				}
 			}
 		}
@@ -299,7 +387,7 @@ class Helper extends Object {
  * from content.  However, is not guaranteed to remove all possibilities.  Escaping
  * content is the best way to prevent all possible attacks.
  *
- * @param mixed $output Either an array of strings to clean or a single string to clean.
+ * @param string|array $output Either an array of strings to clean or a single string to clean.
  * @return string|array cleaned content for output
  */
 	public function clean($output) {
@@ -360,13 +448,13 @@ class Helper extends Object {
  */
 	protected function _parseAttributes($options, $exclude = null, $insertBefore = ' ', $insertAfter = null) {
 		if (!is_string($options)) {
-			$options = (array) $options + array('escape' => true);
+			$options = (array)$options + array('escape' => true);
 
 			if (!is_array($exclude)) {
 				$exclude = array();
 			}
 
-			$exclude =  array('escape' => true) + array_flip($exclude);
+			$exclude = array('escape' => true) + array_flip($exclude);
 			$escape = $options['escape'];
 			$attributes = array();
 
@@ -413,7 +501,7 @@ class Helper extends Object {
 /**
  * Sets this helper's model and field properties to the dot-separated value-pair in $entity.
  *
- * @param mixed $entity A field name, like "ModelName.fieldName" or "ModelName.ID.fieldName"
+ * @param string $entity A field name, like "ModelName.fieldName" or "ModelName.ID.fieldName"
  * @param boolean $setScope Sets the view scope to the model specified in $tagValue
  * @return void
  */
@@ -424,7 +512,7 @@ class Helper extends Object {
 		if ($setScope === true) {
 			$this->_modelScope = $entity;
 		}
-		$parts = array_values(Set::filter(explode('.', $entity), true));
+		$parts = array_values(Hash::filter(explode('.', $entity)));
 		if (empty($parts)) {
 			return;
 		}
@@ -446,10 +534,10 @@ class Helper extends Object {
 
 		// 0.name, 0.created.month style inputs.  Excludes inputs with the modelScope in them.
 		if (
-			$count >= 2 && 
-			is_numeric($parts[0]) && 
-			!is_numeric($parts[1]) && 
-			$this->_modelScope && 
+			$count >= 2 &&
+			is_numeric($parts[0]) &&
+			!is_numeric($parts[1]) &&
+			$this->_modelScope &&
 			strpos($entity, $this->_modelScope) === false
 		) {
 			$entity = $this->_modelScope . '.' . $entity;
@@ -478,7 +566,6 @@ class Helper extends Object {
 			}
 		}
 		$this->_entityPath = $entity;
-		return;
 	}
 
 /**
@@ -523,12 +610,11 @@ class Helper extends Object {
  * Generates a DOM ID for the selected element, if one is not set.
  * Uses the current View::entity() settings to generate a CamelCased id attribute.
  *
- * @param mixed $options Either an array of html attributes to add $id into, or a string
+ * @param array|string $options Either an array of html attributes to add $id into, or a string
  *   with a view entity path to get a domId for.
  * @param string $id The name of the 'id' attribute.
  * @return mixed If $options was an array, an array will be returned with $id set.  If a string
  *   was supplied, a string will be returned.
- * @todo Refactor this method to not have as many input/output options.
  */
 	public function domId($options = null, $id = 'id') {
 		if (is_array($options) && array_key_exists($id, $options) && $options[$id] === null) {
@@ -555,13 +641,12 @@ class Helper extends Object {
  * Gets the input field name for the current tag. Creates input name attributes
  * using CakePHP's data[Model][field] formatting.
  *
- * @param mixed $options If an array, should be an array of attributes that $key needs to be added to.
+ * @param array|string $options If an array, should be an array of attributes that $key needs to be added to.
  *   If a string or null, will be used as the View entity.
  * @param string $field
  * @param string $key The name of the attribute to be set, defaults to 'name'
  * @return mixed If an array was given for $options, an array with $key set will be returned.
  *   If a string was supplied a string will be returned.
- * @todo Refactor this method to not have as many input/output options.
  */
 	protected function _name($options = array(), $field = null, $key = 'name') {
 		if ($options === null) {
@@ -599,13 +684,12 @@ class Helper extends Object {
 /**
  * Gets the data for the current tag
  *
- * @param mixed $options If an array, should be an array of attributes that $key needs to be added to.
+ * @param array|string $options If an array, should be an array of attributes that $key needs to be added to.
  *   If a string or null, will be used as the View entity.
  * @param string $field
  * @param string $key The name of the attribute to be set, defaults to 'value'
  * @return mixed If an array was given for $options, an array with $key set will be returned.
  *   If a string was supplied a string will be returned.
- * @todo Refactor this method to not have as many input/output options.
  */
 	public function value($options = array(), $field = null, $key = 'value') {
 		if ($options === null) {
@@ -626,8 +710,8 @@ class Helper extends Object {
 		$data = $this->request->data;
 
 		$entity = $this->entity();
-		if (!empty($data) && !empty($entity)) {
-			$result = Set::extract(implode('.', $entity), $data);
+		if (!empty($data) && is_array($data) && !empty($entity)) {
+			$result = Hash::get($data, implode('.', $entity));
 		}
 
 		$habtmKey = $this->field();
@@ -657,8 +741,7 @@ class Helper extends Object {
 
 /**
  * Sets the defaults for an input tag.  Will set the
- * name, value, and id attributes for an array of html attributes. Will also
- * add a 'form-error' class if the field contains validation errors.
+ * name, value, and id attributes for an array of html attributes.
  *
  * @param string $field The field name to initialize.
  * @param array $options Array of options to use while initializing an input field.
@@ -751,10 +834,35 @@ class Helper extends Object {
 	}
 
 /**
+ * Before render file callback.
+ * Called before any view fragment is rendered.
+ *
+ * Overridden in subclasses.
+ *
+ * @param string $viewFile The file about to be rendered.
+ * @return void
+ */
+	public function beforeRenderFile($viewfile) {
+	}
+
+/**
+ * After render file callback.
+ * Called after any view fragment is rendered.
+ *
+ * Overridden in subclasses.
+ *
+ * @param string $viewFile The file just be rendered.
+ * @param string $content The content that was rendered.
+ * @return void
+ */
+	public function afterRenderFile($viewfile, $content) {
+	}
+
+/**
  * Transforms a recordset from a hasAndBelongsToMany association to a list of selected
  * options for a multiple select element
  *
- * @param mixed $data
+ * @param string|array $data
  * @param string $key
  * @return array
  */
@@ -820,4 +928,5 @@ class Helper extends Object {
 		} while ($oldstring != $this->_cleaned);
 		$this->_cleaned = str_replace(array("&amp;", "&lt;", "&gt;"), array("&amp;amp;", "&amp;lt;", "&amp;gt;"), $this->_cleaned);
 	}
+
 }
