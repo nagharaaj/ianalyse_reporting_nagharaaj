@@ -168,7 +168,7 @@
                 rowsheight:45,
                 height:'600',
                 source: dataAdapter,
-                enablemousewheel: false,
+                enablemousewheel: true,
                 pageable: false,
                 pageSize: 20,
                 pagerMode: 'simple',
@@ -402,7 +402,22 @@
             });
    });
     </script>
-    <div id="tab-menu" align="left">
+    
+<script type="text/javascript">
+        $(document).ready(function() {
+                $('#tab-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
+        });
+</script>    
+
+<div id='jqxWidget'>
+        <div style="margin-right: 5px;" align="right">
+                <fieldset style="width: 260px; margin-top:2px;">
+                        <legend>QUICK STATS</legend>
+                        <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 110px;"></span></div>
+                        <div id="no_of_clients" style="padding-bottom: 5px">Clients <span style="display: inline-block; width: 110px;"></span></div>
+                        <div id="no_of_pitches" style="padding-bottom: 5px">Pitches <span style="display: inline-block; width: 110px;"></span></div>
+                </fieldset>
+        <div id="tab-menu" align="left">
         <?php
                 if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/client_report') && !preg_match('/Viewer/', $loggedUser['role'])) {
         ?>
@@ -419,31 +434,17 @@
         <?php
                 }
         ?>
-    </div>
-<script type="text/javascript">
-        $(document).ready(function() {
-                $('#tab-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
-        });
-</script>    
-
-<div id='jqxWidget'>
-        <div style="margin-right: 7px; margin-bottom: 5px" align="right">
+             <div style="margin-left: 350px;" align="right">
             <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
             <button style="margin-left: 5px" id="selectcurrencybutton" title="Select currency for report">SELECT CURRENCY</button>
             <button style="margin-left: 5px" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
-        <div style="margin-right: 5px; margin-top: 5px" align="right">
-                <fieldset style="width: 260px">
-                        <legend>QUICK STATS</legend>
-                        <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 110px;"></span></div>
-                        <div id="no_of_clients" style="padding-bottom: 5px">Clients <span style="display: inline-block; width: 110px;"></span></div>
-                        <div id="no_of_pitches" style="padding-bottom: 5px">Pitches <span style="display: inline-block; width: 110px;"></span></div>
-                </fieldset>
-        </div>
-               <div style='margin-top: 20px;margin-bottom: 5px'>
+         </div>
+    </div>
+               <div style='margin-top: 10px;margin-bottom: 5px'>
                      <div id="jqxgrid"></div>
         </div>
-</div>
-    
+
+     </div>
         <div id="popupWindow">
                 <div>Export to excel</div>
                 <div style="overflow: hidden;">
