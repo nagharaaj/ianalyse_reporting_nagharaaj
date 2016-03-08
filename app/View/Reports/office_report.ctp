@@ -171,11 +171,12 @@
              $("#jqxgrid").jqxGrid(
              {
                 width: (parseInt(screen.availWidth) - 30),
-                autoheight:true,
+                height:600,
+                autoheight:false,
                 enablemousewheel: true,
                 source: dataAdapter,
                 pageable: true,
-                pageSize: 20,
+                pageSize: 79,
                 pagerMode: 'simple',
                 sortable: true,
                 filterable: true,
