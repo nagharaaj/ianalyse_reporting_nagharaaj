@@ -17,22 +17,12 @@
                 var rowscount = dataRows.length;
                 $('#no_of_records span').text(rowscount);
                 var employeesCount = 0;
-                var keyContactsCount = 0;
-                var servicesContactsCount = 0;
                 for(var i = 0; i < rowscount; i++) {
                         if(!isNaN(parseFloat(dataRows[i].TotalEmployee))) {
                                 employeesCount = employeesCount + parseFloat(dataRows[i].TotalEmployee);
                         }
-                        if(!isNaN(parseFloat(dataRows[i].TotalEmployee))) {
-                                keyContactsCount = keyContactsCount + parseFloat(dataRows[i].totalKeyEmployeeCount);
-                        }
-                        if(!isNaN(parseFloat(dataRows[i].TotalEmployee))) {
-                                servicesContactsCount = servicesContactsCount + parseFloat(dataRows[i].totalServiceEmployeeCount);
-                        }
                 }
                 $('#no_of_employees span').text(Math.round(employeesCount));
-                $('#no_of_key_employees span').text(Math.round(keyContactsCount));
-                $('#no_of_service_employees span').text(Math.round(servicesContactsCount));
              }
              
              var source =
@@ -315,8 +305,6 @@
                         <legend>Quick stats</legend>
                         <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 70px;"></span></div>
                         <div id="no_of_employees" style="padding-bottom: 5px">Employees <span style="display: inline-block; width: 70px;"></span></div>
-                        <div id="no_of_key_employees" style="padding-bottom: 5px">Key Management Contacts <span style="display: inline-block; width: 70px;"></span></div>
-                        <div id="no_of_service_employees" style="padding-bottom: 5px">Services Contacts <span style="display: inline-block; width: 70px;"></span></div>
                 </fieldset>
         </div>
         
