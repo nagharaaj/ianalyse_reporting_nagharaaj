@@ -32,7 +32,7 @@ class ReportsController extends AppController {
             'ClientActualRevenueByYear'
         );
 
-        public $serviceMap = array(1 => 'Affiliates', 19 => 'Attribution', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
+        public $serviceMap = array(11 => 'Search', 12 => 'SEO',6 => 'Display',1 => 'Affiliates',  2 => 'Content',  4 => 'Data');
 
         public $unwanted_array = array( 'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
                             'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
@@ -1127,7 +1127,7 @@ class ReportsController extends AppController {
         public function office_data() {
 
                 $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
-                $arrServices = $this->serviceMap;
+                $arrServices = array(11 => 'Search', 12 => 'SEO',6 => 'Display',1 => 'Affiliates',  2 => 'Content',  4 => 'Data');
                 $countries = $this->Country->find('list', array('fields' => array('Country.country', 'Country.country'), 'order' => 'Country.country Asc'));
                 $this->set('countries', json_encode($countries, JSON_HEX_APOS));
                 $arrRegions = array();
@@ -1137,7 +1137,6 @@ class ReportsController extends AppController {
                 }
                 $this->set('regions', json_encode($arrRegions));
                 $arrLanguages = $this->Language->find('list', array('fields' => array('Language.language', 'Language.language'), 'order' => 'Language.language Asc'));
-
                 $this->set('departments', $arrKeyDepts);
                 $this->set('services', $arrServices);
                 $this->set('json_services', json_encode($arrServices));
@@ -1164,12 +1163,9 @@ class ReportsController extends AppController {
 
         public function get_office_data() {
                 $this->autoRender=false;
-
                 $officeData = array();
-                $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
-                $arrServices = $this->serviceMap;
-                $arrLanguages = $this->Language->find('list', array('fields' => array('Language.id', 'Language.language'), 'order' => 'Language.language Asc'));
-
+                $arrKeyDepts = array('Executive' => 'executive','BusinessHead' => 'business_head');
+                $arrServices = array(11 => 'Search', 12 => 'SEO',6 => 'Display',1 => 'Affiliates',  2 => 'Content',  4 => 'Data');
                 $i = 0;
                 $conditions = array();
                 if(isset($_GET['mode']) && $_GET['mode'] == 'edit') {
@@ -1201,69 +1197,6 @@ class ReportsController extends AppController {
 
                         $officeData[$i]['YearEstablished'] = $office['Office']['year_established'];
                         $officeData[$i]['TotalEmployee'] = $office['Office']['employee_count'];
-                        $officeData[$i]['Address'] = $office['Office']['address'];
-
-                        $arrTelephones = array();
-                        $arrEmails = array();
-                        $arrWebsites = array();
-                        $arrSocialAccounts = array();
-                        foreach($office['OfficeAttribute'] as $officeAttribute) {
-                                if($officeAttribute['attribute_type'] == 'telephone') {
-                                        $arrTelephones[] = $officeAttribute['attribute_value'];
-                                }
-                                if($officeAttribute['attribute_type'] == 'contact_email') {
-                                        $arrEmails[] = $officeAttribute['attribute_value'];
-                                }
-                                if($officeAttribute['attribute_type'] == 'website') {
-                                        $arrWebsites[] = $officeAttribute['attribute_value'];
-                                }
-                                if($officeAttribute['attribute_type'] == 'social_account') {
-                                        $arrSocialAccounts[] = $officeAttribute['attribute_value'];
-                                }
-                        }
-                        if(!empty($arrTelephones)) {
-                                $officeData[$i]['Telephone'] = implode("<br/>", $arrTelephones);
-                        } else {
-                                $officeData[$i]['Telephone'] = '';
-                        }
-                        if(!empty($arrEmails)) {
-                                $officeData[$i]['GeneralEmail'] = implode("<br/>", $arrEmails);
-                        } else {
-                                $officeData[$i]['GeneralEmail'] = '';
-                        }
-                        if(!empty($arrWebsites)) {
-                                $officeData[$i]['Website'] = implode("<br/>", $arrWebsites);
-                        } else {
-                                $officeData[$i]['Website'] = '';
-                        }
-                        if(!empty($arrSocialAccounts)) {
-                                $officeData[$i]['SocialAccount'] = implode("<br/>", $arrSocialAccounts);
-                        } else {
-                                $officeData[$i]['SocialAccount'] = '';
-                        }
-
-                        $arrKeyEmployeeCount = array();
-                        $totalKeyEmpCount = 0;
-                        $totalServiceEmpCount = 0;
-                        $arrServiceEmployeeCount = array();
-                        foreach($office['OfficeEmployeeCountByDepartment'] as $officeEmployeeCountByDepartment) {
-                                if($officeEmployeeCountByDepartment['department_type'] == 'service') {
-                                        /*if($officeEmployeeCountByDepartment['count_type'] == 'FTE') {
-                                                $arrServiceEmployeeCount[$officeEmployeeCountByDepartment['department_id']] = round(($officeEmployeeCountByDepartment['employee_count']*100), 2) . '%';
-                                        } else {*/
-                                                $arrServiceEmployeeCount[$officeEmployeeCountByDepartment['department_id']] = round($officeEmployeeCountByDepartment['employee_count'], 2);
-                                        //}
-                                        $totalServiceEmpCount += $officeEmployeeCountByDepartment['employee_count'];
-                                } else {
-                                        /*if($officeEmployeeCountByDepartment['count_type'] == 'FTE') {
-                                                $arrKeyEmployeeCount[$officeEmployeeCountByDepartment['department_type']] = round(($officeEmployeeCountByDepartment['employee_count']*100), 2) . '%';
-                                        } else {*/
-                                                $arrKeyEmployeeCount[$officeEmployeeCountByDepartment['department_type']] = round($officeEmployeeCountByDepartment['employee_count'], 2);
-                                        //}
-                                        $totalKeyEmpCount += $officeEmployeeCountByDepartment['employee_count'];
-                                }
-                        }
-
                         $keyContacts = array();
                         foreach($office['OfficeKeyContact'] as $officeKeyContact) {
                                 $keyContacts[$officeKeyContact['contact_type']][] = $officeKeyContact['contact_name'] . (!empty($officeKeyContact['contact_title']) ? "<br/>" . $officeKeyContact['contact_title'] : "<br/>" . 'title') . (!empty($officeKeyContact['contact_email']) ? "<br/><a href='mailto:" . $officeKeyContact['contact_email'] . "' target='_blank'>" . $officeKeyContact['contact_email'] . '</a>' : "<br/>" . 'email');
@@ -1274,15 +1207,7 @@ class ReportsController extends AppController {
                                 } else {
                                         $officeData[$i][$key] = '';
                                 }
-
-                                if(isset($arrKeyEmployeeCount[$keyDept])) {
-                                        $officeData[$i]['count'.$key] = $arrKeyEmployeeCount[$keyDept];
-                                } else {
-                                        $officeData[$i]['count'.$key] = '';
-                                }
                         }
-                        $officeData[$i]['totalKeyEmployeeCount'] = round($totalKeyEmpCount, 2);
-
                         $serviceContacts = array();
                         foreach($office['OfficeServiceContact'] as $officeServiceContact) {
                                 $serviceContacts[$officeServiceContact['service_id']][] = $officeServiceContact['contact_name'] . (!empty($officeServiceContact['contact_title']) ? "<br/>" . $officeServiceContact['contact_title'] : "<br/>" . 'title') . (!empty($officeServiceContact['contact_email']) ? "<br/><a href='mailto:" . $officeServiceContact['contact_email'] . "' target='_blank'>" . $officeServiceContact['contact_email'] . '</a>' : "<br/>" . 'email');
@@ -1293,37 +1218,15 @@ class ReportsController extends AppController {
                                 } else {
                                         $officeData[$i][$service] = '';
                                 }
-
-                                if(isset($arrServiceEmployeeCount[$serviceId])) {
-                                        $officeData[$i]['count'.$service] = $arrServiceEmployeeCount[$serviceId];
-                                } else {
-                                        $officeData[$i]['count'.$service] = '';
-                                }
                         }
-                        $officeData[$i]['totalServiceEmployeeCount'] = round($totalServiceEmpCount, 2);
-
-                        $supportedLanguages = array();
-                        foreach($office['OfficeLanguage'] as $officeLanguage) {
-                                $supportedLanguages[] = $arrLanguages[$officeLanguage['language_id']];
-                        }
-                        if(!empty($supportedLanguages)) {
-                                $officeData[$i]['SupportedLanguages'] = implode(', ', $supportedLanguages);
-                                $officeData[$i]['countSupportedLanguages'] = count($supportedLanguages);
-                        } else {
-                                $officeData[$i]['SupportedLanguages'] = '';
-                                $officeData[$i]['countSupportedLanguages'] = '';
-                        }
-
                         $i++;
                 }
                 echo json_encode($officeData);
         }
 
         public function save_office_record() {
-                $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
-                $arrServices = $this->serviceMap;
-                $arrLanguages = $this->Language->find('list', array('fields' => array('Language.id', 'Language.language'), 'order' => 'Language.language Asc'));
-
+                $arrKeyDepts = array('Executive' => 'executive','BusinessHead' => 'business_head');
+                $arrServices = array(11 => 'Search', 12 => 'SEO',6 => 'Display',1 => 'Affiliates',  2 => 'Content',  4 => 'Data');
                 if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()){
                                 $this->autoRender=false;
@@ -1333,7 +1236,6 @@ class ReportsController extends AppController {
                         $country = $this->Country->findByCountry(trim($arrData['Country']));
                         if(!empty($arrData['RecordId'])) {
                                 $officeId = $arrData['RecordId'];
-
                                 $this->Office->id = $officeId;
                                 $this->Office->save(
                                         array(
@@ -1341,7 +1243,6 @@ class ReportsController extends AppController {
                                                         'region_id' => $region['Region']['id'],
                                                         'year_established' => $arrData['YearEstablished'],
                                                         'employee_count' => $arrData['EmployeeCount'],
-                                                        'address' => $arrData['Address']
                                                 )
                                         )
                                 );
@@ -1393,60 +1294,10 @@ class ReportsController extends AppController {
                                                         'city_id' => $cityId,
                                                         'year_established' => $arrData['YearEstablished'],
                                                         'employee_count' => $arrData['EmployeeCount'],
-                                                        'address' => $arrData['Address']
                                                 )
                                         )
                                 );
                                 $officeId = $this->Office->getLastInsertId();
-                        }
-
-                        if(!empty($arrData['Telephone'])) {
-                                $this->OfficeAttribute->create();
-                                $this->OfficeAttribute->save(
-                                        array(
-                                                'OfficeAttribute' => array(
-                                                        'office_id' => $officeId,
-                                                        'attribute_type' => 'telephone',
-                                                        'attribute_value' => $arrData['Telephone']
-                                                )
-                                        )
-                                );
-                        }
-                        if(!empty($arrData['ContactEmail'])) {
-                                $this->OfficeAttribute->create();
-                                $this->OfficeAttribute->save(
-                                        array(
-                                                'OfficeAttribute' => array(
-                                                        'office_id' => $officeId,
-                                                        'attribute_type' => 'contact_email',
-                                                        'attribute_value' => $arrData['ContactEmail']
-                                                )
-                                        )
-                                );
-                        }
-                        if(!empty($arrData['Website'])) {
-                                $this->OfficeAttribute->create();
-                                $this->OfficeAttribute->save(
-                                        array(
-                                                'OfficeAttribute' => array(
-                                                        'office_id' => $officeId,
-                                                        'attribute_type' => 'website',
-                                                        'attribute_value' => $arrData['Website']
-                                                )
-                                        )
-                                );
-                        }
-                        if(!empty($arrData['SocialAccount'])) {
-                                $this->OfficeAttribute->create();
-                                $this->OfficeAttribute->save(
-                                        array(
-                                                'OfficeAttribute' => array(
-                                                        'office_id' => $officeId,
-                                                        'attribute_type' => 'social_account',
-                                                        'attribute_value' => $arrData['SocialAccount']
-                                                )
-                                        )
-                                );
                         }
 
                         foreach($arrData['KeyContacts'] as $deptContacts) {
@@ -1479,28 +1330,7 @@ class ReportsController extends AppController {
                                                 );
                                         }
                                 }
-                                $deptEmpCount = $deptContacts['dept_emp_count'];
-                                if(!empty($deptEmpCount)) {
-                                        if(is_numeric($deptEmpCount)) {
-                                                $countType = 'numeric';
-                                        } else {
-                                                $countType = 'FTE';
-                                                $deptEmpCount = (substr($deptEmpCount, 0, -1))/100;
-                                        }
-                                        $this->OfficeEmployeeCountByDepartment->create();
-                                        $this->OfficeEmployeeCountByDepartment->save(
-                                                array(
-                                                        'OfficeEmployeeCountByDepartment' => array(
-                                                                'office_id' => $officeId,
-                                                                'department_type' => $keyDept,
-                                                                'count_type' => $countType,
-                                                                'employee_count' => $deptEmpCount
-                                                        )
-                                                )
-                                        );
-                                }
                         }
-
                         foreach($arrData['ServicesContacts'] as $serviceContacts) {
                                 $serviceId = array_search($serviceContacts['service_name'], $arrServices);
                                 foreach($serviceContacts['service_contacts'] as $serviceContact) {
@@ -1530,43 +1360,6 @@ class ReportsController extends AppController {
                                                         )
                                                 );
                                         }
-                                }
-                                $serviceEmpCount = $serviceContacts['service_emp_count'];
-                                if(!empty($serviceEmpCount)) {
-                                        if(is_numeric($serviceEmpCount)) {
-                                                $countType = 'numeric';
-                                        } else {
-                                                $countType = 'FTE';
-                                                $serviceEmpCount = (substr($serviceEmpCount, 0, -1))/100;
-                                        }
-                                        $this->OfficeEmployeeCountByDepartment->create();
-                                        $this->OfficeEmployeeCountByDepartment->save(
-                                                array(
-                                                        'OfficeEmployeeCountByDepartment' => array(
-                                                                'office_id' => $officeId,
-                                                                'department_type' => 'service',
-                                                                'department_id' => $serviceId,
-                                                                'count_type' => $countType,
-                                                                'employee_count' => $serviceEmpCount
-                                                        )
-                                                )
-                                        );
-                                }
-                        }
-
-                        $supportedLanguages = explode(',', $arrData['SupportedLanguages']);
-                        foreach($supportedLanguages as $supportedLanguage) {
-                                $languageId = array_search(trim($supportedLanguage), $arrLanguages);
-                                if(!empty($languageId)) {
-                                        $this->OfficeLanguage->create();
-                                        $this->OfficeLanguage->save(
-                                                array(
-                                                        'OfficeLanguage' => array(
-                                                                'office_id' => $officeId,
-                                                                'language_id' => $languageId
-                                                        )
-                                                )
-                                        );
                                 }
                         }
                 }
@@ -1638,215 +1431,71 @@ class ReportsController extends AppController {
                         // Add some data
                         $objPHPExcel->setActiveSheetIndex(0);
                         $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('F1:J1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('K1:Y1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('Z1:AA1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AB1:AC1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AD1:AE1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AF1:AG1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AH1:AI1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AJ1:AK1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AL1:AM1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AN1:AO1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AP1:AQ1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AR1:AS1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AT1:AU1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AV1:AW1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AX1:AY1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('AZ1:BA1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('BB1:BC1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('BD1:BE1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('BF1:BG1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('BH1:BI1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('BK1:BL1');
-
-                        $objPHPExcel->getActiveSheet()->getStyle("A1:BL2")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                        $objPHPExcel->getActiveSheet()->mergeCells('F1:G1');
+                        $objPHPExcel->getActiveSheet()->getStyle("A1:M2")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                         //$objPHPExcel->getActiveSheet()->getStyle('A1:BJ999')->getAlignment()->setWrapText(true);
                         $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('F1:J1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        $objPHPExcel->getActiveSheet()->getStyle('K1:Y1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('Z1:BJ1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        $objPHPExcel->getActiveSheet()->getStyle('BK1:BL1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
+                        $objPHPExcel->getActiveSheet()->getStyle('F1:G1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
+                        $objPHPExcel->getActiveSheet()->getStyle('H1:M1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getStyle('A2:E2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('F2:J2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        $objPHPExcel->getActiveSheet()->getStyle('K2:Y2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('Z2:BJ2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        $objPHPExcel->getActiveSheet()->getStyle('BK2:BL2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-
+                        $objPHPExcel->getActiveSheet()->getStyle('F2:G2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
+                        $objPHPExcel->getActiveSheet()->getStyle('H2:M2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(11);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(11);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(18);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(14);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(14);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setWidth(16);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(34);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setWidth(25);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(19);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(18);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(34);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(23);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(23);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(25);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("R")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("S")->setWidth(25);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("T")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("U")->setWidth(25);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("V")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("W")->setWidth(25);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("X")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("Y")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("Z")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AA")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AB")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AC")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AD")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AE")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AF")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AG")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AH")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AI")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AJ")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AK")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AL")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AM")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AN")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AO")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AP")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AQ")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AR")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AS")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AT")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AU")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AV")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AW")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AX")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AY")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("AZ")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BA")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BB")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BC")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BD")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BE")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BF")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BG")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BH")->setWidth(28);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BI")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BJ")->setWidth(9);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BK")->setWidth(11);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("BL")->setWidth(17);
-
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(28);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(28);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(28);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(28);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(28);
                         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'General Information');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Contact details');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'Key management contacts');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('Z1', 'Affiliates');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AB1', 'Attribution');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AD1', 'Content');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AF1', 'Conversion Opt.');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AH1', 'Data and Insights');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AJ1', 'Development');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AL1', 'Display');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AN1', 'Feeds');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AP1', 'Lead Gen');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AR1', 'Mobile');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AT1', 'STB');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AV1', 'Search - PPC');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AX1', 'SEO');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AZ1', 'Social - Paid');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BB1', 'Social - Management');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BD1', 'Strategy');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BF1', 'Technology');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BH1', 'Video');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BJ1', '');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BK1', 'Languages');
-
+                        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Key management contacts');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('H1', 'Head of Affiliates');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('I1', 'Head of Content');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('J1', 'Head of Data and Insights');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'Head of Display');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('L1', 'Head of Search-PPC');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('M1', 'Head of SEO');
                         $objPHPExcel->getActiveSheet()->SetCellValue('A2', 'Region');
                         $objPHPExcel->getActiveSheet()->SetCellValue('B2', 'Market');
                         $objPHPExcel->getActiveSheet()->SetCellValue('C2', 'Location name (City)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('D2', 'Year established');
                         $objPHPExcel->getActiveSheet()->SetCellValue('E2', 'Total # employees');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('F2', 'Address');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('G2', 'Telephone number');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('H2', 'General email contact');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('I2', 'Website');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('J2', 'Twitter');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('K2', 'Executive Contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('L2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('M2', 'CFO or Finacial Lead (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('N2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('O2', 'Head of Products & Services (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('P2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('Q2', 'Head of Stratetgy (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('R2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('S2', 'Head of Client Services (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('T2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('U2', 'New Business (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('V2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('W2', 'Marketing (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('X2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('Y2', 'Total # management employees');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('Z2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AA2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AB2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AC2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AD2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AE2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AF2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AG2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AH2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AI2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AJ2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AK2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AL2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AM2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AN2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AO2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AP2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AQ2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AR2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AS2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AT2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AU2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AV2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AW2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AX2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AY2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('AZ2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BA2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BB2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BC2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BD2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BE2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BF2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BG2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BH2', 'Key contact (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BI2', '# employees or FTE');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BJ2', 'Total # management employees');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BK2', '# of supported languages');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('BL2', 'List supported languages');
-
+                        $objPHPExcel->getActiveSheet()->SetCellValue('F2', 'Head of Office(Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('G2', 'Head of New Business (Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('H2', 'Key contact (Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('I2', 'Key contact (Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('J2', 'Key contact (Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('K2', 'Key contact (Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('L2', 'Key contact (Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('M2', 'Key contact (Name/title/email address)');
+ 
                         $i = 2;
                         $arrDataExcel = array();
                         foreach($arrData as $data) {
                                 $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'], $data['YearEstablished'], 
-                                    $data['TotalEmployee'], $data['Address'], $data['Telephone'], $data['GeneralEmail'], $data['Website'], $data['SocialAccount'],
-                                    strip_tags(str_replace('<br/>', "\n", $data['Executive'])), $data['countExecutive'], strip_tags(str_replace('<br/>', "\n", $data['FinanceHead'])), $data['countFinanceHead'], strip_tags(str_replace('<br/>', "\n", $data['ProductHead'])), $data['countProductHead'],
-                                    strip_tags(str_replace('<br/>', "\n", $data['StrategyHead'])), $data['countStrategyHead'], strip_tags(str_replace('<br/>', "\n", $data['ClientHead'])), $data['countClientHead'], strip_tags(str_replace('<br/>', "\n", $data['BusinessHead'])), $data['countBusinessHead'],
-                                    strip_tags(str_replace('<br/>', "\n", $data['MarketingHead'])), $data['countMarketingHead'], $data['totalKeyEmployeeCount'], strip_tags(str_replace('<br/>', "\n", $data['Affiliates'])), $data['countAffiliates'], strip_tags(str_replace('<br/>', "\n", $data['Attribution'])), $data['countAttribution'],
-                                    strip_tags(str_replace('<br/>', "\n", $data['Content'])), $data['countContent'], strip_tags(str_replace('<br/>', "\n", $data['Conversion'])), $data['countConversion'], strip_tags(str_replace('<br/>', "\n", $data['Data'])), $data['countData'],
-                                    strip_tags(str_replace('<br/>', "\n", $data['Development'])), $data['countDevelopment'], strip_tags(str_replace('<br/>', "\n", $data['Display'])), $data['countDisplay'], strip_tags(str_replace('<br/>', "\n", $data['Feeds'])), $data['countFeeds'],
-                                    strip_tags(str_replace('<br/>', "\n", $data['Lead'])), $data['countLead'], strip_tags(str_replace('<br/>', "\n", $data['Mobile'])), $data['countMobile'], strip_tags(str_replace('<br/>', "\n", $data['RTB'])), $data['countRTB'], strip_tags(str_replace('<br/>', "\n", $data['Search'])), $data['countSearch'],
-                                    strip_tags(str_replace('<br/>', "\n", $data['SEO'])), $data['countSEO'], strip_tags(str_replace('<br/>', "\n", $data['SocialPaid'])), $data['countSocialPaid'], strip_tags(str_replace('<br/>', "\n", $data['SocialManagement'])), $data['countSocialManagement'],
-                                    strip_tags(str_replace('<br/>', "\n", $data['Strategy'])), $data['countStrategy'], strip_tags(str_replace('<br/>', "\n", $data['Technology'])), $data['countTechnology'], strip_tags(str_replace('<br/>', "\n", $data['Video'])), $data['countVideo'], $data['totalServiceEmployeeCount'],
-                                    $data['countSupportedLanguages'], $data['SupportedLanguages']);
+                                    $data['TotalEmployee'],
+                                    strip_tags(str_replace('<br/>', "\n", $data['Executive'])), 
+                                    strip_tags(str_replace('<br/>', "\n", $data['BusinessHead'])),
+                                    strip_tags(str_replace('<br/>', "\n", $data['Affiliates'])), 
+                                    strip_tags(str_replace('<br/>', "\n", $data['Content'])),
+                                    strip_tags(str_replace('<br/>', "\n", $data['Data'])), 
+                                    strip_tags(str_replace('<br/>', "\n", $data['Display'])), 
+                                    strip_tags(str_replace('<br/>', "\n", $data['Search'])), 
+                                    strip_tags(str_replace('<br/>', "\n", $data['SEO']))
+                                   
+                                 );
                                 $i++;
                         }
                         if(!empty($arrDataExcel)) {
-                                $objPHPExcel->getActiveSheet()->getStyle('A3:BL'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                $objPHPExcel->getActiveSheet()->getStyle('A3:M'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                                 $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A3');
-                                $objPHPExcel->getActiveSheet()->setAutoFilter('A2:BL'.$i);
+                                $objPHPExcel->getActiveSheet()->setAutoFilter('A2:M'.$i);
                         }
 
                         // Rename sheet

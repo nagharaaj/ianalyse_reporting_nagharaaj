@@ -47,65 +47,14 @@
                     { name: 'City', type: 'string' },
                     { name: 'YearEstablished', type: 'number' },
                     { name: 'TotalEmployee', type: 'number' },
-                    { name: 'Address', type: 'string' },
-                    { name: 'Telephone', type: 'string' },
-                    { name: 'GeneralEmail', type: 'string' },
-                    { name: 'Website', type: 'string' },
-                    { name: 'SocialAccount', type: 'string' },
                     { name: 'Executive', type: 'string' },
-                    { name: 'countExecutive', type: 'number' },
-                    { name: 'FinanceHead', type: 'string' },
-                    { name: 'countFinanceHead', type: 'number' },
-                    { name: 'ProductHead', type: 'string' },
-                    { name: 'countProductHead', type: 'number' },
-                    { name: 'StrategyHead', type: 'string' },
-                    { name: 'countStrategyHead', type: 'number' },
-                    { name: 'ClientHead', type: 'string' },
-                    { name: 'countClientHead', type: 'number' },
                     { name: 'BusinessHead', type: 'string' },
-                    { name: 'countBusinessHead', type: 'number' },
-                    { name: 'MarketingHead', type: 'string' },
-                    { name: 'countMarketingHead', type: 'number' },
-                    { name: 'totalKeyEmployeeCount', type: 'number' },
                     { name: 'Affiliates', type: 'string' },
-                    { name: 'countAffiliates', type: 'number' },
-                    { name: 'Attribution', type: 'string' },
-                    { name: 'countAttribution', type: 'number' },
                     { name: 'Content', type: 'string' },
-                    { name: 'countContent', type: 'number' },
-                    { name: 'Conversion', type: 'string' },
-                    { name: 'countConversion', type: 'number' },
                     { name: 'Data', type: 'string' },
-                    { name: 'countData', type: 'number' },
-                    { name: 'Development', type: 'string' },
-                    { name: 'countDevelopment', type: 'number' },
                     { name: 'Display', type: 'string' },
-                    { name: 'countDisplay', type: 'number' },
-                    { name: 'Feeds', type: 'string' },
-                    { name: 'countFeeds', type: 'number' },
-                    { name: 'Lead', type: 'string' },
-                    { name: 'countLead', type: 'number' },
-                    { name: 'Mobile', type: 'string' },
-                    { name: 'countMobile', type: 'number' },
-                    { name: 'RTB', type: 'string' },
-                    { name: 'countRTB', type: 'number' },
-                    { name: 'Search', type: 'string' },
-                    { name: 'countSearch', type: 'number' },
                     { name: 'SEO', type: 'string' },
-                    { name: 'countSEO', type: 'number' },
-                    { name: 'SocialPaid', type: 'string' },
-                    { name: 'countSocialPaid', type: 'number' },
-                    { name: 'SocialManagement', type: 'string' },
-                    { name: 'countSocialManagement', type: 'number' },
-                    { name: 'Strategy', type: 'string' },
-                    { name: 'countStrategy', type: 'number' },
-                    { name: 'Technology', type: 'string' },
-                    { name: 'countTechnology', type: 'number' },
-                    { name: 'Video', type: 'string' },
-                    { name: 'countVideo', type: 'number' },
-                    { name: 'totalServiceEmployeeCount', type: 'number' },
-                    { name: 'countSupportedLanguages', type: 'number' },
-                    { name: 'SupportedLanguages', type: 'string' }
+                    { name: 'Search', type: 'string' },
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
@@ -134,7 +83,6 @@
              }
 
              var dataAdapter = new $.jqx.dataAdapter(source);
-
              var listInput;
              var buildFilterPanel = function (filterPanel, datafield) {
                 listInput = $("<div id='languageList'></div>");
@@ -219,13 +167,12 @@
                     listInput.jqxListBox('checkAll');
                 });
              }
-
              // initialize jqxGrid
              $("#jqxgrid").jqxGrid(
              {
                 width: (parseInt(screen.availWidth) - 30),
-                autoheight: true,
-                enablemousewheel: false,
+                autoheight:true,
+                enablemousewheel: true,
                 source: dataAdapter,
                 pageable: true,
                 pageSize: 20,
@@ -257,89 +204,14 @@
                   { text: 'Location Name (City)', datafield: 'City', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
                   { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center' },
                   { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Address', columngroup: 'ContactDetails', datafield: 'Address', width: 250, cellClassName: cellclass, align: 'center', filterable: false,
-                          cellsrenderer: function(row, cell, value) {
-                                if(value != '') {
-                                        return '<a style="text-decoration:none;color:#000" href="https://maps.google.com/?q='+value+'"/ target="_blank">'+value+'</a>'
-                                }
-                          }
-                  },
-                  { text: 'Telephone', columngroup: 'ContactDetails', datafield: 'Telephone', width: 120, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: 'General email', columngroup: 'ContactDetails', datafield: 'GeneralEmail', width: 150, cellClassName: cellclass, align: 'center', filterable: false,
-                          cellsrenderer: function(row, cell, value) {
-                                return '<a href="mailto:'+value+'"/ target="_blank">'+value+'</a>'
-                          }
-                  },
-                  { text: 'Website', columngroup: 'ContactDetails', datafield: 'Website', width: 150, cellClassName: cellclass, align: 'center', filterable: false,
-                          cellsrenderer: function(row, cell, value) {
-                                if(value.indexOf('http') != -1) {
-                                        return '<a href="'+value+'"/ target="_blank">'+value+'</a>'
-                                } else {
-                                        return '<a href="http://'+value+'"/ target="_blank">'+value+'</a>'
-                                }
-                          }
-                  },
-                  { text: 'Twitter', columngroup: 'ContactDetails', datafield: 'SocialAccount', width: 150, cellClassName: cellclass, align: 'center', filterable: false,
-                          cellsrenderer: function(row, cell, value) {
-                                if(value.indexOf('http') != -1) {
-                                        return '<a href="'+value+'"/ target="_blank">'+value+'</a>'
-                                }
-                          }
-                  },
-                  { text: 'Executive contact', columngroup: 'KeyContacts', datafield: 'Executive', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countExecutive', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'CFO or finance lead', columngroup: 'KeyContacts', datafield: 'FinanceHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countFinanceHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Head of product<br/>and services', columngroup: 'KeyContacts', datafield: 'ProductHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countProductHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Head of strategy', columngroup: 'KeyContacts', datafield: 'StrategyHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countStrategyHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Head of client services', columngroup: 'KeyContacts', datafield: 'ClientHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countClientHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'New business', columngroup: 'KeyContacts', datafield: 'BusinessHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countBusinessHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Marketing', columngroup: 'KeyContacts', datafield: 'MarketingHead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'KeyContacts', datafield: 'countMarketingHead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Total # employees', datafield: 'totalKeyEmployeeCount', width: 110, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Affiliates', datafield: 'Affiliates', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Affiliates', datafield: 'countAffiliates', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Attribution', datafield: 'Attribution', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Attribution', datafield: 'countAttribution', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Content', datafield: 'Content', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Content', datafield: 'countContent', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Conversion', datafield: 'Conversion', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Conversion', datafield: 'countConversion', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Data', datafield: 'Data', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Data', datafield: 'countData', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Development', datafield: 'Development', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Development', datafield: 'countDevelopment', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Display', datafield: 'Display', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Display', datafield: 'countDisplay', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Feeds', datafield: 'Feeds', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Feeds', datafield: 'countFeeds', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Lead', datafield: 'Lead', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Lead', datafield: 'countLead', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Mobile', datafield: 'Mobile', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Mobile', datafield: 'countMobile', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'RTB', datafield: 'RTB', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'RTB', datafield: 'countRTB', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Search', datafield: 'Search', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Search', datafield: 'countSearch', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'SEO', datafield: 'SEO', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'SEO', datafield: 'countSEO', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'SocialPaid', datafield: 'SocialPaid', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'SocialPaid', datafield: 'countSocialPaid', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'SocialManagement', datafield: 'SocialManagement', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'SocialManagement', datafield: 'countSocialManagement', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Strategy', datafield: 'Strategy', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Strategy', datafield: 'countStrategy', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Technology', datafield: 'Technology', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Technology', datafield: 'countTechnology', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Key contact', columngroup: 'Video', datafield: 'Video', width: 150, cellClassName: cellclass, align: 'center', filterable: false },
-                  { text: '# of employee<br/>or FTE', columngroup: 'Video', datafield: 'countVideo', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Total # employees', datafield: 'totalServiceEmployeeCount', width: 110, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: '# of supported<br/>languages', columngroup: 'Languages', datafield: 'countSupportedLanguages', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'List supported<br/>languages', columngroup: 'Languages', datafield: 'SupportedLanguages', width: 200, cellClassName: cellclass, filtertype: 'custom', filteritems: arrLanguages, align: 'center', 
+                  { text: 'Head of Office', datafield: 'Executive', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
+                  { text: 'Head of New Business', datafield: 'BusinessHead', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
+                  { text: 'Head of PPC', datafield: 'Search', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
+                  { text: 'Head of SEO', datafield: 'SEO', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
+                  { text: 'Head of Display', datafield: 'Display', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
+                  { text: 'Head of Affiliates', datafield: 'Affiliates', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
+                  { text: 'Head of Content', datafield: 'Content', width: 175, cellClassName: cellclass, align: 'center', filterable: false},
+                  { text: 'Head of Data & Insights', datafield: 'Data', width: 175, cellClassName: cellclass, align: 'center', filterable: false ,
                       createfilterpanel: function (datafield, filterPanel) {
                           buildFilterPanel(filterPanel, datafield);
                       }
@@ -348,27 +220,6 @@
                 columngroups: 
                 [
                   { text: 'General information', align: 'center', name: 'GeneralInfo' },
-                  { text: 'Contact details', align: 'center', name: 'ContactDetails' },
-                  { text: 'Key management contacts', align: 'center', name: 'KeyContacts' },
-                  { text: 'Affiliates', align: 'center', name: 'Affiliates' },
-                  { text: 'Attribution', align: 'center', name: 'Attribution' },
-                  { text: 'Content', align: 'center', name: 'Content' },
-                  { text: 'Conversion opt.', align: 'center', name: 'Conversion' },
-                  { text: 'Data & insights', align: 'center', name: 'Data' },
-                  { text: 'Development', align: 'center', name: 'Development' },
-                  { text: 'Display', align: 'center', name: 'Display' },
-                  { text: 'Feeds', align: 'center', name: 'Feeds' },
-                  { text: 'Lead Gen', align: 'center', name: 'Lead' },
-                  { text: 'Mobile', align: 'center', name: 'Mobile' },
-                  { text: 'RTB', align: 'center', name: 'RTB' },
-                  { text: 'Search - PPC', align: 'center', name: 'Search' },
-                  { text: 'SEO', align: 'center', name: 'SEO' },
-                  { text: 'Social - Paid', align: 'center', name: 'SocialPaid' },
-                  { text: 'Social - Management', align: 'center', name: 'SocialManagement' },
-                  { text: 'Strategy', align: 'center', name: 'Strategy' },
-                  { text: 'Technology', align: 'center', name: 'Technology' },
-                  { text: 'Video', align: 'center', name: 'Video' },
-                  { text: 'Languages', align: 'center', name: 'Languages' }
                 ],
                 ready: calculateStats
             });
@@ -424,7 +275,6 @@
                     }
                 });
             });
-
         });
     </script>
     <div id="tab-menu" align="left">
