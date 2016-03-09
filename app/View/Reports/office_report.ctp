@@ -1,11 +1,11 @@
     <script type="text/javascript">
          var editClick;
+        
          $(document).ready(function () {
 
              var userRole = '<?php echo $userRole;?>';
              var languages = jQuery.parseJSON('<?php echo $languages; ?>');
              var arrLanguages = $.map(languages, function(el) { return el; });
-
              var theme = 'base';
              // renderer for grid cells.
              var numberrenderer = function (row, column, value) {
@@ -15,6 +15,7 @@
              var calculateStats = function () {
                 var dataRows = $('#jqxgrid').jqxGrid('getrows');
                 var rowscount = dataRows.length;
+                $("#jqxgrid").jqxGrid('pagesize',rowscount);
                 $('#no_of_records span').text(rowscount);
                 var employeesCount = 0;
                 for(var i = 0; i < rowscount; i++) {
@@ -166,7 +167,6 @@
                 enablemousewheel: true,
                 source: dataAdapter,
                 pageable: true,
-                pageSize: 79,
                 pagerMode: 'simple',
                 sortable: true,
                 filterable: true,
@@ -188,6 +188,8 @@
                     }
                     else menu.height(height);
                 },
+                   ready:calculateStats
+                 ,
                 columns: [
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
@@ -211,9 +213,10 @@
                 columngroups: 
                 [
                   { text: 'General information', align: 'center', name: 'GeneralInfo' },
-                ],
-                ready: calculateStats
-            });
+                ]
+               
+            });     
+                
             $("#jqxgrid").on("filter", function (event) {
                     calculateStats();
                     var paginginfo = $("#jqxgrid").jqxGrid('getpaginginformation');

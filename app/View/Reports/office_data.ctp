@@ -161,7 +161,6 @@
                 enablemousewheel: true,
                 source: dataAdapter,
                 pageable: true,
-                pageSize: 79,
                 pagerMode: 'simple',
                 sortable: true,
                 filterable: true,
@@ -182,6 +181,12 @@
                     }
                     else menu.height(height);
                 },
+                 ready:function()
+                 {
+                       var dataRows = $('#jqxgrid').jqxGrid('getrows');
+                       var rowscount = dataRows.length;
+                       $("#jqxgrid").jqxGrid('pagesize',rowscount);
+                 },
                 columns: [
                   {
                       text: '', cellsalign: 'center', pinned: true, columntype: 'custom', width: 150, editable: false, sortable: false, filterable: false, datafield: null, hidden: ((userRole == 'Viewer' || userRole == 'Country - Viewer') ? true : false),
