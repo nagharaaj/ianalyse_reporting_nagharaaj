@@ -41,6 +41,27 @@
                 $('#no_of_pitches span').text(pitchesCount);
              }
              
+             var horizontalScroll=function(){
+                 var position = $('#jqxgrid').jqxGrid('scrollposition');
+                 var left = position.left;
+                 var top = position.top;
+                 var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
+                 $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e){
+                        e.preventDefault();
+                        var evt = window.event || e //equalize event object
+                        evt = evt.originalEvent ? evt.originalEvent : evt; //convert to originalEvent
+                        var delta = evt.detail ? evt.detail*(-40) : evt.wheelDelta //check for it is used by Opera and FF
+                                if(delta > 0) {
+                                        left=left-20;
+                                        $('#jqxgrid').jqxGrid('scrolloffset',top,left-20);
+                                }
+                                 else{
+                                        left=left+20;
+                                        $('#jqxgrid').jqxGrid('scrolloffset', top,left+20);
+                                }
+                });
+           }
+             
              var source =
              {
                 dataType: "json",
@@ -160,7 +181,6 @@
                     textInput.val("");
                 });
              }
-
              // initialize jqxGrid
              $("#jqxgrid").jqxGrid(
              {
@@ -227,7 +247,11 @@
                   { text: actualRevenueColumnTitle, columngroup: 'ActualRevenue', datafield: 'ActualRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
                   { text: 'Comments', columngroup: 'Comments', datafield: 'Comments', width: 230, cellClassName: cellclass }
                 ],
-                ready: calculateStats
+                ready:function()
+                {
+                        calculateStats();
+                        horizontalScroll();
+                } 
             });
             $("#jqxgrid").on("filter", function (event) {
                     calculateStats();
@@ -443,8 +467,8 @@
                <div style='margin-top: 10px;margin-bottom: 5px'>
                      <div id="jqxgrid"></div>
         </div>
-
      </div>
+ 
         <div id="popupWindow">
                 <div>Export to excel</div>
                 <div style="overflow: hidden;">

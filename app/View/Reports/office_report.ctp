@@ -26,6 +26,27 @@
                 $('#no_of_employees span').text(Math.round(employeesCount));
              }
              
+             var horizontalScroll=function(){
+                 var position = $('#jqxgrid').jqxGrid('scrollposition');
+                 var left = position.left;
+                 var top = position.top;
+                 var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
+                 $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e){
+                        e.preventDefault();
+                        var evt = window.event || e //equalize event object
+                        evt = evt.originalEvent ? evt.originalEvent : evt; //convert to originalEvent
+                        var delta = evt.detail ? evt.detail*(-40) : evt.wheelDelta //check for it is used by Opera and FF
+                                if(delta > 0) {
+                                        left=left-20;
+                                        $('#jqxgrid').jqxGrid('scrolloffset',top,left-20);
+                                }
+                                 else{
+                                        left=left+20;
+                                        $('#jqxgrid').jqxGrid('scrolloffset', top,left+20);
+                                }
+                });
+           }
+             
              var source =
              {
                 dataType: "json",
@@ -188,7 +209,11 @@
                     }
                     else menu.height(height);
                 },
-                   ready:calculateStats
+                   ready:function()
+                   {
+                           calculateStats();
+                           horizontalScroll();
+                   }
                  ,
                 columns: [
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },

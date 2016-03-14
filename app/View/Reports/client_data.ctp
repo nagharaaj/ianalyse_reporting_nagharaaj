@@ -72,7 +72,28 @@
              var numberrenderer = function (row, column, value) {
                  return '<div style="text-align: center; margin-top: 5px;">' + (1 + value) + '</div>';
              }
-
+             
+             var horizontalScroll=function(){
+                 var position = $('#jqxgrid').jqxGrid('scrollposition');
+                 var left = position.left;
+                 var top = position.top;
+                 var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
+                 $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e){
+                        e.preventDefault();
+                        var evt = window.event || e //equalize event object
+                        evt = evt.originalEvent ? evt.originalEvent : evt; //convert to originalEvent
+                        var delta = evt.detail ? evt.detail*(-40) : evt.wheelDelta //check for it is used by Opera and FF
+                                if(delta > 0) {
+                                        left=left-20;
+                                        $('#jqxgrid').jqxGrid('scrolloffset',top,left-20);
+                                }
+                                 else{
+                                        left=left+20;
+                                        $('#jqxgrid').jqxGrid('scrolloffset', top,left+20);
+                                }
+                });
+           }
+             
              var source =
              {
                 dataType: "json",
@@ -189,7 +210,6 @@
                     textInput.val("");
                 });
              }
-//
              // initialize jqxGrid
              $("#jqxgrid").jqxGrid(
              {
@@ -198,7 +218,7 @@
                 rowsheight:45,
                 height:'600',
                 source: dataAdapter,
-                enablemousewheel: false,
+                enablemousewheel: true,
                 pageable:false,
                 pageSize: 20,
                 pagerMode: 'simple',
@@ -270,7 +290,11 @@
                       }
                   },
                   { text: 'Comments', datafield: 'Comments', width: 200, cellClassName: cellclass, editable: false }
-                ]
+                  
+                ],
+          
+                ready: horizontalScroll
+
             });
             $("#jqxgrid").on("filter", function (event) {
                     $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', false);
