@@ -1,3 +1,4 @@
+
 <script type="text/javascript">
          $(document).ready(function () {
              var theme = 'base';
@@ -42,23 +43,25 @@
              }
              
              var horizontalScroll=function(){
-                 var position = $('#jqxgrid').jqxGrid('scrollposition');
-                 var left = position.left;
-                 var top = position.top;
                  var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
                  $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e){
                         e.preventDefault();
+                        var position = $('#jqxgrid').jqxGrid('scrollposition');
+                        var left = position.left;
+                        var top = position.top;
                         var evt = window.event || e //equalize event object
                         evt = evt.originalEvent ? evt.originalEvent : evt; //convert to originalEvent
                         var delta = evt.detail ? evt.detail*(-40) : evt.wheelDelta //check for it is used by Opera and FF
-                                if(delta > 0) {
-                                        left=left-20;
-                                        $('#jqxgrid').jqxGrid('scrolloffset',top,left-20);
-                                }
-                                 else{
-                                        left=left+20;
-                                        $('#jqxgrid').jqxGrid('scrolloffset', top,left+20);
-                                }
+                        if(delta > 0) {
+                                top=top+45;
+                                left=left-25;
+                                $('#jqxgrid').jqxGrid('scrolloffset',top,left);
+                        }
+                         else{
+                                top=top-45;
+                                left=left+25;
+                                $('#jqxgrid').jqxGrid('scrolloffset', top,left);
+                        }
                 });
            }
              
@@ -441,6 +444,7 @@
                         <div id="no_of_clients" style="padding-bottom: 5px">Clients <span style="display: inline-block; width: 110px;"></span></div>
                         <div id="no_of_pitches" style="padding-bottom: 5px">Pitches <span style="display: inline-block; width: 110px;"></span></div>
                 </fieldset>
+        </div>
         <div id="tab-menu" align="left">
         <?php
                 if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/client_report') && !preg_match('/Viewer/', $loggedUser['role'])) {
@@ -458,16 +462,13 @@
         <?php
                 }
         ?>
-             <div style="margin-left: 350px;" align="right">
-            <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
-            <button style="margin-left: 5px" id="selectcurrencybutton" title="Select currency for report">SELECT CURRENCY</button>
-            <button style="margin-left: 5px" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
-         </div>
-    </div>
-               <div style='margin-top: 10px;margin-bottom: 5px'>
-                     <div id="jqxgrid"></div>
+            <div style="float: right; margin-top: 35px;">
+                <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
+                <button style="margin-left: 5px" id="selectcurrencybutton" title="Select currency for report">SELECT CURRENCY</button>
+                <button style="margin-left: 5px" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
+            </div>
         </div>
-     </div>
+        <div id="jqxgrid"></div>
  
         <div id="popupWindow">
                 <div>Export to excel</div>

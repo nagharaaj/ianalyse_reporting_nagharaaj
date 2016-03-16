@@ -27,23 +27,25 @@
              }
              
              var horizontalScroll=function(){
-                 var position = $('#jqxgrid').jqxGrid('scrollposition');
-                 var left = position.left;
-                 var top = position.top;
                  var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
                  $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e){
                         e.preventDefault();
+                        var position = $('#jqxgrid').jqxGrid('scrollposition');
+                        var left = position.left;
+                        var top = position.top;
                         var evt = window.event || e //equalize event object
                         evt = evt.originalEvent ? evt.originalEvent : evt; //convert to originalEvent
                         var delta = evt.detail ? evt.detail*(-40) : evt.wheelDelta //check for it is used by Opera and FF
-                                if(delta > 0) {
-                                        left=left-20;
-                                        $('#jqxgrid').jqxGrid('scrolloffset',top,left-20);
-                                }
-                                 else{
-                                        left=left+20;
-                                        $('#jqxgrid').jqxGrid('scrolloffset', top,left+20);
-                                }
+                        if(delta > 0) {
+                                top=top+25;
+                                left=left-25;
+                                $('#jqxgrid').jqxGrid('scrolloffset',top,left);
+                        }
+                         else{
+                                top=top-25;
+                                left=left+25;
+                                $('#jqxgrid').jqxGrid('scrolloffset', top,left);
+                        }
                 });
            }
              
@@ -209,12 +211,11 @@
                     }
                     else menu.height(height);
                 },
-                   ready:function()
-                   {
-                           calculateStats();
-                           horizontalScroll();
-                   }
-                 ,
+                ready:function()
+                {
+                    calculateStats();
+                    horizontalScroll();
+                },
                 columns: [
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
@@ -296,6 +297,20 @@
             });
         });
     </script>
+<script type="text/javascript">
+        $(document).ready(function() {
+                $('#tab-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
+        });
+</script>    
+
+<div id='jqxWidget'>
+        <div style="margin-right: 5px; margin-top: 5px; margin-bottom: 10px;" align="right">
+                <fieldset style="width: 260px">
+                        <legend>Quick stats</legend>
+                        <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 70px;"></span></div>
+                        <div id="no_of_employees" style="padding-bottom: 5px">Employees <span style="display: inline-block; width: 70px;"></span></div>
+                </fieldset>
+        </div>
     <div id="tab-menu" align="left">
         <?php
                 if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/office_report') && !preg_match('/Viewer/', $loggedUser['role'])) {
@@ -313,28 +328,13 @@
         <?php
                 }
         ?>
-    </div>
-<script type="text/javascript">
-        $(document).ready(function() {
-                $('#tab-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
-        });
-</script>    
-
-<div id='jqxWidget'>
-        <div style="margin-right: 7px; margin-bottom: 5px;" align="right">
+        <div style="float: right; margin-top: 35px;">
             <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
             <button style="margin-left:5px" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
         </div>
+    </div>
         <div id="jqxgrid"></div>
             <div style='margin-top: 20px;'>
-        </div>
-        
-        <div style="margin-right: 5px; margin-top: 5px; margin-bottom: 10px;" align="right">
-                <fieldset style="width: 260px">
-                        <legend>Quick stats</legend>
-                        <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 70px;"></span></div>
-                        <div id="no_of_employees" style="padding-bottom: 5px">Employees <span style="display: inline-block; width: 70px;"></span></div>
-                </fieldset>
         </div>
         
         <div id="loaderWindow">

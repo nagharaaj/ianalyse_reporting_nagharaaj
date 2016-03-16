@@ -74,23 +74,25 @@
              }
              
              var horizontalScroll=function(){
-                 var position = $('#jqxgrid').jqxGrid('scrollposition');
-                 var left = position.left;
-                 var top = position.top;
                  var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
                  $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e){
                         e.preventDefault();
+                        var position = $('#jqxgrid').jqxGrid('scrollposition');
+                        var left = position.left;
+                        var top = position.top;
                         var evt = window.event || e //equalize event object
                         evt = evt.originalEvent ? evt.originalEvent : evt; //convert to originalEvent
                         var delta = evt.detail ? evt.detail*(-40) : evt.wheelDelta //check for it is used by Opera and FF
-                                if(delta > 0) {
-                                        left=left-20;
-                                        $('#jqxgrid').jqxGrid('scrolloffset',top,left-20);
-                                }
-                                 else{
-                                        left=left+20;
-                                        $('#jqxgrid').jqxGrid('scrolloffset', top,left+20);
-                                }
+                        if(delta > 0) {
+                                top=top+45;
+                                left=left-25;
+                                $('#jqxgrid').jqxGrid('scrolloffset',top,left);
+                        }
+                         else{
+                                top=top-45;
+                                left=left+25;
+                                $('#jqxgrid').jqxGrid('scrolloffset', top,left);
+                        }
                 });
            }
              
@@ -1542,9 +1544,8 @@
                     <a href="/reports/client_data">CREATE/UPDATE YOUR RECORDS</a>
             </div>
            
-            <div style='float: right; padding-right: 7px; padding-bottom: 10px; margin-top: 20px;'>
-            <button value="Add a new record" class='createNew'>ADD A NEW RECORD</button>
-            
+            <div style="float: right; margin-top: 35px; padding-right: 7px;">
+                <button value="Add a new record" class='createNew'>ADD A NEW RECORD</button>
             </div>
     </div>
 <script type="text/javascript">
