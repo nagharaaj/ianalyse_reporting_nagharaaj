@@ -357,7 +357,7 @@
                             }
                         });
                 } else {
-                        $("#popupWindow").jqxWindow({ title: 'Export to excel/CSV', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "125px", maxWidth: 400, isModal: true, draggable: false });
+                        $("#popupWindow").jqxWindow({ title: 'Export to excel/CSV', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "170px", maxWidth: 400, isModal: true, draggable: false });
                         $('#divSetting').show();
                         $('#divLoader').hide();
                         $('#divRevenueCurrency').hide();
@@ -401,7 +401,8 @@
                     url: "/reports/export_client_data/",
                     data: JSON.stringify({datarows: rows, timezone: tz.name(), 
                             currency: $("#exportcurrency option:selected").text(),
-                            format: $("#exportformat").val()
+                            format: $("#exportformat").val(),
+                            revenue:$("#exportrevenue option:selected").text()
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -474,13 +475,17 @@
                 <div>Export to excel</div>
                 <div style="overflow: hidden;">
                         <div id="divSetting">
-                                <div style="padding-bottom:10px;">
+                                <div style="padding-bottom:10px;margin-top: 10px">
                                         Select format:
                                         <select id="exportformat"><option value="Excel">Excel</option><option value="csv">CSV</option></select>
                                 </div>
-                                <div>
+                                <div style="padding-bottom:10px;">
                                         Select currency:
                                         <select id="exportcurrency"><option value="default">Actual currencies</option></select>
+                                </div>
+                                <div style="padding-bottom:10px;">
+                                        Show Revenue values for previous years:
+                                        <select id="exportrevenue"><option selected="selected" value="NO">NO</option><option value="YES">YES</option></select>
                                 </div>
                                 <div style="float: right; margin-top: 10px">
                                     <button style="margin-bottom: 5px;" id="exportButton">EXPORT</button>
