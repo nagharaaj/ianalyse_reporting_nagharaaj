@@ -43,7 +43,8 @@
                     { name: 'dailysyncmail', type: 'boolean' },
                     { name: 'weeklysummarymail', type: 'boolean' },
                     { name: 'clientpitchmail', type: 'boolean' },
-                    { name: 'targetclients', type: 'string' }
+                    { name: 'targetclients', type: 'string' },
+                    { name: 'adminlinks', type: 'string' }
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
@@ -73,7 +74,6 @@
              });
              this.editrow = -1;
 
-             var entityEditor;
              $("#dataTable").jqxDataTable(
              {
                 width: (parseInt(screen.availWidth) - 30),
@@ -90,6 +90,7 @@
                   { text: '', hidden: true, dataField: 'weeklysummarymail' },
                   { text: '', hidden: true, dataField: 'clientpitchmail' },
                   { text: '', hidden: true, dataField: 'targetclients' },
+                  { text: '', hidden: true, dataField: 'adminlinks' },
                   { text: 'Name', dataField: 'displayname', width: 210, align: 'center' },
                   { text: 'Title', dataField: 'title', width: 200, align: 'center' },
                   { text: 'Location', dataField: 'location', width: 130, align: 'center' },
@@ -113,15 +114,7 @@
                   }
                 ]
             });
-            $('#dataTable').on('rowEndEdit', function (event) {
-                /*var target = $(event.target);
-                console.log(target.parent().parent().find('.jqx-grid-validation-label').length);
-                if(target.parent().parent().find('.jqx-grid-validation-label')) {
-                        var rowIndex = parseInt(event.target.getAttribute('data-row'));
-                        $("#dataTable").jqxDataTable('beginRowEdit', rowIndex);
-                        return false;
-                }*/
-            });
+
             editClick = function (event) {
                 var target = $(event.target);
                 // get button's value.
@@ -143,13 +136,13 @@
             $("#popupWindow").jqxWindow({
                 width: 1200, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelNew"), maxWidth: 1200, showCloseButton: false
             });
-            $("#createNew").jqxButton({ theme: theme });
-            $("#createNew").click(function () {
+            $(".createNew").jqxButton({ theme: theme });
+            $(".createNew").click(function () {
                 openPopup();
             });
             function openPopup(rowData) {
                 var offset = $("#dataTable").offset();
-                $("#popupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 20, y: parseInt(offset.top) + 20 }, height: "360px", maxWidth: 1200, isModal: true });
+                $("#popupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 20, y: parseInt(offset.top) + 20 }, height: "490px", maxWidth: 1200, isModal: true });
                 if(rowData) {
                         $('#popupWindow').jqxWindow('setTitle', 'Update Existing User');
                         $("#SaveNewUser").html('UPDATE USER');
@@ -230,9 +223,19 @@
                 $("#targetClients").jqxDropDownList({ selectedIndex: -1, width: 300, filterable: true, checkboxes: true, source: clientListDataAdapter, displayMember: "display_name", valueMember: "client_name" });
                 $("#targetClients").jqxDropDownList('uncheckAll');
 
+                $(".adm-lnk").jqxCheckBox({ checked: false });
+
                 if(rowData) {
                     if(rowData.permission == "Global") {
                         $("#nameofentity").jqxDropDownList({ source: ['Global'], checkboxes: false, selectedIndex: 0 });
+
+                        if(rowData.adminlinks) {
+                                console.log(rowData.adminlinks);
+                                $.each(rowData.adminlinks, function( index, value ) {
+                                        console.log(value);
+                                        $(".adm-lnk[linkid="+value+"]").jqxCheckBox('check');
+                                });
+                        }
                     } else if(rowData.permission == "Regional") {
                         $("#nameofentity").jqxDropDownList({ source: regions, checkboxes: true, selectedIndex: -1 });
                         $('#testForm').jqxValidator('validateInput', '#nameofentity');
@@ -262,12 +265,14 @@
                                 $("#targetClients").jqxDropDownList('checkItem', targetClients[i]);
                             }
                         }
+                        $(".adm-lnk").jqxCheckBox('enable');
                     } else {
                         $("#dailySyncMails").jqxCheckBox('disable');
                         $("#weeklySummaryMails").jqxCheckBox('disable');
                         $("#clientPitchMails").jqxCheckBox('disable');
                         $("#targetClients").jqxDropDownList({ disabled: true });
                         $("#targetClients").jqxDropDownList('uncheckAll');
+                        $(".adm-lnk").jqxCheckBox('disable');
                     }
                 }
                 // show the popup window.
@@ -293,12 +298,14 @@
                                 $("#weeklySummaryMails").jqxCheckBox('enable');
                                 $("#clientPitchMails").jqxCheckBox('enable');
                                 $("#targetClients").jqxDropDownList({ disabled: false });
+                                $(".adm-lnk").jqxCheckBox('enable');
                         } else {
                                 $("#dailySyncMails").jqxCheckBox('disable');
                                 $("#weeklySummaryMails").jqxCheckBox('disable');
                                 $("#clientPitchMails").jqxCheckBox('disable');
                                 $("#targetClients").jqxDropDownList({ disabled: true });
                                 $("#targetClients").jqxDropDownList('uncheckAll');
+                                $(".adm-lnk").jqxCheckBox('disable');
                         }
                     }
                 });
@@ -338,10 +345,20 @@
                 if(recordId) {
                     url = "/users/update_user/";
                 }
+                var admLinks = new Array();
+                if($("#permission").val() == 'Global') {
+                        $('.adm-lnk').each(function (i) {
+                                if($(this).val()) {
+                                        var value = $(this).attr('linkid');
+                                        admLinks.push(value);
+                                }
+                        });
+                }
                 var row = { displayname: $("#name").val(), username: $("#username").val(), title: $("#title").val(),
                     location: $("#location").val(), email: $("#email").val(), permission: $("#permission").val(),
                     nameofentity: $("#nameofentity").val(), activeflag: $("#active").val(), dailysyncmails: $("#dailySyncMails").val(),
-                    weeklysummarymails: $("#weeklySummaryMails").val(), clientpitchmails: $("#clientPitchMails").val(), targetclients: $("#targetClients").val()
+                    weeklysummarymails: $("#weeklySummaryMails").val(), clientpitchmails: $("#clientPitchMails").val(),
+                    targetclients: $("#targetClients").val(), adminlinks: admLinks
                 };
                 $.ajax({
                     type: "POST",
@@ -351,7 +368,6 @@
                     dataType: "json",
                     success : function(result) {
                         if(result.success == true) {
-                            //alert("Data saved successfully...");
                             $("#dataTable").jqxDataTable('updateBoundData');
                             $("#popupWindow").jqxWindow('hide');
                         } else {
@@ -367,7 +383,7 @@
         <div id="dataTable"></div>
             <div style='margin-top: 20px;'>
             <div style='float: right; padding-right: 15px; padding-bottom: 30px;'>
-                    <button value="Create New User" id='createNew'>CREATE NEW USER</button>
+                    <button value="Create New User" class='createNew'>CREATE NEW USER</button>
             </div>
         </div>
     </div>
@@ -418,6 +434,21 @@
                 <tr>
                     <td><span style="vertical-align: top;">Select target clients for receiving notification (Default is all clients)</span>&nbsp;<div style="display: inline-block; margin-top: -5px;" id="targetClients"></div></td>
                 </tr>
+            </table>
+            <br/>
+            <table width="99%" cellpadding="5">
+                <tr style="height: 25px; border-color: #aaa; background: none repeat scroll 0 0 #e8e8e8; border-style: solid; border-width: 0 1px 0 0; font-family: Verdana,Arial,sans-serif; font-size: 13px; font-style: normal;">
+                    <td>Manage administration access (Global permission only)</td>
+                </tr>
+        <?php if(isset($adminLinks) && !empty($adminLinks)) {
+                foreach($adminLinks as $adminLinkId => $adminLinkName) {
+        ?>
+                <tr>
+                        <td><div style="display: inline-block" class="adm-lnk" linkid="<?php echo $adminLinkId; ?>">&nbsp;<?php echo $adminLinkName; ?></div></td>
+                </tr>
+        <?php
+                }
+        } ?>
             </table>
         </form>
         <div style="padding-top: 10px;" align="right"><button style="margin-right: 15px;" id="SaveNewUser" value="Add user">ADD USER</button></div>

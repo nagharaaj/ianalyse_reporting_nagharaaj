@@ -20,7 +20,9 @@ class UsersController extends AppController {
             'User',
             'UserLoginRole',
             'UserMarket',
-            'UserMailNotificationClient'
+            'UserMailNotificationClient',
+            'UserAdminAccess',
+            'AdministrationLink'
         );
 
         public $name = 'Users';
@@ -77,6 +79,7 @@ class UsersController extends AppController {
                                         unset($this->request->data['User']['password']);
                                         $this->Auth->login($this->request->data['User']);
                                         $this->Session->write('loggedUser.displayName', $displayName);
+                                        $this->Session->write('loggedUser.role', $userLoginRole['LoginRole']['name']);
                                         return $this->redirect($this->Auth->redirect());
                                 }
                         }
@@ -101,6 +104,7 @@ class UsersController extends AppController {
                 $this->set('markets', json_encode($arrMarkets));
                 $this->set('regions', json_encode($this->Region->find('list', array('order' => 'Region.region Asc'))));
                 $this->set('loginRoles', json_encode($this->LoginRole->find('list', array('order' => 'LoginRole.id Asc'))));
+                $this->set('adminLinks', $this->AdministrationLink->find('list', array('order' => 'AdministrationLink.id Asc')));
         }
 
         public function get_client_list() {
@@ -117,7 +121,7 @@ class UsersController extends AppController {
                 return json_encode($clientList);
         }
 
-        function search_user() {
+        public function search_user() {
 
                 $this->autoRender=false;
 
@@ -138,7 +142,7 @@ class UsersController extends AppController {
                 }
         }
 
-        function save_user() {
+        public function save_user() {
                 $this->autoRender=false;
 
                 $arrData = $this->request->data;
@@ -233,21 +237,35 @@ class UsersController extends AppController {
                                         );
                                 }
                         }
+
+                        if($arrData['permission'] == 'Global' && isset($arrData['adminlinks'])) {
+                                foreach($arrData['adminlinks'] as $adminLink) {
+                                        $this->UserAdminAccess->create();
+                                        $this->UserAdminAccess->save(
+                                                array(
+                                                        'UserAdminAccess' => array(
+                                                            'user_id' => $userId,
+                                                            'admin_link_id' => $adminLink
+                                                        )
+                                                )
+                                        );
+                                }
+                        }
                 }
                 $result = array();
                 $result['success'] = true;
                 return json_encode($result);
         }
 
-        function get_users() {
+        public function get_users() {
                 $this->autoRender=false;
 
-                $usersData = array();
+                $userData = array();
                 $i = 0;
                 $users = $this->User->find('all', array('order' => 'User.display_name Asc'));
                 foreach($users as $user) {
                         $userData[$i]['targetclients'] = '';
-                        
+
                         $userData[$i]['userid'] = $user['User']['id'];
                         $userData[$i]['displayname'] = $user['User']['display_name'];
                         $userData[$i]['title'] = $user['User']['title'];
@@ -282,6 +300,13 @@ class UsersController extends AppController {
                                         $arrTargetClients[] = $targetClient;
                                 }
                                 $userData[$i]['targetclients'] = implode(',', $arrTargetClients);
+
+                                $adminLinks = $this->UserAdminAccess->find('list', array('fields' => array('id', 'admin_link_id'), 'conditions' => array('user_id' => $user['User']['id'])));
+                                $arrAdminLinks = array();
+                                foreach($adminLinks as $adminLink) {
+                                        $arrAdminLinks[] = $adminLink;
+                                }
+                                $userData[$i]['adminlinks'] = $arrAdminLinks;
                         } elseif($userLoginRole['LoginRole']['name'] == 'Viewer') {
                                 $userData[$i]['nameofentity'] = '/';
                         }
@@ -296,7 +321,7 @@ class UsersController extends AppController {
                 echo json_encode($userData);
         }
 
-        function update_user() {
+        public function update_user() {
                 $this->autoRender=false;
 
                 $arrData = $this->request->data;
@@ -334,6 +359,7 @@ class UsersController extends AppController {
                                 $this->UserLoginRole->deleteAll(array('user_id' => $userId));
                                 $this->UserMarket->deleteAll(array('user_id' => $userId));
                                 $this->UserMailNotificationClient->deleteAll(array('user_id' => $userId));
+                                $this->UserAdminAccess->deleteAll(array('user_id' => $userId));
 
                                 $loginRole = $this->LoginRole->findByName($arrData['permission']);
                                 $loginRoleId = $loginRole['LoginRole']['id'];
@@ -406,6 +432,20 @@ class UsersController extends AppController {
                                                 );
                                         }
                                 }
+
+                                if($arrData['permission'] == 'Global' && isset($arrData['adminlinks'])) {
+                                foreach($arrData['adminlinks'] as $adminLink) {
+                                        $this->UserAdminAccess->create();
+                                        $this->UserAdminAccess->save(
+                                                array(
+                                                        'UserAdminAccess' => array(
+                                                            'user_id' => $userId,
+                                                            'admin_link_id' => $adminLink
+                                                        )
+                                                )
+                                        );
+                                }
+                        }
                         } else {
                                 $result = array();
                                 $result['success'] = false;

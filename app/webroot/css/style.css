@@ -836,3 +836,24 @@ button.btn-create-chapter:hover, button.btn-create-question:hover, button.btn-li
     line-height: 25px;
     cursor: pointer;
 }
+
+.drop {
+    background: #455560;
+    position: absolute;
+    /*margin-left: 200px;*/
+    right: 8px;
+    z-index: 2;
+}
+
+.drop ul {
+    clear: both;
+    display: block;
+}
+
+.drop ul li {
+    clear: both;
+    display: block;
+    margin-bottom: 5px;
+    padding-right: 5px;
+    text-align: right;
+}

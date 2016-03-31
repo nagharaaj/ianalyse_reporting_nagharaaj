@@ -55,7 +55,7 @@ class AppController extends Controller {
     function beforeFilter() {
         $this->Auth->allow();
     }
-
+    
     public function generateNav($arrNav, $user) {
         $arrAuthNav = array();
 
@@ -65,8 +65,9 @@ class AppController extends Controller {
                 $arrAuthNav[$linkName] = $linkUrl;
             }
         }
+        $userAdmLinks = $this->getUserAdminAccess($user['id']);
 
-        return $arrAuthNav;
+        return array('admNavLinks' => $arrAuthNav, 'userAdmLinks' => $userAdmLinks);
     }
 
     public function parseRequestVars() {
@@ -84,7 +85,8 @@ class AppController extends Controller {
     public $uses = array(
         'User',
         'LoginRole',
-        'UserLoginRole'
+        'UserLoginRole',
+        'UserAdminAccess'
     );
 
     public function getUserRoles($userId) {
@@ -94,5 +96,15 @@ class AppController extends Controller {
             $userRoles[$userLoginRole['LoginRole']['id']] = $userLoginRole['LoginRole']['name'];
         }
         return $userRoles;
+    }
+    
+    public function getUserAdminAccess($userId) {
+        $this->UserAdminAccess->Behaviors->attach('Containable');
+        $userAdminAccesses = $this->UserAdminAccess->find('all', array('conditions' => array('user_id' => $userId)));
+        $arrUserAdminAccess = array();
+        foreach($userAdminAccesses as $userAdminAccess) {
+            $arrUserAdminAccess[$userAdminAccess['AdministrationLink']['link_name']] = $userAdminAccess['AdministrationLink']['link_url'];
+        }
+        return $arrUserAdminAccess;
     }
 }

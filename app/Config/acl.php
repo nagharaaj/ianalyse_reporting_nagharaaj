@@ -148,8 +148,9 @@ $config['rules'] = array(
                 'controllers/reports/export_office_data' => 'Role/Viewer, Role/CountryViewer',
         ),
         'deny' => array(
-                'controllers/users/user_permissions' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer',
+                'controllers/users/user_permissions' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer, Role/CountryViewer',
                 'controllers/reports/client_data' => 'Role/Viewer, Role/CountryViewer',
-                'controllers/reports/office_data' => 'Role/Viewer, Role/CountryViewer'
+                'controllers/reports/office_data' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/admin/*' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer, Role/CountryViewer'
         ),
 );

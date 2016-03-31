@@ -61,6 +61,21 @@
                         ?>
                                 <div id="lnk-logout">
                                         <span>Welcome, <?php echo $this->Session->read('loggedUser.displayName'); ?>&nbsp;(<a href="/users/logout">Logout</a>)</span>
+                                <?php if($this->Session->check('loggedUser.role') == 'Global') {?>
+                                        <div class="drop" style="display: none;">
+                                            <ul>
+                                <?php
+                                if(isset($admNavLinks['userAdmLinks']) && !empty($admNavLinks['userAdmLinks'])) {
+                                        foreach($admNavLinks['userAdmLinks'] as $linkName => $linkUrl) {
+                                ?>
+                                                    <li><a href="<?php echo $linkUrl;?>"><?php echo $linkName;?></a><hr/></li>
+                                <?php
+                                        }
+                                }
+                                ?>
+                                            </ul>
+                                        </div>
+                                <?php }?>
                                 </div>
                         <?php
                                 }
@@ -69,9 +84,9 @@
 		</div>
                 <div id="nav-menu" align="center">
                         <?php
-                                if(isset($admNavLinks))
+                                if(isset($admNavLinks['admNavLinks']))
                                 {
-                                        foreach($admNavLinks as $navHead => $arrLinks)
+                                        foreach($admNavLinks['admNavLinks'] as $navHead => $arrLinks)
                                         {
                                                 if($navHead == 'CLIENT & NEW BUSINESS DATA') {
                                                         $className = 'grey';
@@ -117,6 +132,12 @@
                     } else {
                         button.fadeIn( 'slow' );
                     }
+                });
+
+                $('#lnk-logout').hover(function(){
+                        $('.drop').show();
+                },function(){
+                        $('.drop').hide();
                 });
         });
         
