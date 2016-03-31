@@ -28,7 +28,7 @@ class DanReconciliationShell extends AppShell {
         public function main() {
                 $this->out('Reconciliation in progress....');
                 $currDt = date('Y-m-d h:i:s');
-                $lastDayDt = date('Y-m-d', strtotime('-45 days'));
+                $lastDayDt = date('Y') . '-01-01';
                 $currTime = date('m/d/Y h:i:s');
                 $emailList = $this->mailList();
 
@@ -165,10 +165,7 @@ class DanReconciliationShell extends AppShell {
                     ),
                     'conditions' => array(
                         "((pitch_stage like 'Live%' or pitch_stage like 'Won%' or pitch_stage like 'Lost%' or pitch_stage='Cancelled' or pitch_stage='Declined') and pitch_stage != 'Lost - archive')",
-                        "(ClientRevenueByService.created between '" . $lastDayDt . "' and '" . $currDt . "' or ClientRevenueByService.modified between '" . $lastDayDt . "' and '" . $currDt . "')",
-                        "Country.country LIKE 'TEST%'",
-                        "Country.country NOT IN ('TEST COUNTRY 4', 'TEST COUNTRY 9')",
-                        //"ClientRevenueByService.client_name like 'NBR-Connect-Test-21-a'"
+                        "(ClientRevenueByService.created between '" . $lastDayDt . "' and '" . $currDt . "' or ClientRevenueByService.modified between '" . $lastDayDt . "' and '" . $currDt . "')"
                     ),
                     'group' => array('Country.country', 'ClientRevenueByService.pitch_stage'),
                     'order' => 'Country.country, ClientRevenueByService.pitch_stage asc'

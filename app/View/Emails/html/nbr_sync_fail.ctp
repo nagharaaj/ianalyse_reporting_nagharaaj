@@ -16,7 +16,7 @@
                         </tr>
                         <tr>
                                 <td>Next schedule for sync up:</td>
-                                <td nowrap><?php echo $data['date_n_time']; ?></td>
+                                <td nowrap><?php echo $data['next_scheduled_time']; ?></td>
                         </tr>
                         <tr>
                                 <td>Reason:</td>

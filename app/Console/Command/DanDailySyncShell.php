@@ -28,8 +28,9 @@ class DanDailySyncShell extends AppShell {
         public function main() {
                 $this->out('Sync in progress....');
                 $currDt = date('Y-m-d h:i:s');
-                $lastDayDt = date('Y-m-d', strtotime('-7 days'));
+                $lastDayDt = date('Y-m-d', strtotime('-1 days'));
                 $currTime = date('m/d/Y h:i:s');
+                $nextSyncTime = date('m/d/Y h:i:s', strtotime('+1 days'));
                 $emailList = $this->mailList();
 
                 //the target url of NBR system.
@@ -91,6 +92,7 @@ class DanDailySyncShell extends AppShell {
                 if($responseStatus['http_code'] != 200) {
                 // if request is not completed successfully, generate notification mail
                         $responseStatus['date_n_time'] = $currTime;
+                        $responseStatus['next_scheduled_time'] = $nextSyncTime;
                         $responseStatus['reason'] = 'Web services are unavailable or the NBRT system is not accessible.';
                         $email = new CakeEmail('gmail');
                         $email->viewVars(array('title_for_layout' => 'Connect < > NBRT sync up failed', 'type' => 'Client data', 'data' => $responseStatus));
@@ -152,7 +154,7 @@ class DanDailySyncShell extends AppShell {
                 foreach($industryCategoryResult as $result) {
                         $arrIndustryCategory[$result->Id] = $result->Title;
                 }
-                
+
                 // NBR currencies array id => currency
                 $arrNbrCurrencies = array();
                 // NBR Euros conversion rates
@@ -221,10 +223,7 @@ class DanDailySyncShell extends AppShell {
                                 ),
                                 'OR' => array("ClientRevenueByService.created BETWEEN ? AND ?" => array($lastDayDt, $currDt),
                                         "ClientRevenueByService.modified BETWEEN ? AND ?" => array($lastDayDt, $currDt)
-                                ),
-                                "Country.country LIKE 'TEST%'",
-                                "Country.country != 'TEST COUNTRY 9'",
-                                //"ClientRevenueByService.client_name = 'A-NBR-Connect-Test-1-10'"
+                                )
                     ),
                     'group' => array('Country.country', 'ClientRevenueByService.client_name', 'ClientRevenueByService.pitch_stage'),
                     'order' => 'Country.country', 'ClientRevenueByService.client_name asc, ClientRevenueByService.pitch_stage asc, ClientRevenueByService.pitch_date desc',
@@ -261,6 +260,7 @@ class DanDailySyncShell extends AppShell {
                                 // send an email notification to admins
                                         $responseStatus = array();
                                         $responseStatus['date_n_time'] = $currTime;
+                                        $responseStatus['next_scheduled_time'] = $nextSyncTime;
                                         $responseStatus['reason'] = 'A country \''.$country.'\' not found in NBRT';
                                         $email = new CakeEmail('gmail');
                                         $email->viewVars(array('title_for_layout' => 'Connect < > NBRT sync up failed', 'type' => 'Client data', 'data' => $responseStatus));
@@ -325,6 +325,7 @@ class DanDailySyncShell extends AppShell {
                                 // send an email notification to admins
                                         $responseStatus = array();
                                         $responseStatus['date_n_time'] = $currTime;
+                                        $responseStatus['next_scheduled_time'] = $nextSyncTime;
                                         $responseStatus['reason'] = 'Mapping for industry category \''.$client['ClientCategory']['dan_mapping'].'\' not found in NBRT';
                                         $email = new CakeEmail('gmail');
                                         $email->viewVars(array('title_for_layout' => 'Connect < > NBRT sync up failed', 'type' => 'Client data', 'data' => $responseStatus));
@@ -485,6 +486,7 @@ class DanDailySyncShell extends AppShell {
                                 }
                                 if(!empty($responseStatus)) {
                                         $responseStatus['date_n_time'] = $currTime;
+                                        $responseStatus['next_scheduled_time'] = $nextSyncTime;
                                         $email = new CakeEmail('gmail');
                                         $email->viewVars(array('title_for_layout' => 'Connect < > NBRT sync up failed', 'type' => 'Client data', 'data' => $responseStatus));
                                         $email->template('nbr_sync_fail', 'default')
@@ -516,6 +518,7 @@ class DanDailySyncShell extends AppShell {
                                                 // send an email notification to admins
                                                 $responseStatus = array();
                                                 $responseStatus['date_n_time'] = $currTime;
+                                                $responseStatus['next_scheduled_time'] = $nextSyncTime;
                                                 $responseStatus['reason'] = 'Access to a country \''.$country.'\' denied in NBRT. Please grant access ASAP.';
                                                 $email = new CakeEmail('gmail');
                                                 $email->viewVars(array('title_for_layout' => 'Connect < > NBRT sync up failed', 'type' => 'Client data', 'data' => $responseStatus));
@@ -904,9 +907,7 @@ class DanDailySyncShell extends AppShell {
                                     'OR' => array("pitch_stage like 'Live%'", "pitch_stage like 'Won%'", "pitch_stage like 'Lost%'", "pitch_stage='Cancelled'", "pitch_stage='Declined'"),
                                     "pitch_stage != 'Lost - archive'"
                                 ),
-                                "ClientDeleteLog.deleted BETWEEN ? AND ?" => array($lastDayDt, $currDt),
-                                "Country.country LIKE 'TEST%'",
-                                //"ClientDeleteLog.client_name = 'NBR-Connect-Test-19'"
+                                "ClientDeleteLog.deleted BETWEEN ? AND ?" => array($lastDayDt, $currDt)
                     ),
                     'group' => array('Country.country', 'ClientDeleteLog.client_name', 'ClientDeleteLog.pitch_stage'),
                     'order' => 'Country.country', 'ClientDeleteLog.client_name asc, ClientDeleteLog.pitch_stage asc, ClientDeleteLog.pitch_date desc',
