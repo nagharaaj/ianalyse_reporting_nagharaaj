@@ -913,6 +913,7 @@ class ReportsController extends AppController {
                         $exportCurrency = $this->request->data['currency'];
                         $exportFormat = $this->request->data['format'];
                         $exportRevenue=$this->request->data['revenue'];
+                        $exportOption=$this->request->data['exportOpt'];
                         $currencies = $this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'));
                         $convertRatio = array_search($exportCurrency, $currencies);
 
@@ -932,7 +933,6 @@ class ReportsController extends AppController {
                                 }
                         }
                         $objPHPExcel = new PHPExcel();
-//                        $objWorksheet = $objPHPExcel->getActiveSheet();
                         // Set properties
                         $objPHPExcel->getProperties()->setCreator("Siddharth Kulkarni");
                         $objPHPExcel->getProperties()->setLastModifiedBy("Siddharth Kulkarni");
@@ -942,7 +942,6 @@ class ReportsController extends AppController {
 
                         // Add some data
                         $objPHPExcel->setActiveSheetIndex(0);
-                       
                         $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(15);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
@@ -963,8 +962,7 @@ class ReportsController extends AppController {
                                 $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(20);
                                 $col=17;
                                 if($exportRevenue=="YES"){
-                                foreach($noYears as $year)
-                                        {
+                                        foreach($noYears as $year){
                                                 $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
                                                 $objPHPExcel->getActiveSheet()->getColumnDimension($colName)->setWidth(14);
                                                 $col++;
@@ -981,7 +979,7 @@ class ReportsController extends AppController {
                         } else {
                                 $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(40);
                         }
-                         if ($this->Auth->user('role') != 'Viewer') {
+                        if ($this->Auth->user('role') != 'Viewer') {
                                 if($exportFormat != 'csv') {
                                         $objPHPExcel->getActiveSheet()->getStyle("A1:".$colName.'1')->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                                 }
@@ -1162,7 +1160,6 @@ class ReportsController extends AppController {
 
                         // Rename sheet
                         $objPHPExcel->getActiveSheet()->setTitle('Client List');
-
                         // Save Excel 2007/CSV file
                         if($exportFormat == 'csv') {
                                 $fileName = 'Client_Data_' . date('m-d-Y') . '.csv';
@@ -1172,12 +1169,33 @@ class ReportsController extends AppController {
                                 $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
                         }
                         $objWriter->save('files/' . $fileName);
-                }
-                $result = array('filename' => $fileName);
-                $result['success'] = true;
+                        if($exportOption=="export_download"){
+                                $result = array('filename' => $fileName);     
+                                $result['success'] = true;
+                        }else{
+                                $user=array();
+                                $user = $this->User->find('first', array('fields' => array('User.email_id'), 'conditions' => array('User.id' => $this->Auth->user('id'))));
+                                $email=new CakeEmail('gmail');
+                                $email->viewVars(array('title_for_layout' => 'Client data export'));
+                                $email->template('clientdata_export', 'default')
+                                   ->emailFormat('html')
+                                   ->attachments('files/'.$fileName)
+                                   ->to(array($user['User']['email_id']))
+                                   ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
+                                   ->subject('Client data export');
+                                if($email->send()){
+                                        $success="Email has been sent successfully on " . $user['User']['email_id'];
+                                        $result = array('message' => $success); 
+                                        $result['success'] = true;
+                                } else{
+                                        $error="Unable to send email to " . $user['User']['email_id'] . ". Please try later."; 
+                                        $result = array('message' => $error); 
+                                        $result['success'] = false;
+                               }
+                        }
                 return json_encode($result);
-        }
-
+              }
+        }  
         public function office_data() {
 
                 $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');

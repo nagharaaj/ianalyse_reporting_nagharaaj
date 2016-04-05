@@ -325,7 +325,7 @@
             });
 
             $("#popupWindow").jqxWindow({
-                width: 300, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none' 
+                width: 320, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none' 
             });
             $('#exporttoexcelbutton').click(function () {
                 if(userRole == 'Viewer' || userRole == 'Country - Viewer') {
@@ -357,7 +357,7 @@
                             }
                         });
                 } else {
-                        $("#popupWindow").jqxWindow({ title: 'Export to excel/CSV', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "170px", maxWidth: 400, isModal: true, draggable: false });
+                        $("#popupWindow").jqxWindow({ title: 'Export to excel/CSV', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelExportButton'), height: "220px", maxWidth: 400, isModal: true, draggable: false });
                         $('#divSetting').show();
                         $('#divLoader').hide();
                         $('#divRevenueCurrency').hide();
@@ -395,6 +395,7 @@
                 $('#divRevenueCurrency').hide();
 
                 var rows = $("#jqxgrid").jqxGrid('getrows');
+                var exportOpt = $("#exportOption").val();
                 var tz = jstz.determine(); // Determines the time zone of the browser client
                 $.ajax({
                     type: "POST",
@@ -402,14 +403,19 @@
                     data: JSON.stringify({datarows: rows, timezone: tz.name(), 
                             currency: $("#exportcurrency option:selected").text(),
                             format: $("#exportformat").val(),
-                            revenue:$("#exportrevenue option:selected").text()
+                            revenue:$("#exportrevenue option:selected").text(),
+                            exportOpt:exportOpt
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success : function(result) {
                         if(result.success == true) {
                             $("#popupWindow").jqxWindow('close');
-                            window.open('/files/' + result.filename);
+                            if(exportOpt=="export_email"){
+                                    alert(result.message);
+                            } else {
+                                    window.open('/files/' + result.filename);
+                            }
                         } else {
                             alert(result.errors);
                             return false;
@@ -486,6 +492,10 @@
                                 <div style="padding-bottom:10px;">
                                         Show Revenue values for previous years:
                                         <select id="exportrevenue"><option selected="selected" value="NO">NO</option><option value="YES">YES</option></select>
+                                </div>
+                                <div style="padding-bottom:10px;">
+                                       Export Option:
+                                        <select id="exportOption"><option selected="selected" value="export_download">Export and Download</option><option value="export_email">Export and Email</option></select>
                                 </div>
                                 <div style="float: right; margin-top: 10px">
                                     <button style="margin-bottom: 5px;" id="exportButton">EXPORT</button>
