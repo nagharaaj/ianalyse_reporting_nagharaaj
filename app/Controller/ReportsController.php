@@ -29,7 +29,8 @@ class ReportsController extends AppController {
             'UserLoginRole',
             'ClientDeleteLog',
             'UserMailNotificationClient',
-            'ClientActualRevenueByYear'
+            'ClientActualRevenueByYear',
+            'UserGridPreference'
         );
 
         public $serviceMap = array(1 => 'Affiliates', 19 => 'Attribution', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
@@ -109,6 +110,12 @@ class ReportsController extends AppController {
                                         }
                                 }
                         }
+                }
+                $arrPreference = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>'client_data')));
+                if(!empty($arrPreference)) {
+                        $this->set('widthPreferences_client_data', $arrPreference['UserGridPreference']['preference']);
+                } else {
+                        $this->set('widthPreferences_client_data', '{}');
                 }
                 $this->set('regions', json_encode($arrRegions));
                 $this->set('markets', json_encode($arrMarkets));
@@ -890,10 +897,15 @@ class ReportsController extends AppController {
                                 }
                         }
                 }
+                $arrPreference = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>'client_report')));
+                if(!empty($arrPreference)) {
+                        $this->set('widthPreferences', $arrPreference['UserGridPreference']['preference']);
+                } else {
+                        $this->set('widthPreferences', '{}');
+                }
                 $this->set('regions', json_encode($arrRegions));
                 $this->set('markets', json_encode($arrMarkets));
                 $this->set('cities', json_encode($arrCities));
-
                 $this->set('loggedUser', $this->Auth->user());
                 $this->set('userAcl', $this->Acl);
                 $this->set('userRole', $this->Auth->user('role'));
@@ -1230,6 +1242,12 @@ class ReportsController extends AppController {
                         }
                         $userMarkets = $this->Country->find('list', array('conditions' => array('Country.id in (' . implode(',', $arrCountries) . ')')));
                 }
+                $arrPreference = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>'office_data')));
+                if(!empty($arrPreference)) {
+                        $this->set('widthPreferences_office_data', $arrPreference['UserGridPreference']['preference']);
+                } else {
+                        $this->set('widthPreferences_office_data', '{}');
+                }
                 $this->set('userMarkets', json_encode($userMarkets));
         }
 
@@ -1465,8 +1483,13 @@ class ReportsController extends AppController {
         public function office_report() {
 
                 $arrLanguages = $this->Language->find('list', array('fields' => array('Language.language', 'Language.language'), 'order' => 'Language.language Asc'));
-
                 $this->set('languages', json_encode($arrLanguages));
+                $arrPreference = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>'office_report')));
+                if(!empty($arrPreference)) {
+                        $this->set('widthPreferences_office_report', $arrPreference['UserGridPreference']['preference']);
+                } else {
+                        $this->set('widthPreferences_office_report', '{}');
+                }
                 $this->set('userRole', $this->Auth->user('role'));
                 $this->set('loggedUser', $this->Auth->user());
                 $this->set('userAcl', $this->Acl);
@@ -1601,5 +1624,45 @@ class ReportsController extends AppController {
                 $result['success'] = true;
                 $result['data'] = $arrRevenue;
                 return json_encode($result);
+        }
+        
+        public function user_grid_preferences() {
+                if($this->RequestHandler->isAjax()) {
+                        $this->autoRender=false;
+                }
+                $user_id=$this->Auth->user('id');
+                $gridStatus= $this->request->data;
+                $recordExists = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.id', 'UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>$gridStatus['formname'])));
+                if(!empty($recordExists)) {
+                        $this->UserGridPreference->id = $recordExists['UserGridPreference']['id'];
+                        $this->UserGridPreference->save(
+                                  array(
+                                        'UserGridPreference' => array(
+                                                'preference'=>  json_encode($gridStatus['state'])
+                                               )
+                                       )
+                                );
+                } else {
+                        $this->UserGridPreference->create();
+                        $this->UserGridPreference->save(
+                                  array(
+                                        'UserGridPreference' => array(
+                                                'user_id'=>$user_id,
+                                                'preference'=>  json_encode($gridStatus['state']),
+                                                'formname'=>$gridStatus['formname'],
+                                                'created' =>date('Y-m-d H:i:s')
+                                               )
+                                       )
+                                );
+                }
+        }
+        
+        public function delete_grid_preferences() {
+                if($this->RequestHandler->isAjax()) {
+                          $this->autoRender=false;
+                  }
+                $data = $this->request->data;
+                $user_id=$this->Auth->user('id');
+                $this->UserGridPreference->query('DELETE FROM `user_grid_preferences` WHERE `user_id`='.$user_id.' AND `formname` = \''.$data['formname'].'\'');
         }
 }

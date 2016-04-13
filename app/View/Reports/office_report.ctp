@@ -6,6 +6,8 @@
              var userRole = '<?php echo $userRole;?>';
              var languages = jQuery.parseJSON('<?php echo $languages; ?>');
              var arrLanguages = $.map(languages, function(el) { return el; });
+             var widthPreferences_office_report = jQuery.parseJSON('<?php echo $widthPreferences_office_report; ?>');
+             var defaultState;
              var theme = 'base';
              // renderer for grid cells.
              var numberrenderer = function (row, column, value) {
@@ -213,8 +215,15 @@
                 },
                 ready:function()
                 {
+                    defaultState = $("#jqxgrid").jqxGrid('savestate');
                     calculateStats();
                     horizontalScroll();
+                    var columns = widthPreferences_office_report.columns;
+                        if(columns) {
+                                $.each(columns, function(columnName, columnSettings) {
+                                       $('#jqxgrid').jqxGrid('setcolumnproperty',columnName,'width',columnSettings.width);
+                                });
+                        }
                 },
                 columns: [
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
@@ -261,13 +270,38 @@
                     }
                 }
             });
+            $("#jqxgrid").on("columnresized", function (event){
+                    var state=null;
+                    state = $("#jqxgrid").jqxGrid('savestate');
+                    var obj=[];
+                    obj= {
+                            state:state,
+                            formname:'office_report'
+                         };
+                $.ajax({
+                            type: "POST",
+                            url: "/reports/user_grid_preferences/",
+                            data: JSON.stringify(obj),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json"
+                      });
+            }); 
             $('#clearfilteringbutton').jqxButton({ theme: theme });
             $('#exporttoexcelbutton').jqxButton({ theme: theme });
             // clear the filtering.
             $('#clearfilteringbutton').click(function () {
                 $("#jqxgrid").jqxGrid('clearfilters');
-                listInput.jqxListBox('checkAll');
                 calculateStats();
+                $.ajax({
+                            type: "POST",
+                            url: "/reports/delete_grid_preferences/",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                formname: 'office_report'
+                            })
+                      });
+                      $('#jqxgrid').jqxGrid('loadstate', defaultState);
             });
 
             $("#loaderWindow").jqxWindow({

@@ -13,7 +13,8 @@
              var userRole = '<?php echo $userRole;?>';
              var userMarkets = jQuery.parseJSON('<?php echo $userMarkets;?>');
              var arrUserMarkets = $.map(userMarkets, function(el) { return el; });
-
+             var widthPreferences_office_data = jQuery.parseJSON('<?php echo $widthPreferences_office_data; ?>');
+             var defaultState;
              var theme = 'base';
              // renderer for grid cells.
              var numberrenderer = function (row, column, value) {
@@ -50,7 +51,7 @@
                 url: "/reports/get_office_data/",
                 data: { mode: 'edit' },
                 datafields: [
-                      { name: 'RecordId', type: 'number' },
+                    { name: 'RecordId', type: 'number' },
                     { name: 'Region', type: 'string' },
                     { name: 'Country', type: 'string' },
                     { name: 'City', type: 'string' },
@@ -207,10 +208,17 @@
                 },
                  ready:function()
                  {
+                       defaultState = $("#jqxgrid").jqxGrid('savestate');
                        var dataRows = $('#jqxgrid').jqxGrid('getrows');
                        var rowscount = dataRows.length;
                        $("#jqxgrid").jqxGrid('pagesize',rowscount);
                        horizontalScroll();
+                        var columns = widthPreferences_office_data.columns;
+                        if(columns) {
+                                $.each(columns, function(columnName, columnSettings) {
+                                       $('#jqxgrid').jqxGrid('setcolumnproperty',columnName,'width',columnSettings.width);
+                                });
+                        }
                  },
                 columns: [
                   {
@@ -307,6 +315,20 @@
                                 $(this).parent().parent().css('line-height', $(this).parent().parent().parent().css('height'));
                         });
                     }
+                    var state=null;
+                    state = $("#jqxgrid").jqxGrid('savestate');
+                    var obj=[];
+                    obj= {
+                            state:state,
+                            formname:'office_data'
+                         };
+                $.ajax({
+                            type: "POST",
+                            url: "/reports/user_grid_preferences/",
+                            data: JSON.stringify(obj),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json"
+                      });
             });
             editClick = function (event) {
                 var target = $(event.target);
@@ -466,6 +488,20 @@
                 // show the popup window.
                 $("#popupWindow").jqxWindow('open');
             }
+            $('#clearfilteringbutton').jqxButton({ theme: theme });
+            $('#clearfilteringbutton').click(function () {
+                $("#jqxgrid").jqxGrid('clearfilters');
+                $.ajax({
+                            type: "POST",
+                            url: "/reports/delete_grid_preferences/",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                formname: 'office_data'
+                            })
+                      });
+                      $('#jqxgrid').jqxGrid('loadstate', defaultState);
+            });
             $("#CancelNew").jqxButton({ theme: theme });
             $("#SaveNew").jqxButton({ theme: theme });
             $("#SaveNew").click(function () {
@@ -626,6 +662,7 @@
         
          <?php if($userRole == 'Global') { ?>
         <div style='float: right; padding-right: 7px; margin-top: 35px;'>
+            <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
             <button value="Add a new record" class='createNew'>ADD NEW LOCATION</button>
         </div>
         <?php } ?>

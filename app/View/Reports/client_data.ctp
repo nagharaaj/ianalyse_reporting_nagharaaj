@@ -25,9 +25,11 @@
              var arrStages = $.map(stages, function(el) { return el; });
              var divisions = jQuery.parseJSON('<?php echo $divisions; ?>');
              var arrDivisions = $.map(divisions, function(el) { return el; });
+             var widthPreferences_client_data = jQuery.parseJSON('<?php echo $widthPreferences_client_data; ?>');
              var arrMonths = ['Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)'];
              var currMonth = '<?php echo $currMonth; ?>';
              var currYear = '<?php echo $currYear; ?>';
+             var defaultState;
              var localizationobj = {};
              localizationobj.loadtext = "Processing";
 
@@ -37,7 +39,7 @@
                      {value: 3, label: "Mar (3)"}, 
                      {value: 4, label: "Apr (4)"}, 
                      {value: 5, label: "May (5)"}, 
-                     {value: 6, label: "Jun (6)"}, 
+                     {value: 6, label: "Jun (6)"},
                      {value: 7, label: "Jul (7)"}, 
                      {value: 8, label: "Aug(8)"}, 
                      {value: 9, label: "Sep (9)"}, 
@@ -162,6 +164,7 @@
                         return '';
                 }
              }
+             var textInput;
              var buildFilterPanel = function (filterPanel, datafield) {
                 var textInput = $("<input style='margin:5px;'/>");
                 var applyinput = $("<div class='filter' style='height: 25px; margin-left: 20px; margin-top: 7px;'></div>");
@@ -295,8 +298,17 @@
                   
                 ],
           
-                ready: horizontalScroll
-
+                ready:function()
+                {
+                        horizontalScroll();
+                        defaultState = $("#jqxgrid").jqxGrid('savestate');
+                        var columns = widthPreferences_client_data.columns;
+                        if(columns) {
+                                $.each(columns, function(columnName, columnSettings) {
+                                       $('#jqxgrid').jqxGrid('setcolumnproperty',columnName,'width',columnSettings.width);
+                                });
+                        }
+                }
             });
             $("#jqxgrid").on("filter", function (event) {
                     $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', false);
@@ -361,6 +373,22 @@
                     }
                 }
             });
+            $("#jqxgrid").on("columnresized", function (event){
+                    var state=null;
+                    state = $("#jqxgrid").jqxGrid('savestate');
+                    var obj=[];
+                    obj= {
+                            state:state,
+                            formname:'client_data'
+                         };
+                $.ajax({
+                            type: "POST",
+                            url: "/reports/user_grid_preferences/",
+                            data: JSON.stringify(obj),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json"
+                      });
+            }); 
             /*$("#jqxgrid").on("pagechanged", function (event) {
                     if ($(".editButtons").length > 0) {
                         $( ".editButtons" ).each(function( i ) {
@@ -1204,10 +1232,26 @@
                         }
                 ]
             });
-
+            $('#clearfilteringbutton').jqxButton({ theme: theme });
             $("#CancelNew").jqxButton({ theme: theme });
             $("#SaveNew").jqxButton({ theme: theme });
             // update the edited row when the user clicks the 'Save' button.
+            $('#clearfilteringbutton').click(function () {
+                $("#jqxgrid").jqxGrid('clearfilters');
+                if(textInput) {
+                    textInput.val("");
+                }
+                $.ajax({
+                            type: "POST",
+                            url: "/reports/delete_grid_preferences/",
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                formname: 'client_data'
+                            })
+                      });
+                      $('#jqxgrid').jqxGrid('loadstate', defaultState);
+            });
             $("#SaveNew").click(function () {
                 if(!$('#testForm').jqxValidator('validate')) {
                         return false;
@@ -1545,6 +1589,7 @@
             </div>
            
             <div style="float: right; margin-top: 35px; padding-right: 7px;">
+                <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
                 <button value="Add a new record" class='createNew'>ADD A NEW RECORD</button>
             </div>
     </div>
