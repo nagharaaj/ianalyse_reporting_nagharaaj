@@ -28,7 +28,13 @@ class DanDailySyncShell extends AppShell {
         public function main() {
                 $this->out('Sync in progress....');
                 $currDt = date('Y-m-d h:i:s');
-                $lastDayDt = date('Y-m-d', strtotime('-1 days'));
+                $lastSync = $this->Region->query("SELECT created FROM logs WHERE message like 'NBRT sync completed successfully.%' ORDER BY id DESC LIMIT 1");
+                if(!empty($lastSync)) {
+                        $lastSyncDt = explode(' ', $lastSync[0]['logs']['created']);
+                        $lastDayDt = $lastSyncDt[0];
+                } else {
+                        $lastDayDt = date('Y-m-d', strtotime('-1 days'));
+                }
                 $currTime = date('m/d/Y h:i:s');
                 $nextSyncTime = date('m/d/Y h:i:s', strtotime('+1 days'));
                 $emailList = $this->mailList();
