@@ -11,6 +11,7 @@
 echo $this->Form->create('User', array('action' => 'login'));
 echo $this->Form->input('username', array('label' => 'Username', 'autocomplete' => 'off'));
 echo $this->Form->input('password', array('type' => 'password', 'label' => 'Password')); 
+
 echo $this->Form->end('Login');
 ?>
 </div>

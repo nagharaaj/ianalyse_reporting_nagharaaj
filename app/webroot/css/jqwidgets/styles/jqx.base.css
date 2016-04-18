@@ -524,7 +524,7 @@ button.jqx-button, input[type=button].jqx-button,  input[type=submit].jqx-button
     margin-bottom: 1px;
     border-color: transparent;  
     background: #fff;
-    white-space: normal;
+    white-space: nowrap;
     font-weight: normal; 
     font-size: inherit;
     overflow: hidden; 
@@ -2555,6 +2555,7 @@ of the horizontal scrollbar.*/
     background: transparent;
     border: 1px solid transparent;
     touch-action:none;
+   
 }
 /*applied to the horizontal scrollbar thumb in hovered state.*/
 .jqx-scrollbar-thumb-state-hover-horizontal

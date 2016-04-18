@@ -62,9 +62,9 @@ class DATABASE_CONFIG {
 	public $default = array(
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
-		'host' => 'localhost',
+		'host' => '127.0.0.1',
 		'login' => 'root',
-		'password' => '@wardW1nning!',
+		'password' => '',
 		'database' => 'ianalyse_reporting',
 		'prefix' => '',
 		'encoding' => 'utf8',
@@ -80,5 +80,5 @@ class DATABASE_CONFIG {
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);
-        
+
 }
