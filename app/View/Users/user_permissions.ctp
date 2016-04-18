@@ -78,7 +78,11 @@
              {
                 width: (parseInt(screen.availWidth) - 30),
                 source: dataAdapter,
-                pageable: false,
+                pageable: true,
+                pageSize:25,
+                pagerButtonsCount:5,
+                filterable:true,
+                filterMode:'simple',
                 sortable: false,
                 altRows: true,
                 editable: false,
