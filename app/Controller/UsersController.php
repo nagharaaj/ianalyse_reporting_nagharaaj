@@ -56,7 +56,7 @@ class UsersController extends AppController {
         }
 
         public function login() {
-                $domain     = 'evolvingsols.com';
+                $domain     = null;
 
                 $this->set('title_for_layout', 'Log In');
 
@@ -64,7 +64,7 @@ class UsersController extends AppController {
                         $username = $this->request->data['User']['username'];
                         $password = $this->request->data['User']['password'];
 
-                        $ldap = new CLdapLogin('172.27.173.209', '389', $domain, $username, $password);
+                        $ldap = new CLdapLogin('AMDC2DCM05.media.global.loc', '3268', $domain, $username, $password);
                         if (true == $ldap->login()) {
                                 $loggedUser = $this->User->find('first', array('conditions' => array('User.username' => $username, 'User.is_active' => 1)));
                                 if($loggedUser) {
@@ -125,11 +125,11 @@ class UsersController extends AppController {
 
                 $this->autoRender=false;
 
-                $user_name 	= 'siddharthk@evolvingsols.com';
+                $user_name 	= 'sysamdc2web02ldap@media.global.loc';
                 $domain         = null;
-                $password 	= 'Googli#@123';
+                $password 	= 'Neyo48pu39';
 
-                $ldap = new CLdapLogin('172.27.173.209', '389', $domain, $user_name, $password);
+                $ldap = new CLdapLogin('AMDC2DCM05.media.global.loc', '3268', $domain, $user_name, $password);
 
                 if($this->request->data['name_startsWith']) {
                         $nameStartsWith = $this->request->data['name_startsWith'];

@@ -55,7 +55,7 @@ class CLdapLogin {
       
       //echo '<div class="alert alert-success">Loged In with UserName :: <u>' . $this->user_name . '</u></div><br/>';
             
-      $base_dn  = 'DC=evolvingsols,DC=com';
+      $base_dn  = 'DC=media,DC=global,DC=loc';
       //$filter   = "(&(objectCategory=person) (sAMAccountName=$this->user_name))";
       $filter   = "(&(objectCategory=*) (userPrincipalName=$this->user_name))";
       
@@ -95,7 +95,7 @@ class CLdapLogin {
 
   public function getGroupName() {
     if ($this->bind) {
-        $base_dn      = 'DC=evolvingsols,DC=com';
+        $base_dn      = 'DC=media,DC=global,DC=loc';
       	$filter       = "(userPrincipalName=" . $this->user_name . ")";
         $fields       = array("memberof");
         $group_list   = array();
@@ -141,7 +141,7 @@ class CLdapLogin {
   public function getAllUserInfo($strSearch = null) {
     
       if ($this->bind) {
-        $base_dn  = 'DC=evolvingsols,DC=com';
+        $base_dn  = 'DC=media,DC=global,DC=loc';
         $filter   = "(&(objectCategory=*) (|(displayName=$strSearch*) (givenName=$strSearch*) (sn=$strSearch*)))";
         //$filter   = "(sAMAccountName=$this->user_name)";
 
