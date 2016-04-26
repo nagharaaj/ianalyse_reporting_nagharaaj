@@ -26,6 +26,9 @@ class DanDailySyncShell extends AppShell {
                             'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', '\''=>'', '"'=>'', ' '=>'', '`'=>'', '-' => '', '_' => '');
 
         public function main() {
+                set_time_limit(0);
+                ini_set('memory_limit', '-1');
+
                 $this->out('Sync in progress....');
                 $currDt = date('Y-m-d h:i:s');
                 $lastSync = $this->Region->query("SELECT created FROM logs WHERE message like 'NBRT sync completed successfully.%' ORDER BY id DESC LIMIT 1");
@@ -208,6 +211,7 @@ class DanDailySyncShell extends AppShell {
                 }
 
                 // query to aggregate client revenue by services data in iProspect grouped by country, client name, pitch status
+                $this->ClientRevenueByService->query("SET SESSION group_concat_max_len = 1000000");
                 $clients = $this->ClientRevenueByService->find('all', array(
                     'fields' => array(
                         'ClientRevenueByService.client_name', 'ClientRevenueByService.parent_company', 'ClientRevenueByService.pitch_date',
@@ -894,6 +898,7 @@ class DanDailySyncShell extends AppShell {
                         }
                 }
 
+                $this->ClientDeleteLog->query("SET SESSION group_concat_max_len = 1000000");
                 $deletedClients = $this->ClientDeleteLog->find('all', array(
                     'fields' => array(
                         'ClientDeleteLog.client_name', 'ClientDeleteLog.parent_company', 'ClientDeleteLog.pitch_date',

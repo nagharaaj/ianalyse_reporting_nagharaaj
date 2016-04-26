@@ -26,6 +26,9 @@ class DanReconciliationShell extends AppShell {
                             'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', '\''=>'', '"'=>'', ' '=>'', '`'=>'', '-' => '', '_' => '');
 
         public function main() {
+                set_time_limit(0);
+                ini_set('memory_limit', '-1');
+
                 $this->out('Reconciliation in progress....');
                 $currDt = date('Y-m-d h:i:s');
                 $lastDayDt = date('Y') . '-01-01';
@@ -157,6 +160,7 @@ class DanReconciliationShell extends AppShell {
                 }
 
                 // query to aggregate client revenue by services data in iProspect grouped by country, client name, pitch status
+                $this->ClientRevenueByService->query("SET SESSION group_concat_max_len = 1000000");
                 $clients = $this->ClientRevenueByService->find('all', array(
                     'fields' => array(
                         'ClientRevenueByService.pitch_stage',
@@ -332,6 +336,7 @@ class DanReconciliationShell extends AppShell {
                         $countryCurrency = $arrCountryCurrency[$country];
                         if($totalRevenueByCountry[$country] != $totalNbrRevenueByCountry[$country]) {
                                 // query to aggregate client revenue by services data in iProspect grouped by country, client name, pitch status
+                                $this->ClientRevenueByService->query("SET SESSION group_concat_max_len = 1000000");
                                 $clients = $this->ClientRevenueByService->find('all', array(
                                     'fields' => array(
                                         'ClientRevenueByService.client_name', 'ClientRevenueByService.parent_company', 'ClientRevenueByService.pitch_date',
