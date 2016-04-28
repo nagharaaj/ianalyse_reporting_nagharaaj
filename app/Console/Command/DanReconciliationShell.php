@@ -186,6 +186,10 @@ class DanReconciliationShell extends AppShell {
                                 $country = 'United States of America';
                         } elseif($client['Country']['country'] == 'United Arab Emirates') {
                                 $country = 'UAE';
+                        } elseif($client['Country']['country'] == 'Serbia and Montenegro') {
+                                $country = 'Serbia';
+                        } elseif($client['Country']['country'] == 'Burma') {
+                                $country = 'Myanmar';
                         } else {
                                 $country = $client['Country']['country'];
                         }
@@ -515,7 +519,7 @@ class DanReconciliationShell extends AppShell {
                                                 }
                                                 //echo $estimatedRevenue ."\n". $estimatedRevenueGBP ."\n". $estimatedRevenueUSD;
                                                 if($client[0]['active_markets'] != null) {
-                                                        $client[0]['active_markets'] = str_replace(array('United States', 'United Arab Emirates'), array('United States of America', 'UAE'), $client[0]['active_markets']);
+                                                        $client[0]['active_markets'] = str_replace(array('United States', 'United Arab Emirates', 'Serbia and Montenegro', 'Burma'), array('United States of America', 'UAE', 'Serbia', 'Myanmar'), $client[0]['active_markets']);
                                                         $activeMarkets = array_unique(explode(',', $client[0]['active_markets']));
                                                         if (($key = array_search($client['Country']['country'], $activeMarkets)) !== false) {
                                                                 unset($activeMarkets[$key]);
