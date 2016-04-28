@@ -333,3 +333,12 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
+
+Configure::write('IP.ldap_configuration', array(
+    "domain" => null,
+    "base_dn" => "DC=media,DC=global,DC=loc",
+    "ldap_server" => "AMDC2DCM05.media.global.loc",
+    "ldap_port" => "3268",
+    "ldap_user" => "sysamdc2web02ldap@media.global.loc",
+    "ldap_passwd" => "Neyo48pu39"
+));

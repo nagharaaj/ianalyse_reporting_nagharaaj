@@ -26,6 +26,7 @@ class UsersController extends AppController {
         );
 
         public $name = 'Users';
+        public $ldapConfig = null;
 
         public function beforeFilter() {
 
@@ -47,6 +48,8 @@ class UsersController extends AppController {
                   'controller' => 'dashboard',
                   'action' => 'index'
                 );
+
+                $this->ldapConfig = Configure::read('IP.ldap_configuration');
         }
 
         public function beforeRender() {
@@ -56,7 +59,10 @@ class UsersController extends AppController {
         }
 
         public function login() {
-                $domain     = null;
+                $domain     = $this->ldapConfig['domain'];
+                $baseDN     = $this->ldapConfig['base_dn'];
+                $ldapServer = $this->ldapConfig['ldap_server'];
+                $ldapPort   = $this->ldapConfig['ldap_port'];
 
                 $this->set('title_for_layout', 'Log In');
 
@@ -64,7 +70,7 @@ class UsersController extends AppController {
                         $username = $this->request->data['User']['username'];
                         $password = $this->request->data['User']['password'];
 
-                        $ldap = new CLdapLogin('AMDC2DCM05.media.global.loc', '3268', $domain, $username, $password);
+                        $ldap = new CLdapLogin($ldapServer, $ldapPort, $domain, $username, $password, $baseDN);
                         if (true == $ldap->login()) {
                                 $loggedUser = $this->User->find('first', array('conditions' => array('User.username' => $username, 'User.is_active' => 1)));
                                 if($loggedUser) {
@@ -125,11 +131,14 @@ class UsersController extends AppController {
 
                 $this->autoRender=false;
 
-                $user_name 	= 'sysamdc2web02ldap@media.global.loc';
-                $domain         = null;
-                $password 	= 'Neyo48pu39';
+                $username 	= $this->ldapConfig['ldap_user'];
+                $baseDN         = $this->ldapConfig['base_dn'];
+                $ldapServer     = $this->ldapConfig['ldap_server'];
+                $ldapPort       = $this->ldapConfig['ldap_port'];
+                $domain         = $this->ldapConfig['domain'];
+                $password 	= $this->ldapConfig['ldap_passwd'];
 
-                $ldap = new CLdapLogin('AMDC2DCM05.media.global.loc', '3268', $domain, $user_name, $password);
+                $ldap = new CLdapLogin($ldapServer, $ldapPort, $domain, $username, $password, $baseDN);
 
                 if($this->request->data['name_startsWith']) {
                         $nameStartsWith = $this->request->data['name_startsWith'];
