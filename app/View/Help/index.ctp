@@ -1,5 +1,17 @@
 <script type="text/javascript">
+        var editClick;
         $(document).ready(function () {
+                 $(".que-and-ans").hide();  
+                 $(".chapter-head").click(function(){
+                       $('.answer').slideUp();
+                       $(this).nextAll('div').slideToggle();
+                 });
+                 $(".question").click(function(){
+                       $(this).next('div').slideToggle();
+                 });
+                 $(".question button").click(function(event){
+                  event.stopPropagation();
+                 });
                 var theme = 'base';
                 var userRole = '<?php echo $userRole; ?>';
 
@@ -10,24 +22,6 @@
 
                         $('#newChapterForm').jqxValidator({ position: 'right', rules: [
                                         { input: '#chapter_name', message: 'Chapter name is required!', rule: 'required' }
-                                ]
-                        });
-                        $('#newQuestionForm').jqxValidator({ position: 'right', rules: [
-                                        { input: '#chapter', message: 'Chapter is required!', rule: function (input) {
-                                                if (input.val() != '') {
-                                                        return true;
-                                                }
-                                                return false;
-                                            }
-                                        },
-                                        { input: '#question', message: 'Question is required!', rule: 'required' },
-                                        { input: '#answer', message: 'Answer is required!', rule: function (input) {
-                                                if (input.val() != '') {
-                                                        return true;
-                                                }
-                                                return false;
-                                            }
-                                        }
                                 ]
                         });
                 } else {
@@ -62,17 +56,12 @@
                         { name: 'chapterId' },
                         { name: 'chapterName' }
                     ],
-                    url: '/help/get_chapters_list',
-                    async: false
+                     async: false,
+                    url: '/help/get_chapters_list'
                 };
                 var dataAdapterChapters = new $.jqx.dataAdapter(sourceChapterList);
                 $("#create_question").click(function () {
-                        $("#questionWindow").jqxWindow({ position: { x: 220, y: 'top' }, height: "500px", width: "800px", isModal: true });
-                        $("#chapter").jqxDropDownList({ source: dataAdapterChapters, displayMember: "chapterName", valueMember: "chapterId", selectedIndex: -1 });
-                        $("#question").jqxInput({ height: 25, width: 550 }).val('');
-                        $("#answer").jqxEditor({ tools: 'bold italic underline', width: '100%', height: '300px' });
-                        // show the popup window.
-                        $("#questionWindow").jqxWindow('open');
+                       openPopup();
                 });
 
                 $("#SaveNewChapter").click(function (e) {
@@ -107,17 +96,19 @@
 
                 $("#SaveNewQuestion").click(function (e) {
                         e.preventDefault();
-                        $("#SaveNewQuestion").attr('disabled', true);
+                         $("#SaveNewQuestion").attr('disabled', true);
                         if(!$('#newQuestionForm').jqxValidator('validate')) {
                                 $("#SaveNewQuestion").attr('disabled', false);
                                 return false;
                         }
-
-                        var data = { ChapterId: $("#chapter").val(), Question: $("#question").val(), Answer: $("#answer").val()};
-
+                        var url="/help/save_new_question/";
+                        if(id){
+                                var url="/help/update_question/";
+                        }
+                        var data = { ChapterId: $("#divChapter").val(), Question: $("#question").val(), Answer: $("#answer").val(), id:id };
                         $.ajax({
                                 type: "POST",
-                                url: "/help/save_new_question/",
+                                url: url,
                                 data: JSON.stringify(data),
                                 contentType: "application/json; charset=utf-8",
                                 dataType: "json",
@@ -126,6 +117,10 @@
                                                 $("#SaveNewQuestion").attr('disabled', false);
                                                 $('#newQuestionForm').trigger("reset");
                                                 $("#questionWindow").jqxWindow('close');
+                                                if(id) {
+                                                        target.parent().parent().find(".que").html(data.Question);
+                                                        target.parent().parent().parent().find(".answer").html(data.Answer);
+                                                 }
                                         } else {
                                                 alert(result.errors);
                                                 $("#SaveNewQuestion").attr('disabled', false);
@@ -174,6 +169,76 @@
                         // show the popup window.
                         $("#newQuestionsList").jqxWindow('open');
                 });
+                var id;
+                var target;
+                editClick = function (event) {
+                        target = $(event.target);
+                        // get button's value.
+                        var value = target.val();
+                        id = target.attr('data-row');
+                        var chapter = target.parent().parent().parent().parent().find('.chapter-head').text();
+                        var que = target.parent().parent().find('.que').text();
+                        var ans = target.parent().parent().parent().find('.answer').text();
+                        var data = { Chapter: chapter, Question: que, Answer: ans };
+                        openPopup(data);
+                }
+            
+            function openPopup(rowData) {
+               $("#questionWindow").jqxWindow({ position: { x: 220, y: 'top' }, height: "500px", width: "800px", isModal: true });
+               if(rowData) {
+                        $('#questionWindow').jqxWindow('setTitle', 'Edit');
+                        $("#SaveNewQuestion").html('UPDATE');
+                } else {
+                        $("#SaveNewQuestion").html('SAVE');
+                }
+                var rules =[];
+                if(rowData != null){
+                    $("#divChapter").text('');
+                    $("#divChapter").text(rowData.Chapter);
+                } else {
+                $("#divChapter").html('');
+                $("#divChapter").jqxDropDownList({ source :dataAdapterChapters , displayMember :'chapterName', valueMember :'chapterId' }).val(rowData ? rowData.Chapter : '');
+                rules.push(validator.chapter);
+                }
+                $("#divQuestion").html('');
+                var inpQuestion = $("<input type='text' id=\"question\"></div>");
+                $("#divQuestion").append(inpQuestion);
+                inpQuestion.jqxInput({ height: 25, width: 550 });
+                $("#question").val(rowData ? rowData.Question : '');
+                rules.push(validator.question);
+                if($("#divAnswer").html()) {
+                        $('#answer').jqxEditor('destroy');
+                }
+                $("#divAnswer").html('');
+                var inpAnswer = $("<textarea id=\"answer\"></textarea>");
+                $("#divAnswer").append(inpAnswer);
+                inpAnswer.jqxEditor({ tools: 'bold italic underline', width: '100%', height: '300px' });
+                $("#answer").val(rowData ? rowData.Answer : '');
+                rules.push(validator.answer);
+                $('#newQuestionForm').jqxValidator({ position: 'right', rules: rules });
+                // show the popup window.
+                $("#questionWindow").jqxWindow('open');
+            }
+            var validator = {
+                chapter : {
+                        input: '#divChapter', message: 'Chapter is required!', rule: function (input) {
+                                if (input.val() != '') {
+                                        return true;
+                                }
+                                return false;
+                            }
+                         },
+                question : {
+                        input: '#question', message: 'Question is required!', rule: 'required' },
+                answer : {
+                        input: '#answer', message: 'Answer is required!', rule: function (input) {
+                                if (input.val() != '') {
+                                        return true;
+                                }
+                                return false;
+                            }
+                }
+            }
         });
 </script>
 <div class="help-section">
@@ -197,7 +262,14 @@
 ?>
                 <div class="que-and-ans">
                         <div class="question">
-                                <b>Q:</b> <?php echo $question['HelpQuestion']['question']; ?>
+                                <b>Q:</b> <span class="que"><?php echo $question['HelpQuestion']['question']; ?></span>
+                         <?php
+                                if($userRole == 'Global') {
+                        ?>
+                            <div align="right"><button data-row="<?php echo $question['HelpQuestion']['id']?>" class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button></div>
+                        <?php
+                                  }
+                        ?>
                         </div>
                         <div class="answer">
                                 <!--<b>A:</b>--> <?php echo $question['HelpQuestion']['answer']; ?>
@@ -244,17 +316,17 @@
                 <table>
                     <tr>
                         <td align="right" style="width: 100px;">Chapter</td>
-                        <td align="left" style="padding-bottom: 5px;"><div id="chapter"></div></td>
+                        <td align="left" style="padding-bottom: 5px;"><div id="divChapter"></div></td>
                         <td style="width: 100px"></td>
                     </tr>
                     <tr>
                         <td align="right" style="width: 100px;">Question</td>
-                        <td align="left" style="padding-bottom: 5px;"><input type="text" id="question"/></td>
+                        <td align="left" style="padding-bottom: 5px;"><div id="divQuestion"></div></td>
                         <td style="width: 100px"></td>
                     </tr>
                     <tr>
                         <td align="right" style="width: 100px; vertical-align: top">Answer</td>
-                        <td align="left" style="padding-bottom: 5px;"><textarea id="answer"></textarea></td>
+                        <td align="left" style="padding-bottom: 5px;"><div id="divAnswer"></div></td>
                         <td style="width: 100px"></td>
                     </tr>
                 </table>
