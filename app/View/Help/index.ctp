@@ -61,6 +61,7 @@
                 };
                 var dataAdapterChapters = new $.jqx.dataAdapter(sourceChapterList);
                 $("#create_question").click(function () {
+                       id = null;
                        openPopup();
                 });
 
@@ -96,7 +97,7 @@
 
                 $("#SaveNewQuestion").click(function (e) {
                         e.preventDefault();
-                         $("#SaveNewQuestion").attr('disabled', true);
+                        $("#SaveNewQuestion").attr('disabled', true);
                         if(!$('#newQuestionForm').jqxValidator('validate')) {
                                 $("#SaveNewQuestion").attr('disabled', false);
                                 return false;
@@ -105,7 +106,7 @@
                         if(id){
                                 var url="/help/update_question/";
                         }
-                        var data = { ChapterId: $("#divChapter").val(), Question: $("#question").val(), Answer: $("#answer").val(), id:id };
+                        var data = { ChapterId: $("#chapter").val(), Question: $("#question").val(), Answer: $("#answer").val(), id:id };
                         $.ajax({
                                 type: "POST",
                                 url: url,
@@ -178,7 +179,7 @@
                         id = target.attr('data-row');
                         var chapter = target.parent().parent().parent().parent().find('.chapter-head').text();
                         var que = target.parent().parent().find('.que').text();
-                        var ans = target.parent().parent().parent().find('.answer').text();
+                        var ans = target.parent().parent().parent().find('.answer').html();
                         var data = { Chapter: chapter, Question: que, Answer: ans };
                         openPopup(data);
                 }
@@ -192,16 +193,18 @@
                         $("#SaveNewQuestion").html('SAVE');
                 }
                 var rules =[];
-                if(rowData != null){
-                    $("#divChapter").text('');
+                if(rowData){
+                    $("#divChapter").html('');
                     $("#divChapter").text(rowData.Chapter);
                 } else {
                 $("#divChapter").html('');
-                $("#divChapter").jqxDropDownList({ source :dataAdapterChapters , displayMember :'chapterName', valueMember :'chapterId' }).val(rowData ? rowData.Chapter : '');
+                var inpChapter = $("<div id=\"chapter\"></div>");
+                $("#divChapter").append(inpChapter);
+                inpChapter.jqxDropDownList({ source :dataAdapterChapters , displayMember :'chapterName', valueMember :'chapterId' }).val(rowData ? rowData.Chapter : '');
                 rules.push(validator.chapter);
                 }
                 $("#divQuestion").html('');
-                var inpQuestion = $("<input type='text' id=\"question\"></div>");
+                var inpQuestion = $("<input type='text' id=\"question\">");
                 $("#divQuestion").append(inpQuestion);
                 inpQuestion.jqxInput({ height: 25, width: 550 });
                 $("#question").val(rowData ? rowData.Question : '');
@@ -221,7 +224,7 @@
             }
             var validator = {
                 chapter : {
-                        input: '#divChapter', message: 'Chapter is required!', rule: function (input) {
+                        input: '#chapter', message: 'Chapter is required!', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
                                 }
@@ -266,7 +269,7 @@
                          <?php
                                 if($userRole == 'Global') {
                         ?>
-                            <div align="right"><button data-row="<?php echo $question['HelpQuestion']['id']?>" class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button></div>
+                            <div style="float: right"><button data-row="<?php echo $question['HelpQuestion']['id']?>" class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button></div>
                         <?php
                                   }
                         ?>

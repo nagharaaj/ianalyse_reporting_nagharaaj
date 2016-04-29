@@ -653,6 +653,7 @@ button.expandButtons:hover {
     line-height: 30px;
     border-bottom: none;
     font-weight: bold;
+    cursor: pointer;
     /*min-width: 20%;*/
 }
 
@@ -665,6 +666,7 @@ button.expandButtons:hover {
     font-size: 20px;
     padding-bottom: 10px;
     padding-top: 5px;
+    cursor: pointer;
 }
 
 .answer {

@@ -145,31 +145,31 @@ class HelpController extends AppController {
                 $result['success'] = true;
                 return json_encode($result);
         }
-        
+
         public function update_question() {
                 if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()){
                                 $this->autoRender=false;
                         }
-                $arrData = $this->request->data;
-                
+                        $arrData = $this->request->data;
+
                         if(isset($arrData['id'])) {
-                                        $this->HelpQuestion->id = $arrData['id'];
-                                        $this->HelpQuestion->save(
-                                                array(
-                                                        'HelpQuestion' => array(
-                                                                'question' => trim($arrData['Question']),
-                                                                'answer' => trim($arrData['Answer'])
-                                                        )
+                                $this->HelpQuestion->id = $arrData['id'];
+                                $this->HelpQuestion->save(
+                                        array(
+                                                'HelpQuestion' => array(
+                                                        'question' => trim($arrData['Question']),
+                                                        'answer' => trim($arrData['Answer'])
                                                 )
-                                        );
+                                        )
+                                );
                         }
                 }
                 $result = array();
                 $result['success'] = true;
                 return json_encode($result);
         }
-        
+
         public function login_help() {
                 if($this->RequestHandler->isAjax()){
                         $this->autoRender=false;
