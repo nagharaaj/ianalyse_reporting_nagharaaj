@@ -14,6 +14,10 @@ class LogsController extends DatabaseLoggerAppController {
 			'Log.id'
 		)
 	);
+        
+        public function beforeRender() {
+                $this->set('admNavLinks', parent::generateNav($this->arrNav, $this->Auth->user()));
+        }
 
 	function index($filter = null) {
 		if(!empty($this->data)){
