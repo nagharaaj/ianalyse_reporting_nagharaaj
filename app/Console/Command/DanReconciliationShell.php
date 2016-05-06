@@ -25,6 +25,8 @@ class DanReconciliationShell extends AppShell {
                             'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
                             'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', '\''=>'', '"'=>'', ' '=>'', '`'=>'', '-' => '', '_' => '');
 
+        public $nbrCountries = array();
+
         public function main() {
                 set_time_limit(0);
                 ini_set('memory_limit', '-1');
@@ -150,14 +152,8 @@ class DanReconciliationShell extends AppShell {
                         }
                 }
                 // NBR countries array id => country
-                $arrNbrCountry = array();
-                $countryUrl = $siteUrl . "_api/web/lists(guid'100f63e1-6845-4fa8-b3f3-0ee87c1dbdd5')/items";
-                curl_setopt( $ch, CURLOPT_URL, $countryUrl );
-                $countryContent = json_decode(curl_exec( $ch ));
-                $countryResult = $countryContent->d->results;
-                foreach($countryResult as $result) {
-                        $arrNbrCountry[$result->Id] = $result->Title;
-                }
+                $this->nbrCountries = array();
+                $arrNbrCountry = $this->getNbrCountry($siteUrl . "_api/web/lists(guid'100f63e1-6845-4fa8-b3f3-0ee87c1dbdd5')/items");
 
                 // query to aggregate client revenue by services data in iProspect grouped by country, client name, pitch status
                 $this->ClientRevenueByService->query("SET SESSION group_concat_max_len = 1000000");
@@ -754,5 +750,31 @@ class DanReconciliationShell extends AppShell {
                 }
 
                 return $emailTo;
+        }
+
+        public function getNbrCountry($countryUrl) {
+                $userpwd = 'MEDIA\sysSP-P-NBR:Jfo829/K!';
+                // curl object for read requests
+                $ch = curl_init();
+                //curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
+                //curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookie );
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 25 );
+                curl_setopt( $ch, CURLOPT_TIMEOUT, 25 );
+                curl_setopt($ch, CURLOPT_USERPWD, $userpwd);
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array("accept: application/json;odata=verbose"));
+
+                curl_setopt( $ch, CURLOPT_URL, $countryUrl );
+                $countryContent = json_decode(curl_exec( $ch ));
+                $countryResult = $countryContent->d->results;
+                foreach($countryResult as $result) {
+                        $this->nbrCountries[$result->Id] = $result->Title;
+                }
+                if(isset($countryContent->d->__next)) {
+                        $this->getNbrCountry($countryContent->d->__next);
+                }
+
+                return $this->nbrCountries;
         }
 }

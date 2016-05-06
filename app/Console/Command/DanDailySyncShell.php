@@ -1054,7 +1054,7 @@ class DanDailySyncShell extends AppShell {
                 foreach($countryResult as $result) {
                         $this->nbrCountries[$result->Id] = $result->Title;
                 }
-                if($countryContent->d->__next) {
+                if(isset($countryContent->d->__next)) {
                         $this->getNbrCountry($countryContent->d->__next);
                 }
 
