@@ -178,6 +178,7 @@ class DanReconciliationShell extends AppShell {
                 $totalRevenueByCountry = array();
                 $totalRevenueByPitchStatus = array();
                 $arrCountry = array();
+                $arrConnectCountries = array();
                 foreach($clients as $client) {
                         if($client['Country']['country'] == 'United States') {
                                 $country = 'United States of America';
@@ -224,6 +225,7 @@ class DanReconciliationShell extends AppShell {
 
                         if(array_search($country, $arrCountry) === false) {
                                 $arrCountry[] = $country;
+                                $arrConnectCountries[$country] = $client['Country']['country'];
                         }
                 }
 
@@ -359,7 +361,7 @@ class DanReconciliationShell extends AppShell {
                                                 'OR' => array("ClientRevenueByService.created BETWEEN ? AND ?" => array($lastDayDt, $currDt),
                                                         "ClientRevenueByService.modified BETWEEN ? AND ?" => array($lastDayDt, $currDt)
                                                 ),
-                                                "Country.country = '".$country."'"
+                                                "Country.country = '".$arrConnectCountries[$country]."'"
                                     ),
                                     'group' => array('Country.country', 'ClientRevenueByService.client_name', 'ClientRevenueByService.pitch_stage'),
                                     'order' => 'Country.country', 'ClientRevenueByService.client_name asc, ClientRevenueByService.pitch_stage asc, ClientRevenueByService.pitch_date desc',
