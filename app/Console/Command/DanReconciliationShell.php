@@ -26,6 +26,7 @@ class DanReconciliationShell extends AppShell {
                             'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y', '\''=>'', '"'=>'', ' '=>'', '`'=>'', '-' => '', '_' => '');
 
         public $nbrCountries = array();
+        public $nbrCountryData = array();
 
         public function main() {
                 set_time_limit(0);
@@ -260,16 +261,13 @@ class DanReconciliationShell extends AppShell {
                                 $countryId = $countryCodeData->d->results[0]->Id;
                         }
                         //request to get pitches under the country pitch list
+                        $this->nbrCountryData = array();
                         $countryPitchUrl = $siteUrl . $countryCode .'/_api/web/lists/getbytitle(\'Pitch\')/items';
                         $countryPitchFilter = urlencode('DALeadCountry eq ' . $countryId . ' and DANetworkBrand eq ' . $networkBrandId . ' and DAArchivePitch eq 0');
                         $countryPitchUrl = $countryPitchUrl . '?$filter=' . $countryPitchFilter;
-                        curl_setopt( $ch, CURLOPT_URL, $countryPitchUrl );
-                        $countryPitchContent = json_decode(curl_exec( $ch ));
-                        //echo '<pre>'; print_r($countryPitchContent); echo '</pre>'; exit(0);
-                        $countryPitchResult = (isset($countryPitchContent->d)) ? $countryPitchContent->d : null;
-                        //echo '<pre>'; print_r($countryPitchResult); echo '</pre>'; exit(0);
-                        if($countryPitchResult != null) {
-                                foreach($countryPitchResult->results as $result) {
+                        $countryPitchResult = $this->getNbrCountryData($countryPitchUrl);
+                        if(!empty($countryPitchResult)) {
+                                foreach($countryPitchResult['results'] as $result) {
                                         $estimatedRevenueUSD = $result->DAEstimatedAnnualRevenueUSD;
                                         $pitchStatus = $arrPitchStatus[$result->DAPitchStatusId];
 
@@ -286,6 +284,8 @@ class DanReconciliationShell extends AppShell {
                                         }
                                         $noOfRecords++;
                                 }
+                        } else {
+                                $totalNbrRevenueByCountry[$country] = 0;
                         }
                 }
                 // array to store countrycodes for generating request on country wise pitch list
@@ -776,5 +776,35 @@ class DanReconciliationShell extends AppShell {
                 }
 
                 return $this->nbrCountries;
+        }
+
+        public function getNbrCountryData($countryPitchUrl) {
+                $userpwd = 'MEDIA\sysSP-P-NBR:Jfo829/K!';
+                // curl object for read requests
+                $ch = curl_init();
+                //curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
+                //curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookie );
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 25 );
+                curl_setopt( $ch, CURLOPT_TIMEOUT, 25 );
+                curl_setopt($ch, CURLOPT_USERPWD, $userpwd);
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array("accept: application/json;odata=verbose"));
+
+                curl_setopt( $ch, CURLOPT_URL, $countryPitchUrl );
+                $countryPitchContent = json_decode(curl_exec( $ch ));
+                //echo '<pre>'; print_r($countryPitchContent); echo '</pre>'; exit(0);
+                $countryPitchResult = (isset($countryPitchContent->d)) ? $countryPitchContent->d : null;
+                //echo '<pre>'; print_r($countryPitchResult); echo '</pre>'; exit(0);
+                if($countryPitchResult != null) {
+                        foreach($countryPitchResult->results as $result) {
+                                $this->nbrCountryData['results'][] = $result;
+                        }
+                }
+                if(isset($countryPitchContent->d->__next)) {
+                        $this->getNbrCountryData($countryPitchContent->d->__next);
+                }
+
+                return $this->nbrCountryData;
         }
 }
