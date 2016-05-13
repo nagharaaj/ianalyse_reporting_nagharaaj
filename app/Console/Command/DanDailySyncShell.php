@@ -448,11 +448,11 @@ class DanDailySyncShell extends AppShell {
                                 if($client[0]['active_markets'] != null) {
                                         $client[0]['active_markets'] = str_replace(array('United States', 'United Arab Emirates', 'Serbia and Montenegro', 'Burma'), array('United States of America', 'UAE', 'Serbia', 'Myanmar'), $client[0]['active_markets']);
                                         $activeMarkets = array_unique(explode(',', $client[0]['active_markets']));
-                                        if (($key = array_search($client['Country']['country'], $activeMarkets)) !== false) {
+                                        if (($key = array_search($country, $activeMarkets)) !== false) {
                                                 unset($activeMarkets[$key]);
                                         }
                                         foreach($activeMarkets as $activeMarket) {
-                                                if(array_search($activeMarket, $arrNbrCountry) == false) {
+                                                if(array_search(trim($activeMarket), $arrNbrCountry) == false) {
                                                         $responseStatus['reason'] = 'A country \''.$activeMarket.'\' under Other countries involved not found in NBRT';
                                                 }
                                         }
