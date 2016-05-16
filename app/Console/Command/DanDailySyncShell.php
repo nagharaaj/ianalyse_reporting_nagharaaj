@@ -206,6 +206,117 @@ class DanDailySyncShell extends AppShell {
                 $this->nbrCountries = array();
                 $arrNbrCountry = $this->getNbrCountry($siteUrl . "_api/web/lists(guid'100f63e1-6845-4fa8-b3f3-0ee87c1dbdd5')/items");
 
+                // array to store countrycodes for generating request on country wise pitch list
+                $arrCountryCode = array();
+                // NBR country id array country name => id
+                $arrCountryId = array();
+                // array to store country's local currency, gbp and usd conversion rates details
+                $arrCountryCurrency = array();
+                // array to store # of records synced by country
+                $arrRecordsByCountry = array();
+                $noOfRecordsSynced = 0;
+
+                $this->ClientDeleteLog->query("SET SESSION group_concat_max_len = 1000000");
+                $deletedClients = $this->ClientDeleteLog->find('all', array(
+                    'fields' => array(
+                        'ClientDeleteLog.client_name', 'ClientDeleteLog.parent_company', 'ClientDeleteLog.pitch_date',
+                        'ClientDeleteLog.pitch_stage', 'ClientDeleteLog.client_since_month', 'ClientDeleteLog.client_since_year',
+                        'ClientDeleteLog.lost_date', 'ClientDeleteLog.agency_id', 'group_concat(NULLIF(ClientDeleteLog.comments,"")) as comments',
+                        'date_format(ClientDeleteLog.created, "%Y-%m-%d") as created',
+                        'date_format(ClientDeleteLog.modified, "%Y-%m-%d") as modified',
+                        'group_concat(ClientDeleteLog.estimated_revenue) as estimated_revenue', 'group_concat(ClientDeleteLog.currency_id) as currency_id',
+                        'group_concat(NULLIF(ClientDeleteLog.active_markets,"")) as active_markets', 'group_concat(ClientDeleteLog.service_id) as service_id',
+                        'group_concat(NULLIF(ClientDeleteLog.city_id,"")) as city_id',
+                        'LeadAgency.agency',
+                        'Country.country',
+                        'ClientCategory.dan_mapping',
+                    ),
+                    'conditions' => array(
+                                'AND' => array(
+                                    'OR' => array("pitch_stage like 'Live%'", "pitch_stage like 'Won%'", "pitch_stage like 'Lost%'", "pitch_stage='Cancelled'", "pitch_stage='Declined'"),
+                                    "pitch_stage != 'Lost - archive'"
+                                ),
+                                "ClientDeleteLog.deleted BETWEEN ? AND ?" => array($lastDayDt, $currDt)
+                    ),
+                    'group' => array('Country.country', 'ClientDeleteLog.client_name', 'ClientDeleteLog.pitch_stage'),
+                    'order' => 'Country.country', 'ClientDeleteLog.client_name asc, ClientDeleteLog.pitch_stage asc, ClientDeleteLog.pitch_date desc',
+                    //'limit' => 10
+                ));
+                //echo '<pre>'; print_r($deletedClients);
+                foreach($deletedClients as $client) {
+                        if($client['Country']['country'] == 'United States') {
+                                $country = 'United States of America';
+                        } elseif($client['Country']['country'] == 'United Arab Emirates') {
+                                $country = 'UAE';
+                        } elseif($client['Country']['country'] == 'Serbia and Montenegro') {
+                                $country = 'Serbia';
+                        } elseif($client['Country']['country'] == 'Burma') {
+                                $country = 'Myanmar';
+                        } else {
+                                $country = $client['Country']['country'];
+                        }
+                        if(array_key_exists($country, $arrCountryCode) === false) {
+                        // check if country code already exists in array
+                                // request to pull country information like id, name and country code from NBR
+                                $countryCodeUrl = $siteUrl . '_api/web/lists/getbytitle(\'Country\')/items?$select=Id,Title,DACountryCode&$filter=' . urlencode('Title eq \'' . $country . '\'');
+                                curl_setopt( $ch, CURLOPT_URL, $countryCodeUrl );
+                                $countryCodeData = json_decode(curl_exec( $ch ));
+                                $arrCountryCode[$country] = $countryCodeData->d->results[0]->DACountryCode;
+                                $arrCountryId[$country] = $countryCodeData->d->results[0]->Id;
+                        }
+                        $countryCode = $arrCountryCode[$country];
+                        $countryId = $arrCountryId[$country];
+
+                        // request to check whether the client name already exists in NBR client list
+                        $clientSearchUrl = $siteUrl . '_api/web/lists/GetByTitle(\'Client\')/items';
+                        $clientSearchSelect = 'Id,Title,DACltHoldCompany,DAIndustryCateogry/Id';
+                        $clientSearchExpand = 'DAIndustryCateogry';
+                        $exactCientName = $client['ClientDeleteLog']['client_name']; // exact client name to search
+                        $rowClientName = strtr( $client['ClientDeleteLog']['client_name'], $this->unwanted_array ); // client name to search without special, accented characters
+                        $clientSearchFilter = urlencode("((Title eq '" . str_replace("'", "''", $exactCientName) . "' or substringof('" . $rowClientName . "', Title)) or (DACltHoldCompany eq '" . str_replace("'", "''", $exactCientName) . "' or substringof('" . $rowClientName . "', DACltHoldCompany)))");
+                        $clientSearchUrl = $clientSearchUrl. '?$select=' . $clientSearchSelect. '&$expand=' . $clientSearchExpand . '&$filter=' . $clientSearchFilter;
+                        curl_setopt( $ch, CURLOPT_URL, $clientSearchUrl );
+                        $clientSearchContent = json_decode(curl_exec( $ch ));
+                        $clientSearchResult = $clientSearchContent->d;
+                        //echo '<pre>'; print_r($clientSearchContent); echo '</pre>';
+                        if(!empty($clientSearchResult->results)) { // if client name does not exists in NBR client list, create new entry
+                                $clientId = $clientSearchResult->results[0]->Id;
+                                $clientHolidngCompany = $clientSearchResult->results[0]->DACltHoldCompany;
+                                $industryCategoryId = array_search($client['ClientCategory']['dan_mapping'], $arrIndustryCategory);
+                        } else {
+                                $clientId = null;
+                        }
+
+                        if($clientId != null) {
+                        // if a valid client id, process the other details
+                                $pitchStatus = $pitchStatusMappings[$client['ClientDeleteLog']['pitch_stage']];
+                                $networkBrand = 'iProspect';
+                                $isArchivePitch = true;
+
+                                $pitchStatusId = array_search($pitchStatus, $arrPitchStatus);
+                                $networkBrandId = array_search($networkBrand, $arrNetworkBrand);
+
+                                //request to check whether entry of a pitch for the client exists under the country pitch list
+                                $pitchExistsUrl = $siteUrl . $countryCode .'/_api/web/lists/getbytitle(\'Pitch\')/items';
+                                $pitchExistsFilter = urlencode('DACLient eq ' . $clientId . ' and DALeadCountry eq ' . $countryId . ' and DANetworkBrand eq ' . $networkBrandId . ' and DAPitchStatus eq ' . $pitchStatusId . ' and DAArchivePitch eq 0'); // and DATypeOfNetwork eq \'Digital and Creative\'
+                                $pitchExistsUrl = $pitchExistsUrl . '?$filter=' . $pitchExistsFilter;
+                                curl_setopt( $ch, CURLOPT_URL, $pitchExistsUrl );
+                                $pitchExistsContent = json_decode(curl_exec( $ch ));
+                                $pitchExistsResult = $pitchExistsContent->d;
+                                //echo '<pre>'; print_r($pitchExistsContent); echo '</pre>';
+                                if(!empty($pitchExistsResult->results)) {
+                                // if entry exists, mark it as archived
+                                        $url3 = $siteUrl . $countryCode .'/_vti_bin/listdata.svc/Pitch('.$pitchExistsResult->results[0]->Id.')';
+                                        curl_setopt( $ch3, CURLOPT_URL, $url3 );
+                                        $deletedContent = json_decode(curl_exec( $ch3 ));
+                                        //echo '<pre>'; print_r($deletedContent); echo '</pre>';
+
+                                        $arrRecordsByCountry[$country]++;
+                                        $noOfRecordsSynced++;
+                                }
+                        }
+                }
+
                 // query to aggregate client revenue by services data in iProspect grouped by country, client name, pitch status
                 $this->ClientRevenueByService->query("SET SESSION group_concat_max_len = 1000000");
                 $clients = $this->ClientRevenueByService->find('all', array(
@@ -237,15 +348,6 @@ class DanDailySyncShell extends AppShell {
                 ));
                 //echo '<pre>'; print_r($clients); exit(0);
 
-                // array to store countrycodes for generating request on country wise pitch list
-                $arrCountryCode = array();
-                // NBR country id array country name => id
-                $arrCountryId = array();
-                // array to store country's local currency, gbp and usd conversion rates details
-                $arrCountryCurrency = array();
-                // array to store # of records synced by country
-                $arrRecordsByCountry = array();
-                $noOfRecordsSynced = 0;
                 foreach($clients as $client) {
                         if($client['Country']['country'] == 'United States') {
                                 $country = 'United States of America';
@@ -895,107 +997,6 @@ class DanDailySyncShell extends AppShell {
                                 }
                                 $arrRecordsByCountry[$country]++;
                                 $noOfRecordsSynced++;
-                        }
-                }
-
-                $this->ClientDeleteLog->query("SET SESSION group_concat_max_len = 1000000");
-                $deletedClients = $this->ClientDeleteLog->find('all', array(
-                    'fields' => array(
-                        'ClientDeleteLog.client_name', 'ClientDeleteLog.parent_company', 'ClientDeleteLog.pitch_date',
-                        'ClientDeleteLog.pitch_stage', 'ClientDeleteLog.client_since_month', 'ClientDeleteLog.client_since_year',
-                        'ClientDeleteLog.lost_date', 'ClientDeleteLog.agency_id', 'group_concat(NULLIF(ClientDeleteLog.comments,"")) as comments',
-                        'date_format(ClientDeleteLog.created, "%Y-%m-%d") as created',
-                        'date_format(ClientDeleteLog.modified, "%Y-%m-%d") as modified',
-                        'group_concat(ClientDeleteLog.estimated_revenue) as estimated_revenue', 'group_concat(ClientDeleteLog.currency_id) as currency_id',
-                        'group_concat(NULLIF(ClientDeleteLog.active_markets,"")) as active_markets', 'group_concat(ClientDeleteLog.service_id) as service_id',
-                        'group_concat(NULLIF(ClientDeleteLog.city_id,"")) as city_id',
-                        'LeadAgency.agency',
-                        'Country.country',
-                        'ClientCategory.dan_mapping',
-                    ),
-                    'conditions' => array(
-                                'AND' => array(
-                                    'OR' => array("pitch_stage like 'Live%'", "pitch_stage like 'Won%'", "pitch_stage like 'Lost%'", "pitch_stage='Cancelled'", "pitch_stage='Declined'"),
-                                    "pitch_stage != 'Lost - archive'"
-                                ),
-                                "ClientDeleteLog.deleted BETWEEN ? AND ?" => array($lastDayDt, $currDt)
-                    ),
-                    'group' => array('Country.country', 'ClientDeleteLog.client_name', 'ClientDeleteLog.pitch_stage'),
-                    'order' => 'Country.country', 'ClientDeleteLog.client_name asc, ClientDeleteLog.pitch_stage asc, ClientDeleteLog.pitch_date desc',
-                    //'limit' => 10
-                ));
-                //echo '<pre>'; print_r($deletedClients);
-                foreach($deletedClients as $client) {
-                        if($client['Country']['country'] == 'United States') {
-                                $country = 'United States of America';
-                        } elseif($client['Country']['country'] == 'United Arab Emirates') {
-                                $country = 'UAE';
-                        } elseif($client['Country']['country'] == 'Serbia and Montenegro') {
-                                $country = 'Serbia';
-                        } elseif($client['Country']['country'] == 'Burma') {
-                                $country = 'Myanmar';
-                        } else {
-                                $country = $client['Country']['country'];
-                        }
-                        if(array_key_exists($country, $arrCountryCode) === false) {
-                        // check if country code already exists in array
-                                // request to pull country information like id, name and country code from NBR
-                                $countryCodeUrl = $siteUrl . '_api/web/lists/getbytitle(\'Country\')/items?$select=Id,Title,DACountryCode&$filter=' . urlencode('Title eq \'' . $country . '\'');
-                                curl_setopt( $ch, CURLOPT_URL, $countryCodeUrl );
-                                $countryCodeData = json_decode(curl_exec( $ch ));
-                                $arrCountryCode[$country] = $countryCodeData->d->results[0]->DACountryCode;
-                                $arrCountryId[$country] = $countryCodeData->d->results[0]->Id;
-                        }
-                        $countryCode = $arrCountryCode[$country];
-                        $countryId = $arrCountryId[$country];
-
-                        // request to check whether the client name already exists in NBR client list
-                        $clientSearchUrl = $siteUrl . '_api/web/lists/GetByTitle(\'Client\')/items';
-                        $clientSearchSelect = 'Id,Title,DACltHoldCompany,DAIndustryCateogry/Id';
-                        $clientSearchExpand = 'DAIndustryCateogry';
-                        $exactCientName = $client['ClientDeleteLog']['client_name']; // exact client name to search
-                        $rowClientName = strtr( $client['ClientDeleteLog']['client_name'], $this->unwanted_array ); // client name to search without special, accented characters
-                        $clientSearchFilter = urlencode("((Title eq '" . str_replace("'", "''", $exactCientName) . "' or substringof('" . $rowClientName . "', Title)) or (DACltHoldCompany eq '" . str_replace("'", "''", $exactCientName) . "' or substringof('" . $rowClientName . "', DACltHoldCompany)))");
-                        $clientSearchUrl = $clientSearchUrl. '?$select=' . $clientSearchSelect. '&$expand=' . $clientSearchExpand . '&$filter=' . $clientSearchFilter;
-                        curl_setopt( $ch, CURLOPT_URL, $clientSearchUrl );
-                        $clientSearchContent = json_decode(curl_exec( $ch ));
-                        $clientSearchResult = $clientSearchContent->d;
-                        //echo '<pre>'; print_r($clientSearchContent); echo '</pre>';
-                        if(!empty($clientSearchResult->results)) { // if client name does not exists in NBR client list, create new entry
-                                $clientId = $clientSearchResult->results[0]->Id;
-                                $clientHolidngCompany = $clientSearchResult->results[0]->DACltHoldCompany;
-                                $industryCategoryId = array_search($client['ClientCategory']['dan_mapping'], $arrIndustryCategory);
-                        } else {
-                                $clientId = null;
-                        }
-
-                        if($clientId != null) {
-                        // if a valid client id, process the other details
-                                $pitchStatus = $pitchStatusMappings[$client['ClientDeleteLog']['pitch_stage']];
-                                $networkBrand = 'iProspect';
-                                $isArchivePitch = true;
-
-                                $pitchStatusId = array_search($pitchStatus, $arrPitchStatus);
-                                $networkBrandId = array_search($networkBrand, $arrNetworkBrand);
-
-                                //request to check whether entry of a pitch for the client exists under the country pitch list
-                                $pitchExistsUrl = $siteUrl . $countryCode .'/_api/web/lists/getbytitle(\'Pitch\')/items';
-                                $pitchExistsFilter = urlencode('DACLient eq ' . $clientId . ' and DALeadCountry eq ' . $countryId . ' and DANetworkBrand eq ' . $networkBrandId . ' and DAPitchStatus eq ' . $pitchStatusId . ' and DAArchivePitch eq 0'); // and DATypeOfNetwork eq \'Digital and Creative\'
-                                $pitchExistsUrl = $pitchExistsUrl . '?$filter=' . $pitchExistsFilter;
-                                curl_setopt( $ch, CURLOPT_URL, $pitchExistsUrl );
-                                $pitchExistsContent = json_decode(curl_exec( $ch ));
-                                $pitchExistsResult = $pitchExistsContent->d;
-                                //echo '<pre>'; print_r($pitchExistsContent); echo '</pre>';
-                                if(!empty($pitchExistsResult->results)) {
-                                // if entry exists, mark it as archived
-                                        $url3 = $siteUrl . $countryCode .'/_vti_bin/listdata.svc/Pitch('.$pitchExistsResult->results[0]->Id.')';
-                                        curl_setopt( $ch3, CURLOPT_URL, $url3 );
-                                        $deletedContent = json_decode(curl_exec( $ch3 ));
-                                        //echo '<pre>'; print_r($deletedContent); echo '</pre>';
-
-                                        $arrRecordsByCountry[$country]++;
-                                        $noOfRecordsSynced++;
-                                }
                         }
                 }
 
