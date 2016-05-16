@@ -155,9 +155,9 @@
                 }
                 $("#recordid").val((rowData ? rowData.uid : ''));
                 if(rowData) {
-                        $("#name").jqxInput({ height: 25, width: 225, minLength: 7 }).val(rowData.displayname);
+                        $("#name").jqxInput({ height: 25, width: 225, minLength: 6 }).val(rowData.displayname);
                 } else {
-                        $("#name").jqxInput({ placeHolder: "Enter First Name", height: 25, width: 225, minLength: 7,
+                        $("#name").jqxInput({ placeHolder: "Enter First Name", height: 25, width: 225, minLength: 6,
                                 source: function (query, response) {
                                         var dataAdapter = new $.jqx.dataAdapter
                                         (
@@ -234,9 +234,7 @@
                         $("#nameofentity").jqxDropDownList({ source: ['Global'], checkboxes: false, selectedIndex: 0 });
 
                         if(rowData.adminlinks) {
-                                console.log(rowData.adminlinks);
                                 $.each(rowData.adminlinks, function( index, value ) {
-                                        console.log(value);
                                         $(".adm-lnk[linkid="+value+"]").jqxCheckBox('check');
                                 });
                         }
