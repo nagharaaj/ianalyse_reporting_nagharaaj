@@ -161,7 +161,7 @@ class DanReconciliationShell extends AppShell {
                 $clients = $this->ClientRevenueByService->find('all', array(
                     'fields' => array(
                         'ClientRevenueByService.pitch_stage',
-                        'group_concat(ClientRevenueByService.estimated_revenue) as estimated_revenue', 'group_concat(ClientRevenueByService.currency_id) as currency_id',
+                        'group_concat(IFNULL(ClientRevenueByService.estimated_revenue,0)) as estimated_revenue', 'group_concat(IFNULL(ClientRevenueByService.currency_id,"")) as currency_id',
                         'Country.country'
                     ),
                     'conditions' => array(
@@ -346,7 +346,7 @@ class DanReconciliationShell extends AppShell {
                                         'ClientRevenueByService.lost_date', 'ClientRevenueByService.agency_id', 'group_concat(NULLIF(ClientRevenueByService.comments,"")) as comments',
                                         'date_format(ClientRevenueByService.created, "%Y-%m-%d") as created',
                                         'date_format(ClientRevenueByService.modified, "%Y-%m-%d") as modified',
-                                        'group_concat(ClientRevenueByService.estimated_revenue) as estimated_revenue', 'group_concat(ClientRevenueByService.currency_id) as currency_id',
+                                        'group_concat(IFNULL(ClientRevenueByService.estimated_revenue,0)) as estimated_revenue', 'group_concat(IFNULL(ClientRevenueByService.currency_id,"")) as currency_id',
                                         'group_concat(NULLIF(ClientRevenueByService.active_markets,"")) as active_markets', 'group_concat(ClientRevenueByService.service_id) as service_id',
                                         'group_concat(NULLIF(ClientRevenueByService.city_id,"")) as city_id',
                                         'LeadAgency.agency',

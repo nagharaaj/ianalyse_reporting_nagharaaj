@@ -224,7 +224,7 @@ class DanDailySyncShell extends AppShell {
                         'ClientDeleteLog.lost_date', 'ClientDeleteLog.agency_id', 'group_concat(NULLIF(ClientDeleteLog.comments,"")) as comments',
                         'date_format(ClientDeleteLog.created, "%Y-%m-%d") as created',
                         'date_format(ClientDeleteLog.modified, "%Y-%m-%d") as modified',
-                        'group_concat(ClientDeleteLog.estimated_revenue) as estimated_revenue', 'group_concat(ClientDeleteLog.currency_id) as currency_id',
+                        'group_concat(IFNULL(ClientDeleteLog.estimated_revenue,0)) as estimated_revenue', 'group_concat(IFNULL(ClientDeleteLog.currency_id,"")) as currency_id',
                         'group_concat(NULLIF(ClientDeleteLog.active_markets,"")) as active_markets', 'group_concat(ClientDeleteLog.service_id) as service_id',
                         'group_concat(NULLIF(ClientDeleteLog.city_id,"")) as city_id',
                         'LeadAgency.agency',
