@@ -551,6 +551,7 @@ class DanReconciliationShell extends AppShell {
                                                 $typeOfPitch = 'Contract';
                                                 $networkBrand = 'iProspect';
                                                 $typeOfNetwork = 'Digital and Creative';
+                                                $holdingBrand = 'iProspect';
                                                 $isArchivePitch = false;
                                                 $pitchStatusId = array_search($pitchStatus, $arrPitchStatus);
                                                 $pitchStageId = (!empty($pitchStage) ? array_search($pitchStage, $arrPitchStage) : 0);
@@ -637,6 +638,7 @@ class DanReconciliationShell extends AppShell {
                                                             'Cities' => implode(', ', $arrCities),
                                                             'ClientHolidngCompany' => $clientHolidngCompany,
                                                             'PitchClosedDate' => $pitchCloseDate,
+                                                            'HoldingBrandName' => $holdingBrand,
                                                             'MultipleNetworksInvolved' => $multipleNetworksInvolved,
                                                             'ScopeValue' => $scope,
                                                             'SupportNetwork' => $supportNetwork,
@@ -684,6 +686,7 @@ class DanReconciliationShell extends AppShell {
                                                                         'Cities' => implode(', ', $arrCities),
                                                                         'ClientHolidngCompany' => $clientHolidngCompany,
                                                                         'PitchClosedDate' => $pitchCloseDate,
+                                                                        'HoldingBrandName' => $holdingBrand,
                                                                         'MultipleNetworksInvolved' => $multipleNetworksInvolved,
                                                                         'ScopeValue' => $scope,
                                                                         'SupportNetwork' => $supportNetwork,
