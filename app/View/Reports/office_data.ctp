@@ -488,7 +488,9 @@
                 // show the popup window.
                 $("#popupWindow").jqxWindow('open');
             }
+            if(userRole == 'Global'){
             $('#clearfilteringbutton').jqxButton({ theme: theme });
+            }
             $('#clearfilteringbutton').click(function () {
                 $("#jqxgrid").jqxGrid('clearfilters');
                 $.ajax({
