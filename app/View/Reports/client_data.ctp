@@ -113,7 +113,6 @@
                     { name: 'ParentCompany', type: 'string' },
                     { name: 'ClientCategory', type: 'string' },
                     { name: 'PitchStart', type: 'date' },
-                    /*{ name: 'PitchLeader', type: 'string' },*/
                     { name: 'PitchStage', type: 'string' },
                     { name: 'ClientMonth', type: 'string' },
                     { name: 'ClientYear', type: 'number' },
@@ -284,7 +283,6 @@
                   { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
-                  /*{ text: 'Pitch Leader', columngroup: 'PitchLeader', datafield: 'PitchLeader', width: 150, cellClassName: cellclass, editable: false },*/
                   { text: 'Active Markets', datafield: 'ActiveMarkets', width: 160, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: estimatedRevenueColumnTitle, datafield: 'EstimatedRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
@@ -512,23 +510,6 @@
                                 $("#divPitchStart").append(inpPitchStart);
                                 $("#update_pitchstart").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                         }
-                        /*if(pitchleader != '') {
-                                if(pitchstage.match(/Live/g)) {
-                                        $("#divPitchLeader").html('');
-                                        var inpPitchLeader = $("<input type=\"text\" id=\"update_pitchleader\" />");
-                                        $("#divPitchLeader").append(inpPitchLeader);
-                                        $("#update_pitchleader").jqxInput({ height: 25, width: 200 }).val(pitchleader);
-                                        rules.push(validator.pitchleader);
-                                } else {
-                                        $("#divPitchLeader").text(pitchleader);
-                                }
-                        } else {
-                                $("#divPitchLeader").html('');
-                                var inpPitchLeader = $("<input type=\"text\" id=\"update_pitchleader\" />");
-                                $("#divPitchLeader").append(inpPitchLeader);
-                                $("#update_pitchleader").jqxInput({ height: 25, width: 200 }).val(pitchleader);
-                                rules.push(validator.pitchleader);
-                        }*/
                         if(pitchstage.match(/Lost/g)) {
                                 $("#divPitchStage").text(pitchstage);
                         } else {
@@ -617,6 +598,7 @@
                                 $("#update_division").jqxDropDownList({ source: divisions }).val(division);
                                 rules.push(validator.division);
                         }
+                        $("#update_activemarket").jqxDropDownList('uncheckAll');
                         $("#update_activemarket").jqxDropDownList({ source: countries, checkboxes: true });
                         var entities = activemarkets.split(',');
                         for(key in entities) {
@@ -763,7 +745,6 @@
                         var leadagency = data.LeadAgency;
                         var clientcategory = data.ClientCategory;
                         var pitchstart = data.PitchStart;
-                        /*var pitchleader = data.PitchLeader;*/
                         var pitchstage = data.PitchStage;
                         var clientsincemonth = data.ClientMonth;
                         var clientsinceyear = data.ClientYear;
@@ -1066,13 +1047,12 @@
                 $("#parentcompany").jqxInput({ height: 25, width: 175 }).val('');
                 $("#category").jqxDropDownList({ source: categories, selectedIndex: -1 });
                 $("#pitchstart").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
-                /*$("#pitchleader").jqxInput({ height: 25, width: 200 }).val('');*/
                 $("#pitchstage").jqxDropDownList({ source: stages, selectedIndex: -1 });
                 $("#clientsince").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                 $("#lostdate").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                 $("#service").jqxDropDownList({ source: services, selectedIndex: -1 });
                 $("#division").jqxDropDownList({ source: divisions, selectedIndex: -1 });
-                $("#activemarket").jqxDropDownList({ source: countries, checkboxes: true, selectedIndex: -1 });
+                $("#activemarket").jqxDropDownList({ source: countries, checkboxes: true, selectedIndex: -1});
                 $("#currency").jqxDropDownList({ source: currencies, selectedIndex: -1 });
                 $("#estrevenue").jqxInput({ height: 25, width: 100, rtl:true }).val('');
                 $("#notes").jqxInput({ height: 25, width: 200 }).val('');
@@ -1170,7 +1150,6 @@
                                 return false;
                             } 
                         },
-                        /*{ input: '#pitchleader', message: 'Pitch leader is required!', action: 'keyup, blur', rule: 'required' },*/
                         { input: '#pitchstage', message: 'Stage is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
@@ -1332,14 +1311,6 @@
                             return false;
                         }
                 },
-                /*pitchleader : {
-                        input: '#update_pitchleader', message: 'Pitch Leader is required!', action: 'blur', rule: function (input) {
-                            if (input.val() != '') {
-                                    return true;
-                            }
-                            return false;
-                        } 
-                },*/
                 clientsince: { input: '#update_clientsince', message: 'Client Since is required!', action: 'change', rule: function (input) {
                         if($('#update_pitchstage').val()) {
                                 var pitchstage = $('#update_pitchstage').val();
@@ -1485,11 +1456,6 @@
                 } else {
                         var pitchstart = $('#divPitchStart').text();
                 }
-                /*if($('#update_pitchleader').val()) {
-                        var pitchleader = $('#update_pitchleader').val();
-                } else {
-                        var pitchleader = $('#divPitchLeader').text();
-                }*/
                 if($('#update_pitchstage').val()) {
                         var pitchstage = $('#update_pitchstage').val();
                 } else {
@@ -1535,7 +1501,7 @@
 
                 var row = { RecordId: recordid, ClientName: clientname, ParentCompany: parentcompany, Region: region,
                     Country: country, City: city, LeadAgency: leadagency, ClientCategory: clientcategory,
-                    PitchStart: pitchstart, /*PitchLeader: pitchleader,*/ PitchStage: pitchstage,
+                    PitchStart: pitchstart,PitchStage: pitchstage,
                     ClientSince: clientsince, LostDate: lostdate,
                     Service: service, Division: division, ActiveMarkets: activemarkets, Currency: currency,
                     EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
@@ -1680,11 +1646,6 @@
                     <td align="left" style="padding-bottom: 5px;"><div id="pitchstart"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
-                <!--<tr>
-                    <td align="right">Pitch Leader</td>
-                    <td align="left" style="padding-bottom: 5px;"><input type="text" id="pitchleader"/></td>
-                    <td style="width: 150px"></td>
-                </tr>-->
                 <tr>
                     <td align="right">Active Market</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="activemarket"></div></td>
@@ -1785,11 +1746,6 @@
                     <td align="left" style="padding-bottom: 5px;"><div id="divPitchStart"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
-                <!--<tr>
-                    <td align="right" style="padding-bottom: 5px; padding-right: 5px">Pitch Leader</td>
-                    <td align="left" style="padding-bottom: 5px;"><div id="divPitchLeader"/></td>
-                    <td style="width: 150px"></td>
-                </tr>-->
                 <tr>
                     <td align="right" style="padding-bottom: 5px; padding-right: 5px">Active Market</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="update_activemarket"></div></td>
