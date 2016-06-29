@@ -212,6 +212,8 @@ class DanDailySyncShell extends AppShell {
                 $arrCountryId = array();
                 // array to store country's local currency, gbp and usd conversion rates details
                 $arrCountryCurrency = array();
+                // array to store Region,SubRegion,Cluster information
+                $arrCountryInfo = array();
                 // array to store # of records synced by country
                 $arrRecordsByCountry = array();
                 $noOfRecordsSynced = 0;
@@ -364,7 +366,7 @@ class DanDailySyncShell extends AppShell {
                         if(array_key_exists($country, $arrCountryCode) === false) {
                         // check if country code already exists in array
                                 // request to pull country information like id, name and country code from NBR
-                                $countryCodeUrl = $siteUrl . '_api/web/lists/getbytitle(\'Country\')/items?$select=Id,Title,DACountryCode,DACurrencyId&$filter=' . urlencode('Title eq \'' . $country . '\'');
+                                $countryCodeUrl = $siteUrl . '_api/web/lists/getbytitle(\'Country\')/items?$select=Id,Title,DACountryCode,DACurrencyId,DARegion,DASubRegion,DACluster&$filter=' . urlencode('Title eq \'' . $country . '\'');
                                 curl_setopt( $ch, CURLOPT_URL, $countryCodeUrl );
                                 $countryCodeData = json_decode(curl_exec( $ch ));
                                 if(isset($countryCodeData->d) && empty($countryCodeData->d->results)) {
@@ -394,12 +396,18 @@ class DanDailySyncShell extends AppShell {
                                         $arrCountryCode[$country] = $countryCodeData->d->results[0]->DACountryCode;
                                         $arrCountryId[$country] = $countryCodeData->d->results[0]->Id;
                                         $arrCountryCurrency[$country] = $arrNbrCurrencies[$countryCodeData->d->results[0]->DACurrencyId];
+                                        $arrCountryInfo[$country]['Region'] = $countryCodeData->d->results[0]->DARegion;
+                                        $arrCountryInfo[$country]['SubRegion'] = $countryCodeData->d->results[0]->DASubRegion;
+                                        $arrCountryInfo[$country]['Cluster'] = $countryCodeData->d->results[0]->DACluster;
                                         $arrRecordsByCountry[$country] = 0;
                                 }
                         }
                         $countryCode = $arrCountryCode[$country];
                         $countryId = $arrCountryId[$country];
                         $countryCurrency = $arrCountryCurrency[$country];
+                        $countryRegion = $arrCountryInfo[$country]['Region'];
+                        $countrySubRegion = $arrCountryInfo[$country]['SubRegion'];
+                        $countryCluster = $arrCountryInfo[$country]['Cluster'];
 
                         // request to check whether the client name already exists in NBR client list
                         $clientSearchUrl = $siteUrl . '_api/web/lists/GetByTitle(\'Client\')/items';
@@ -671,7 +679,9 @@ class DanDailySyncShell extends AppShell {
                                             'NetworkBrandId' => $networkBrandId,
                                             'LeadCountryId' => $countryId,
                                             'Cities' => implode(', ', $arrCities),
+                                            'Region' => $countryRegion,
                                             'ClientHolidngCompany' => $clientHolidngCompany,
+                                            'SubRegion' => $countrySubRegion,
                                             'PitchClosedDate' => $pitchCloseDate,
                                             'HoldingBrandName' => $holdingBrand,
                                             'MultipleNetworksInvolved' => $multipleNetworksInvolved,
@@ -680,7 +690,8 @@ class DanDailySyncShell extends AppShell {
                                             'TypeOfNetworkValue' => $typeOfNetwork,
                                             'ArchivePitch' => $isArchivePitch,
                                             'OtherCountrySInvolved' => implode(', ', $activeMarkets),
-                                            'Services' => implode(', ', $arrServices)
+                                            'Services' => implode(', ', $arrServices),
+                                            'Cluster' => $countryCluster
                                         );
                                         //echo json_encode($data) . "<br/>";
                                         $url1 = $siteUrl . $countryCode .'/_vti_bin/listdata.svc/Pitch';
@@ -744,7 +755,9 @@ class DanDailySyncShell extends AppShell {
                                                     'NetworkBrandId' => $networkBrandId,
                                                     'LeadCountryId' => $countryId,
                                                     'Cities' => implode(', ', $arrCities),
+                                                    'Region' => $countryRegion,
                                                     'ClientHolidngCompany' => $clientHolidngCompany,
+                                                    'SubRegion' => $countrySubRegion,
                                                     'PitchClosedDate' => $pitchCloseDate,
                                                     'HoldingBrandName' => $holdingBrand,
                                                     'MultipleNetworksInvolved' => $multipleNetworksInvolved,
@@ -753,7 +766,8 @@ class DanDailySyncShell extends AppShell {
                                                     'TypeOfNetworkValue' => $typeOfNetwork,
                                                     'ArchivePitch' => $isArchivePitch,
                                                     'OtherCountrySInvolved' => implode(', ', $activeMarkets),
-                                                    'Services' => implode(', ', $updatedServices)
+                                                    'Services' => implode(', ', $updatedServices),
+                                                    'Cluster' => $countryCluster
                                                 );
                                                 // request to update the existing entry. add new services and revenue values to existing entry
                                                 $url2 = $siteUrl . $countryCode .'/_vti_bin/listdata.svc/Pitch('.$pitchExistsResult->results[0]->Id.')';
@@ -815,7 +829,9 @@ class DanDailySyncShell extends AppShell {
                                                     'NetworkBrandId' => $networkBrandId,
                                                     'LeadCountryId' => $countryId,
                                                     'Cities' => implode(', ', $arrCities),
+                                                    'Region' => $countryRegion,
                                                     'ClientHolidngCompany' => $clientHolidngCompany,
+                                                    'SubRegion' => $countrySubRegion,
                                                     'PitchClosedDate' => $pitchCloseDate,
                                                     'HoldingBrandName' => $holdingBrand,
                                                     'MultipleNetworksInvolved' => $multipleNetworksInvolved,
@@ -824,7 +840,8 @@ class DanDailySyncShell extends AppShell {
                                                     'TypeOfNetworkValue' => $typeOfNetwork,
                                                     'ArchivePitch' => $isArchivePitch,
                                                     'OtherCountrySInvolved' => implode(', ', $activeMarkets),
-                                                    'Services' => implode(', ', $updatedServices)
+                                                    'Services' => implode(', ', $updatedServices),
+                                                    'Cluster' => $countryCluster
                                                 );
                                                 // request to update the existing entry. add new services and revenue values to existing entry
                                                 $url2 = $siteUrl . $countryCode .'/_vti_bin/listdata.svc/Pitch('.$pitchExistsResult->results[0]->Id.')';
@@ -851,7 +868,9 @@ class DanDailySyncShell extends AppShell {
                                                     'NetworkBrandId' => $networkBrandId,
                                                     'LeadCountryId' => $countryId,
                                                     'Cities' => implode(', ', $arrCities),
+                                                    'Region' => $countryRegion,
                                                     'ClientHolidngCompany' => $clientHolidngCompany,
+                                                    'SubRegion' => $countrySubRegion,
                                                     'PitchClosedDate' => $pitchCloseDate,
                                                     'HoldingBrandName' => $holdingBrand,
                                                     'MultipleNetworksInvolved' => $multipleNetworksInvolved,
@@ -860,7 +879,8 @@ class DanDailySyncShell extends AppShell {
                                                     'TypeOfNetworkValue' => $typeOfNetwork,
                                                     'ArchivePitch' => $isArchivePitch,
                                                     'OtherCountrySInvolved' => implode(', ', $activeMarkets),
-                                                    'Services' => implode(', ', $updatedServices)
+                                                    'Services' => implode(', ', $updatedServices),
+                                                    'Cluster' => $countryCluster
                                                 );
                                                 // request to update revenue value for the existing entry
                                                 $url2 = $siteUrl . $countryCode .'/_vti_bin/listdata.svc/Pitch('.$pitchExistsResult->results[0]->Id.')';
@@ -887,7 +907,9 @@ class DanDailySyncShell extends AppShell {
                                                     'NetworkBrandId' => $networkBrandId,
                                                     'LeadCountryId' => $countryId,
                                                     'Cities' => implode(', ', $arrCities),
+                                                    'Region' => $countryRegion,
                                                     'ClientHolidngCompany' => $clientHolidngCompany,
+                                                    'SubRegion' => $countrySubRegion,
                                                     'PitchClosedDate' => $pitchCloseDate,
                                                     'HoldingBrandName' => $holdingBrand,
                                                     'MultipleNetworksInvolved' => $multipleNetworksInvolved,
@@ -896,7 +918,8 @@ class DanDailySyncShell extends AppShell {
                                                     'TypeOfNetworkValue' => $typeOfNetwork,
                                                     'ArchivePitch' => $isArchivePitch,
                                                     'OtherCountrySInvolved' => implode(', ', $activeMarkets),
-                                                    'Services' => implode(', ', $updatedServices)
+                                                    'Services' => implode(', ', $updatedServices),
+                                                    'Cluster' =>$countryCluster
                                                 );
                                                 //echo json_encode($data) . "<br/>";
                                                 // request to update scope and other countries involved value for the existing entry
@@ -981,7 +1004,9 @@ class DanDailySyncShell extends AppShell {
                                                                     'NetworkBrandId' => $networkBrandId,
                                                                     'LeadCountryId' => $countryId,
                                                                     'Cities' => implode(', ', $arrCities),
+                                                                    'Region' => $countryRegion,
                                                                     'ClientHolidngCompany' => $clientHolidngCompany,
+                                                                    'SubRegion' => $countrySubRegion,
                                                                     'PitchClosedDate' => $pitchCloseDate,
                                                                     'HoldingBrandName' => $holdingBrand,
                                                                     'MultipleNetworksInvolved' => $multipleNetworksInvolved,
@@ -990,7 +1015,8 @@ class DanDailySyncShell extends AppShell {
                                                                     'TypeOfNetworkValue' => $typeOfNetwork,
                                                                     'ArchivePitch' => $isArchivePitch,
                                                                     'OtherCountrySInvolved' => implode(', ', $activeMarkets),
-                                                                    'Services' => implode(', ', $newLiveServices)
+                                                                    'Services' => implode(', ', $newLiveServices),
+                                                                    'Cluster' => $countryCluster
                                                                 );
                                                                 // request to remove services and revenue values of updated services from the live pitch entry
                                                                 $url2 = $siteUrl . $countryCode .'/_vti_bin/listdata.svc/Pitch('.$livePitchExistsResult->results[0]->Id.')';
