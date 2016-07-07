@@ -52,7 +52,7 @@ class DanDailySyncShell extends AppShell {
                 $pitchStatusMappings = $this->PitchStage->find('list', array('fields' => array('PitchStage.pitch_stage', 'PitchStage.dan_mapping')));
                 //array of currencies and conversion rates
                 $currencies = $this->Currency->find('list', array('fields' => array('Currency.id', 'Currency.currency')));
-                $services = $this->Service->find('list', array('fields' => array('Service.id', 'Service.service_name')));
+                $services = $this->Service->find('list', array('fields' => array('Service.id', 'Service.dan_mapping')));
                 $cities = $this->City->find('list', array('fields' => array('City.id', 'City.city')));
 
                 // curl object for read requests
