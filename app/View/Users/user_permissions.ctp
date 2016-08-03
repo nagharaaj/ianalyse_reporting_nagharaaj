@@ -23,7 +23,7 @@
                      { name: 'client_name' }
                  ],
                  url: "/users/get_client_list/",
-                 async: false
+                 async: true
              };
              var clientListDataAdapter = new $.jqx.dataAdapter(clientListSource);
 
@@ -128,7 +128,7 @@
                 if (isNaN(rowIndex)) {
                     return;
                 }
-                $("#dataTable").jqxDataTable('selectRow', rowIndex);
+                //$("#dataTable").jqxDataTable('selectRow', rowIndex);
                 var selection = $("#dataTable").jqxDataTable('getSelection');
                 for (var i = 0; i < selection.length; i++) {
                     // get a selected row.
@@ -425,13 +425,13 @@
                     <td>Manage email notifications (Global permission only)</td>
                 </tr>
                 <tr>
-                    <td><div style="display: inline-block" id="dailySyncMails">&nbsp;Receive NBR daily sync and reconciliation notification</div></td>
+                    <td><div style="display: inline-block" id="dailySyncMails">&nbsp;Receive NBRT daily sync and reconciliation notification</div></td>
                 </tr>
                 <tr>
                     <td><div style="display: inline-block" id="weeklySummaryMails">&nbsp;Receive weekly summary notification</div></td>
                 </tr>
                 <tr>
-                    <td><div style="display: inline-block" id="clientPitchMails">&nbsp;Receive new/update pitch notification</div></td>
+                    <td><div style="display: inline-block" id="clientPitchMails">&nbsp;Receive new/update/delete pitch notification</div></td>
                 </tr>
                 <tr>
                     <td><span style="vertical-align: top;">Select target clients for receiving notification (Default is all clients)</span>&nbsp;<div style="display: inline-block; margin-top: -5px;" id="targetClients"></div></td>
