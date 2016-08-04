@@ -58,6 +58,9 @@ class UsersController extends AppController {
                 }
         }
 
+        /*
+         * function to validate user on login page.
+         */
         public function login() {
                 $domain     = $this->ldapConfig['domain'];
                 $baseDN     = $this->ldapConfig['base_dn'];
@@ -94,12 +97,19 @@ class UsersController extends AppController {
                 }
         }
 
+        /*
+         * function to log user out of the logged session
+         */
         public function logout() {
                 $this->Session->delete('loggedUser');
                 $this->Session->destroy();
                 return $this->redirect($this->Auth->logout());
         }
 
+        /*
+         * method for the user permissions module
+         * shows all the users information
+         */
         public function user_permissions() {
 
                 $this->set('countries', json_encode($this->Country->find('list', array('fields' => array('Country.country', 'Country.country'), 'order' => 'Country.country Asc')), JSON_HEX_APOS));
@@ -113,6 +123,10 @@ class UsersController extends AppController {
                 $this->set('adminLinks', $this->AdministrationLink->find('list', array('order' => 'AdministrationLink.id Asc')));
         }
 
+        /*
+         * function to fetch client names for the select box
+         * of client specific mails on the add user popup
+         */
         public function get_client_list() {
                 $this->autoRender=false;
 
@@ -127,6 +141,10 @@ class UsersController extends AppController {
                 return json_encode($clientList);
         }
 
+        /*
+         * function to search a user name in active directory
+         * on the create new user popup.
+         */
         public function search_user() {
 
                 $this->autoRender=false;
@@ -151,6 +169,9 @@ class UsersController extends AppController {
                 }
         }
 
+        /*
+         * function the save new user information.
+         */
         public function save_user() {
                 $this->autoRender=false;
 
@@ -266,6 +287,10 @@ class UsersController extends AppController {
                 return json_encode($result);
         }
 
+        /*
+         * function to fetch users information into the
+         * grid on user permissions page
+         */
         public function get_users() {
                 $this->autoRender=false;
 
@@ -330,6 +355,9 @@ class UsersController extends AppController {
                 echo json_encode($userData);
         }
 
+        /*
+         * function to update existing user information
+         */
         public function update_user() {
                 $this->autoRender=false;
 
