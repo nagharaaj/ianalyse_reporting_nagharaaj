@@ -750,19 +750,12 @@ class ReportsController extends AppController {
                                                         'ClientRevenueByService' => array(
                                                                 'pitch_date' => $pitchDate,
                                                                 'pitch_stage' => $pitchStage,
-                                                                'client_name' => $clientName,
-                                                                'parent_company' => $companyName,
-                                                                'comments' => $comments,
-                                                                'category_id' => $categoryId,
                                                                 'agency_id' => $agencyId,
                                                                 'region_id' => $regionId,
                                                                 'managing_entity' => $managingEntity,
                                                                 'country_id' => $countryId,
                                                                 'city_id' => $cityId,
-                                                                'client_since_month' => $clientMonth,
-                                                                'client_since_year' => $clientYear,
                                                                 'lost_date' => $lostDate,
-                                                                'active_markets' => $activeMarkets,
                                                                 'division_id' => $divisionId,
                                                                 'currency_id' => $currencyId,
                                                                 'year' => date('Y'),
@@ -780,19 +773,12 @@ class ReportsController extends AppController {
                                                         'ClientRevenueByService' => array(
                                                                 'pitch_date' => $pitchDate,
                                                                 'pitch_stage' => $pitchStage,
-                                                                'client_name' => $clientName,
-                                                                'parent_company' => $companyName,
-                                                                'comments' => $comments,
-                                                                'category_id' => $categoryId,
                                                                 'agency_id' => $agencyId,
                                                                 'region_id' => $regionId,
                                                                 'managing_entity' => $managingEntity,
                                                                 'country_id' => $countryId,
                                                                 'city_id' => $cityId,
-                                                                'client_since_month' => $clientMonth,
-                                                                'client_since_year' => $clientYear,
                                                                 'lost_date' => $lostDate,
-                                                                'active_markets' => $activeMarkets,
                                                                 'division_id' => $divisionId,
                                                                 'currency_id' => $currencyId,
                                                                 'year' => date('Y'),
@@ -808,19 +794,12 @@ class ReportsController extends AppController {
                                                 'ClientRevenueByService' => array(
                                                         'pitch_date' => $pitchDate,
                                                         'pitch_stage' => $pitchStage,
-                                                        'client_name' => $clientName,
-                                                        'parent_company' => $companyName,
-                                                        'comments' => $comments,
-                                                        'category_id' => $categoryId,
                                                         'agency_id' => $agencyId,
                                                         'region_id' => $regionId,
                                                         'managing_entity' => $managingEntity,
                                                         'country_id' => $countryId,
                                                         'city_id' => $cityId,
-                                                        'client_since_month' => $clientMonth,
-                                                        'client_since_year' => $clientYear,
                                                         'lost_date' => $lostDate,
-                                                        'active_markets' => $activeMarkets,
                                                         'division_id' => $divisionId,
                                                         'currency_id' => $currencyId,
                                                         'year' => date('Y'),
@@ -1205,9 +1184,10 @@ class ReportsController extends AppController {
                                         $result['success'] = false;
                                }
                         }
-                return json_encode($result);
-              }
-        }  
+                        return json_encode($result);
+                }
+        }
+
         public function office_data() {
 
                 $arrKeyDepts = array('Executive' => 'executive', 'FinanceHead' => 'finance_head', 'ProductHead' => 'product_head', 'StrategyHead' => 'strategy_head', 'ClientHead' => 'client_head', 'BusinessHead' => 'business_head', 'MarketingHead' => 'marketing_head');
