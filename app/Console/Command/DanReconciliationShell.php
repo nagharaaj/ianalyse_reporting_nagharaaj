@@ -35,7 +35,7 @@ class DanReconciliationShell extends AppShell {
                 $this->out('Reconciliation in progress....');
                 $currDt = date('Y-m-d h:i:s');
                 $lastDayDt = date('Y') . '-01-01';
-                $currTime = date('m/d/Y h:i:s');
+                $currTime = date('m/d/Y H:i:s');
                 $emailList = $this->mailList();
 
                 //the target url of NBR system.

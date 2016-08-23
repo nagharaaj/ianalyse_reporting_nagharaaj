@@ -40,8 +40,8 @@ class DanDailySyncShell extends AppShell {
                 } else {
                         $lastDayDt = date('Y-m-d', strtotime('-1 days'));
                 }
-                $currTime = date('m/d/Y h:i:s');
-                $nextSyncTime = date('m/d/Y h:i:s', strtotime('+1 days'));
+                $currTime = date('m/d/Y H:i:s');
+                $nextSyncTime = date('m/d/Y H:i:s', strtotime('+1 days'));
                 $emailList = $this->mailList();
 
                 //the target url of NBR system.
@@ -53,6 +53,7 @@ class DanDailySyncShell extends AppShell {
                 //array of currencies and conversion rates
                 $currencies = $this->Currency->find('list', array('fields' => array('Currency.id', 'Currency.currency')));
                 $services = $this->Service->find('list', array('fields' => array('Service.id', 'Service.dan_mapping')));
+                $serviceMappings = $this->Service->find('list', array('fields' => array('Service.service_name', 'Service.dan_mapping')));
                 $cities = $this->City->find('list', array('fields' => array('City.id', 'City.city')));
 
                 // curl object for read requests
@@ -703,6 +704,11 @@ class DanDailySyncShell extends AppShell {
                                 // if entry already exists
                                         $updatedServices = $arrServices;
                                         $existingServices = explode(', ', $pitchExistsResult->results[0]->DAServices);
+                                        foreach($existingServices as $arrIndex => $existingService) {
+                                                if(array_key_exists($existingService, $serviceMappings)) {
+                                                        $existingServices[$arrIndex] = $serviceMappings[$existingService];
+                                                }
+                                        }
                                         $newServices = array_diff($arrServices, $existingServices);
                                         if(!empty($newServices)) { // if only few new services are added to existing services
                                                 $updatedServices = array_merge($existingServices, $newServices);
@@ -944,6 +950,11 @@ class DanDailySyncShell extends AppShell {
                                         if(!empty($livePitchExistsResult->results)) {
                                         // if entry with live pitch exists for same services
                                                 $existingLiveServices = explode(', ', $livePitchExistsResult->results[0]->DAServices);
+                                                foreach($existingLiveServices as $arrIndex => $existingLiveService) {
+                                                        if(array_key_exists($existingLiveService, $serviceMappings)) {
+                                                                $existingLiveServices[$arrIndex] = $serviceMappings[$existingLiveService];
+                                                        }
+                                                }
                                                 $updatedServices = array_intersect($newServices, $existingLiveServices);
                                                 if(!empty($updatedServices)) {
                                                         if(count($updatedServices) == count($existingLiveServices)) {
