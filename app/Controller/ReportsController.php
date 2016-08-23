@@ -748,16 +748,12 @@ class ReportsController extends AppController {
                                         $this->ClientRevenueByService->save(
                                                 array(
                                                         'ClientRevenueByService' => array(
-                                                                'pitch_date' => $pitchDate,
-                                                                'pitch_stage' => $pitchStage,
                                                                 'agency_id' => $agencyId,
                                                                 'region_id' => $regionId,
                                                                 'managing_entity' => $managingEntity,
                                                                 'country_id' => $countryId,
                                                                 'city_id' => $cityId,
-                                                                'lost_date' => $lostDate,
                                                                 'division_id' => $divisionId,
-                                                                'currency_id' => $currencyId,
                                                                 'year' => date('Y'),
                                                                 'modified' => date('Y-m-d H:i:s')
                                                         )
@@ -771,16 +767,12 @@ class ReportsController extends AppController {
                                         $this->ClientRevenueByService->save(
                                                 array(
                                                         'ClientRevenueByService' => array(
-                                                                'pitch_date' => $pitchDate,
-                                                                'pitch_stage' => $pitchStage,
                                                                 'agency_id' => $agencyId,
                                                                 'region_id' => $regionId,
                                                                 'managing_entity' => $managingEntity,
                                                                 'country_id' => $countryId,
                                                                 'city_id' => $cityId,
-                                                                'lost_date' => $lostDate,
                                                                 'division_id' => $divisionId,
-                                                                'currency_id' => $currencyId,
                                                                 'year' => date('Y'),
                                                                 'modified' => date('Y-m-d H:i:s')
                                                         )
@@ -792,16 +784,12 @@ class ReportsController extends AppController {
                                 $this->ClientRevenueByService->save(
                                         array(
                                                 'ClientRevenueByService' => array(
-                                                        'pitch_date' => $pitchDate,
-                                                        'pitch_stage' => $pitchStage,
                                                         'agency_id' => $agencyId,
                                                         'region_id' => $regionId,
                                                         'managing_entity' => $managingEntity,
                                                         'country_id' => $countryId,
                                                         'city_id' => $cityId,
-                                                        'lost_date' => $lostDate,
                                                         'division_id' => $divisionId,
-                                                        'currency_id' => $currencyId,
                                                         'year' => date('Y'),
                                                         'modified' => date('Y-m-d H:i:s')
                                                 )
