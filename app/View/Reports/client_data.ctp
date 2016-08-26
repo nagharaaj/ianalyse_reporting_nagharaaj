@@ -23,8 +23,6 @@
              var arrRegions = $.map(regions, function(el) { return el; });
              var stages = jQuery.parseJSON('<?php echo $stages; ?>');
              var arrStages = $.map(stages, function(el) { return el; });
-             var divisions = jQuery.parseJSON('<?php echo $divisions; ?>');
-             var arrDivisions = $.map(divisions, function(el) { return el; });
              var widthPreferences_client_data = jQuery.parseJSON('<?php echo $widthPreferences_client_data; ?>');
              var arrMonths = ['Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)'];
              var currMonth = '<?php echo $currMonth; ?>';
@@ -119,7 +117,6 @@
                     { name: 'ClientSince', type: 'date' },
                     { name: 'Lost', type: 'date' },
                     { name: 'Service', type: 'string' },
-                    { name: 'Division', type: 'string' },
                     { name: 'ActiveMarkets', type: 'string' },
                     { name: 'Currency', type: 'string' },
                     { name: 'EstimatedRevenue', type: 'float' },
@@ -279,7 +276,6 @@
                   { text: 'Lead Agency', datafield: 'LeadAgency', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Status', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
-                  { text: 'Division', datafield: 'Division', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
@@ -417,12 +413,10 @@
                         var leadagency = data.LeadAgency;
                         var clientcategory = data.ClientCategory;
                         var pitchstart = data.PitchStart;
-                        /*var pitchleader = data.PitchLeader;*/
                         var pitchstage = data.PitchStage;
                         var clientsince = data.ClientSince;
                         var lostdate = data.Lost;
                         var service = data.Service;
-                        var division = data.Division;
                         var activemarkets = data.ActiveMarkets;
                         var currency = data.Currency;
                         var estimatedrevenue = data.EstimatedRevenue;
@@ -585,19 +579,6 @@
                                 $("#divService").append(inpService);
                                 $("#update_service").jqxDropDownList({ source: services }).val(service);
                         }
-                        if(division != null) {
-                                $("#divDivision").html('');
-                                var inpDivision = $("<div id=\"update_division\"></div>");
-                                $("#divDivision").append(inpDivision);
-                                $("#update_division").jqxDropDownList({ source: divisions }).val(division);
-                                rules.push(validator.division);
-                        } else {
-                                $("#divDivision").html('');
-                                var inpDivision = $("<div id=\"update_division\"></div>");
-                                $("#divDivision").append(inpDivision);
-                                $("#update_division").jqxDropDownList({ source: divisions }).val(division);
-                                rules.push(validator.division);
-                        }
                         $("#update_activemarket").jqxDropDownList('uncheckAll');
                         $("#update_activemarket").jqxDropDownList({ source: countries, checkboxes: true });
                         var entities = activemarkets.split(',');
@@ -749,7 +730,6 @@
                         var clientsincemonth = data.ClientMonth;
                         var clientsinceyear = data.ClientYear;
                         var lostdate = data.Lost;
-                        var division = data.Division;
                         var activemarkets = data.ActiveMarkets;
                         var currency = data.Currency;
                         var comments = data.Comments;
@@ -790,7 +770,6 @@
                         var lostDate = new Date(lostdate);
                         $("#lostdate").val(lostDate);
                         $("#service").jqxDropDownList({ source: services, selectedIndex: -1 });
-                        $("#division").jqxDropDownList({ source: divisions, selectedIndex: -1 }).val(division);
                         $("#activemarket").jqxDropDownList({ source: countries, checkboxes: true });
                         var entities = activemarkets.split(',');
                         for(key in entities) {
@@ -1051,7 +1030,6 @@
                 $("#clientsince").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                 $("#lostdate").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                 $("#service").jqxDropDownList({ source: services, selectedIndex: -1 });
-                $("#division").jqxDropDownList({ source: divisions, selectedIndex: -1 });
                 $("#activemarket").jqxDropDownList({ source: countries, checkboxes: true, selectedIndex: -1});
                 $("#currency").jqxDropDownList({ source: currencies, selectedIndex: -1 });
                 $("#estrevenue").jqxInput({ height: 25, width: 100, rtl:true }).val('');
@@ -1180,13 +1158,6 @@
                                 return false;
                             } 
                         },
-                        { input: '#division', message: 'Division is required!', action: 'change', rule: function (input) {
-                                if (input.val() != '') {
-                                        return true;
-                                }
-                                return false;
-                            } 
-                        },
                         { input: '#activemarket', message: 'Active Market is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
@@ -1240,9 +1211,9 @@
                 
                 var row = { ClientName: $("#advertisername").val(), ParentCompany: $("#parentcompany").val(), Region: $("#region").val(),
                     Country: $("#nameofentity").val(), City: $("#city").val(), LeadAgency: $("#agency").val(), ClientCategory: $("#category").val(), 
-                    PitchStart: $("#pitchstart").val(), /*PitchLeader: $("#pitchleader").val(),*/ PitchStage: $("#pitchstage").val(),
+                    PitchStart: $("#pitchstart").val(),PitchStage: $("#pitchstage").val(),
                     ClientSince: $("#clientsince").val(), LostDate: $("#lostdate").val(),
-                    Service: $("#service").val(), Division: $("#division").val(), ActiveMarkets: $("#activemarket").val(), Currency: $("#currency").val(),
+                    Service: $("#service").val(),ActiveMarkets: $("#activemarket").val(), Currency: $("#currency").val(),
                     EstimatedRevenue: $("#estrevenue").val(), Comments: $("#notes").val(), parentId: $('#parentrecordid').val()
                 };
                 $.ajax({
@@ -1294,14 +1265,6 @@
                             }
                             return false;
                         } 
-                },
-                division : {
-                        input: '#update_division', message: 'Division is required!', action: 'change', rule: function (input) {
-                            if (input.val() != '') {
-                                    return true;
-                            }
-                            return false;
-                        }
                 },
                 pitchstage : {
                         input: '#update_pitchstage', message: 'Stage is required!', action: 'change', rule: function (input) {
@@ -1476,11 +1439,6 @@
                 } else {
                         var service = $('#divService').text();
                 }
-                if($('#update_division').val()) {
-                        var division = $('#update_division').val();
-                } else {
-                        var division = $('#divDivision').text();
-                }
                 var activemarkets = $('#update_activemarket').val();
                 if($('#update_currency').val()) {
                         var currency = $('#update_currency').val();
@@ -1503,7 +1461,7 @@
                     Country: country, City: city, LeadAgency: leadagency, ClientCategory: clientcategory,
                     PitchStart: pitchstart,PitchStage: pitchstage,
                     ClientSince: clientsince, LostDate: lostdate,
-                    Service: service, Division: division, ActiveMarkets: activemarkets, Currency: currency,
+                    Service: service, ActiveMarkets: activemarkets, Currency: currency,
                     EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
                 };
 
@@ -1511,7 +1469,7 @@
                     Country: country, City: city, LeadAgency: leadagency, ClientCategory: clientcategory,
                     PitchStart: pitchstart, PitchStage: pitchstage,
                     ClientSince: clientsince, LostDate: lostdate,
-                    Service: service, Division: division, ActiveMarkets: activemarkets, Currency: currency,
+                    Service: service, ActiveMarkets: activemarkets, Currency: currency,
                     EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
                 };
 
@@ -1626,11 +1584,6 @@
                     <td align="left" style="padding-bottom: 5px;"><div id="service"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
-                <tr>
-                    <td align="right">Division</td>
-                    <td align="left" style="padding-bottom: 5px;"><div id="division"></div></td>
-                    <td style="width: 150px"></td>
-                </tr>
                 <tr id="trClientSince" style="display: none">
                     <td align="right">Client Since (M-Y)</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="clientsince"></div></td>
@@ -1724,11 +1677,6 @@
                 <tr>
                     <td align="right" style="padding-bottom: 5px; padding-right: 5px">Service</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="divService"></div></td>
-                    <td style="width: 150px"></td>
-                </tr>
-                <tr>
-                    <td align="right" style="padding-bottom: 5px; padding-right: 5px">Division</td>
-                    <td align="left" style="padding-bottom: 5px;"><div id="divDivision"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
                 <tr id="trUpdateClientSince" style="display: none">
