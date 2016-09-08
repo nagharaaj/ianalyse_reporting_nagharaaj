@@ -29,7 +29,8 @@ class ReportsController extends AppController {
             'ClientDeleteLog',
             'UserMailNotificationClient',
             'ClientActualRevenueByYear',
-            'UserGridPreference'
+            'UserGridPreference',
+            'UpdatePitchNotification'
         );
 
         public $serviceMap = array(1 => 'Affiliates', 19 => 'Attribution', 2 => 'Content', 3 => 'Conversion', 4 => 'Data', 5 => 'Development', 6 => 'Display', 7 => 'Feeds', 8 => 'Lead', 9 => 'Mobile', 10 => 'RTB', 11 => 'Search', 12 => 'SEO', 13 => 'SocialPaid', 14 => 'SocialManagement', 15 => 'Strategy', 16 => 'Technology', 17 => 'Video');
@@ -262,6 +263,7 @@ class ReportsController extends AppController {
                 }
                 $result = array();
                 if ($arrData) {
+                // script to send new pitch notification to users opted for notifications for specific clients
                         $this->UserLoginRole->Behaviors->attach('Containable');
                         $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id', 'User.id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global', 'User.client_specific_mail' => 1), 'order' => 'User.display_name'));
 
@@ -273,22 +275,22 @@ class ReportsController extends AppController {
                                         if($isClientAlert > 0) {
                                                 $emailTo[] = $globalUser['User']['email_id'];
                                         }
-                                } else {
-                                        $emailTo[] = $globalUser['User']['email_id'];
                                 }
                         }
 
-                        try {
-                                $email = new CakeEmail('gmail');
-                                $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'New Pitch', 'data' => $arrData));
-                                $email->template('new_pitch', 'default')
-                                    ->emailFormat('html')
-                                    ->to($emailTo)
-                                    ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
-                                    ->subject('New pitch added')
-                                    ->send();
-                        } catch (Exception $e) {
-                                $result['mailError'] = $e->getMessage();
+                        if(!empty($emailTo)) {
+                                try {
+                                        $email = new CakeEmail('gmail');
+                                        $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'New Pitch', 'data' => $arrData));
+                                        $email->template('new_pitch', 'default')
+                                            ->emailFormat('html')
+                                            ->to($emailTo)
+                                            ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
+                                            ->subject('New pitch added for ' . $arrData['ClientName'])
+                                            ->send();
+                                } catch (Exception $e) {
+                                        $result['mailError'] = $e->getMessage();
+                                }
                         }
                 }
                 $result['success'] = true;
@@ -347,7 +349,7 @@ class ReportsController extends AppController {
                                                 $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
                                                 $email->template('delete_pitch', 'default')
                                                     ->emailFormat('html')
-                                                    ->to(array( 'ama.hughes@iprospect.com'))    //'mathilde.natier@iprospect.com',
+                                                    ->to(array('Helena.Snowdon@iprospect.com'))    //'mathilde.natier@iprospect.com',
                                                     ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
                                                     ->subject('Pitch is deleted')
                                                     ->send();
@@ -596,7 +598,7 @@ class ReportsController extends AppController {
 
         public function update_client_record() {
                 if ($this->request->isPost()) {
-                        if($this->RequestHandler->isAjax()){
+                        if($this->RequestHandler->isAjax()) {
                                 $this->autoRender=false;
                         }
 
@@ -775,11 +777,33 @@ class ReportsController extends AppController {
                 if ($arrData) {
                         if(preg_match('/Live/', $existingStatus['ClientRevenueByService']['pitch_stage']) && !preg_match('/Live/', $pitchStage)
                                 && $existingStatus['ClientRevenueByService']['pitch_stage'] != $pitchStage) {
+                                // add to update pitch notification log
+                                $this->UpdatePitchNotification->create();
+                                $this->UpdatePitchNotification->save(
+                                        array(
+                                            'UpdatePitchNotification' => array(
+                                                'pitch_id' => $recordId,
+                                                'pitch_date' => $pitchDate,
+                                                'pitch_status' => $pitchStage,
+                                                'client_name' => $clientName,
+                                                'parent_company' => $companyName,
+                                                'client_category' => trim($arrData['ClientCategory']),
+                                                'city' => trim($arrData['City']),
+                                                'country' => trim($arrData['Country']),
+                                                'service' => trim($arrData['Service']),
+                                                'active_markets' => $activeMarkets,
+                                                'updated_by' => $this->Auth->user('id'),
+                                                'updated_date' => date('Y-m-d H:i:s')
+                                            )
+                                        )
+                                );
+
+                                // script to send update pitch notification to users opted for notifications for specific client
                                 if(preg_match('/Lost/', $pitchStage) || $pitchStage == 'Cancelled' || $pitchStage == 'Declined') {
-                                        $subject = 'Pitch is lost';
+                                        $subject = 'Pitch is lost for ' . $arrData['ClientName'];
                                         $template = 'lost_pitch';
                                 } else {
-                                        $subject = 'Pitch is won';
+                                        $subject = 'Pitch is won for ' . $arrData['ClientName'];
                                         $template = 'won_pitch';
                                 }
                                 $this->UserLoginRole->Behaviors->attach('Containable');
@@ -793,22 +817,22 @@ class ReportsController extends AppController {
                                                 if($isClientAlert > 0) {
                                                         $emailTo[] = $globalUser['User']['email_id'];
                                                 }
-                                        } else {
-                                                $emailTo[] = $globalUser['User']['email_id'];
                                         }
                                 }
 
-                                try {
-                                        $email = new CakeEmail('gmail');
-                                        $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Pitch updated', 'data' => $arrData));
-                                        $email->template($template, 'default')
-                                            ->emailFormat('html')
-                                            ->to($emailTo)
-                                            ->from(array('connectiprospect@gmail.com' => 'iProspect Connect'))
-                                            ->subject('iProspect Connect: ' . $subject)
-                                            ->send();
-                                } catch (Exception $e) {
-                                        $result['mailError'] = $e->getMessage();
+                                if(!empty($emailTo)) {
+                                        try {
+                                                $email = new CakeEmail('gmail');
+                                                $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Pitch updated', 'data' => $arrData));
+                                                $email->template($template, 'default')
+                                                    ->emailFormat('html')
+                                                    ->to($emailTo)
+                                                    ->from(array('connectiprospect@gmail.com' => 'iProspect Connect'))
+                                                    ->subject('iProspect Connect: ' . $subject)
+                                                    ->send();
+                                        } catch (Exception $e) {
+                                                $result['mailError'] = $e->getMessage();
+                                        }
                                 }
                         }
                 }
