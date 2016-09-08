@@ -25,7 +25,7 @@
                 <tbody>
         <?php foreach($data['newPitches'] as $newPitch) { ?>
                         <tr>
-                                <td nowrap><?php echo $newPitch['ClientRevenueByService']['pitch_date']; ?></td>
+                                <td nowrap><?php echo date('m/d/Y', strtotime($newPitch['ClientRevenueByService']['pitch_date'])); ?></td>
                                 <td nowrap><?php echo $newPitch['ClientRevenueByService']['pitch_stage']; ?></td>
                                 <td nowrap><?php echo $newPitch['ClientRevenueByService']['client_name']; ?></td>
                                 <td nowrap><?php echo $newPitch['ClientRevenueByService']['parent_company']; ?></td>
@@ -57,7 +57,7 @@
                 <tbody>
         <?php foreach($data['updatedPitches'] as $updatedPitch) { ?>
                         <tr>
-                                <td nowrap><?php echo $updatedPitch['UpdatePitchNotification']['pitch_date']; ?></td>
+                                <td nowrap><?php echo date('m/d/Y', strtotime($updatedPitch['UpdatePitchNotification']['pitch_date'])); ?></td>
                                 <td nowrap><?php echo $updatedPitch['UpdatePitchNotification']['pitch_status']; ?></td>
                                 <td nowrap><?php echo $updatedPitch['UpdatePitchNotification']['client_name']; ?></td>
                                 <td nowrap><?php echo $updatedPitch['UpdatePitchNotification']['parent_company']; ?></td>
