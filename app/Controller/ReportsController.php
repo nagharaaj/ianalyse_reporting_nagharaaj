@@ -1224,7 +1224,7 @@ class ReportsController extends AppController {
                         $officeData[$i]['Region'] = $office['Region']['region'];
                         $officeData[$i]['Country'] = $office['Country']['country'];
                         $officeData[$i]['City'] = $office['City']['city'];
-
+                        $officeData[$i]['MarketsCovered'] = $office['Office']['markets_covered'];
                         $officeData[$i]['YearEstablished'] = $office['Office']['year_established'];
                         $officeData[$i]['TotalEmployee'] = $office['Office']['employee_count'];
                         $keyContacts = array();
@@ -1273,6 +1273,7 @@ class ReportsController extends AppController {
                                                         'region_id' => $region['Region']['id'],
                                                         'year_established' => $arrData['YearEstablished'],
                                                         'employee_count' => $arrData['EmployeeCount'],
+                                                        'markets_covered'=> $arrData['MarketsCovered']
                                                 )
                                         )
                                 );
@@ -1314,7 +1315,7 @@ class ReportsController extends AppController {
                                         )
                                 );
                                 $cityId = $this->City->getLastInsertId();
-
+                                
                                 $this->Office->create();
                                 $this->Office->save(
                                         array(
@@ -1324,6 +1325,7 @@ class ReportsController extends AppController {
                                                         'city_id' => $cityId,
                                                         'year_established' => $arrData['YearEstablished'],
                                                         'employee_count' => $arrData['EmployeeCount'],
+                                                        'markets_covered' => $arrData['MarketsCovered']
                                                 )
                                         )
                                 );
@@ -1465,56 +1467,59 @@ class ReportsController extends AppController {
 
                         // Add some data
                         $objPHPExcel->setActiveSheetIndex(0);
-                        $objPHPExcel->getActiveSheet()->mergeCells('A1:E1');
-                        $objPHPExcel->getActiveSheet()->mergeCells('F1:G1');
-                        $objPHPExcel->getActiveSheet()->getStyle("A1:M2")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                        $objPHPExcel->getActiveSheet()->mergeCells('A1:F1');
+                        $objPHPExcel->getActiveSheet()->mergeCells('G1:H1');
+                        $objPHPExcel->getActiveSheet()->getStyle("A1:N2")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                         //$objPHPExcel->getActiveSheet()->getStyle('A1:BJ999')->getAlignment()->setWrapText(true);
-                        $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('F1:G1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        $objPHPExcel->getActiveSheet()->getStyle('H1:M1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('A2:E2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('F2:G2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        $objPHPExcel->getActiveSheet()->getStyle('H2:M2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
+                        $objPHPExcel->getActiveSheet()->getStyle('A1:F1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
+                        $objPHPExcel->getActiveSheet()->getStyle('G1:H1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
+                        $objPHPExcel->getActiveSheet()->getStyle('I1:N1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
+                        $objPHPExcel->getActiveSheet()->getStyle('A2:F2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
+                        $objPHPExcel->getActiveSheet()->getStyle('G2:H2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
+                        $objPHPExcel->getActiveSheet()->getStyle('I2:N2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(11);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(11);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(18);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(14);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(14);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(34);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setWidth(25);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(28);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(22);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setWidth(34);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(25);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(28);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(28);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(28);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(28);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(28);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(28);
                         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'General Information');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Key management contacts');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('H1', 'Head of Affiliates');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('I1', 'Head of Content');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('J1', 'Head of Data and Insights');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'Head of Display');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('L1', 'Head of Search-PPC');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('M1', 'Head of SEO');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'Key management contacts');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('I1', 'Head of Affiliates');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('J1', 'Head of Content');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'Head of Data and Insights');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('L1', 'Head of Display');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('M1', 'Head of Search-PPC');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Head of SEO');
                         $objPHPExcel->getActiveSheet()->SetCellValue('A2', 'Region');
                         $objPHPExcel->getActiveSheet()->SetCellValue('B2', 'Market');
                         $objPHPExcel->getActiveSheet()->SetCellValue('C2', 'Location name (City)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('D2', 'Year established');
                         $objPHPExcel->getActiveSheet()->SetCellValue('E2', 'Total # employees');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('F2', 'Head of Office(Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('G2', 'Head of New Business (Name/title/email address)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('H2', 'Key contact (Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('F2', 'Markets Covered');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('G2', 'Head of Office(Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('H2', 'Head of New Business (Name/title/email address)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('I2', 'Key contact (Name/title/email address)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('J2', 'Key contact (Name/title/email address)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('K2', 'Key contact (Name/title/email address)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('L2', 'Key contact (Name/title/email address)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('M2', 'Key contact (Name/title/email address)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('N2', 'Key contact (Name/title/email address)');
  
                         $i = 2;
                         $arrDataExcel = array();
                         foreach($arrData as $data) {
                                 $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'], $data['YearEstablished'], 
                                     $data['TotalEmployee'],
+                                    $data['MarketsCovered'],
                                     strip_tags(str_replace('<br/>', "\n", $data['Executive'])), 
                                     strip_tags(str_replace('<br/>', "\n", $data['BusinessHead'])),
                                     strip_tags(str_replace('<br/>', "\n", $data['Affiliates'])), 
@@ -1528,9 +1533,9 @@ class ReportsController extends AppController {
                                 $i++;
                         }
                         if(!empty($arrDataExcel)) {
-                                $objPHPExcel->getActiveSheet()->getStyle('A3:M'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                $objPHPExcel->getActiveSheet()->getStyle('A3:N'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                                 $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A3');
-                                $objPHPExcel->getActiveSheet()->setAutoFilter('A2:M'.$i);
+                                $objPHPExcel->getActiveSheet()->setAutoFilter('A2:N'.$i);
                         }
 
                         // Rename sheet
