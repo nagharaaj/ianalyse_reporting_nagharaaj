@@ -12,17 +12,23 @@
                 <thead>
                         <th>Client</th>
                         <th>Parent Company</th>
+                        <th>Client Category</th>
                         <th>City</th>
                         <th>Country</th>
                         <th>Service</th>
+                        <th>Pitch Status</th>
+                        <th>Active Markets</th>
                 </thead>
                 <tbody>
                         <tr>
                                 <td nowrap><?php echo $data['ClientName']; ?></td>
                                 <td nowrap><?php echo $data['ParentCompany']; ?></td>
+                                <td nowrap><?php echo $data['ClientCategory']; ?></td>
                                 <td nowrap><?php echo $data['City']; ?></td>
                                 <td nowrap><?php echo $data['Country']; ?></td>
                                 <td nowrap><?php echo $data['Service']; ?></td>
+                                <td nowrap><?php echo $data['PitchStage']; ?></td>
+                                <td nowrap><?php echo $data['ActiveMarkets']; ?></td>
                         </tr>
                 </tbody>
         </table>
