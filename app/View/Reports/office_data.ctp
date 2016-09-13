@@ -434,7 +434,7 @@
                 $("#divMarketsCovered").html('');
                 var inpMarketsCovered = $("<div id=\"markets_covered\" />");
                 $("#divMarketsCovered").append(inpMarketsCovered);
-                if(rowData){
+                if(rowData && rowData.MarketsCovered){
                         $("#markets_covered").jqxDropDownList('uncheckAll');
                         $("#markets_covered").jqxDropDownList({ source: countries, checkboxes: true });
                         var entities = rowData.MarketsCovered.split(',');
