@@ -1634,4 +1634,229 @@ class ReportsController extends AppController {
                 $user_id=$this->Auth->user('id');
                 $this->UserGridPreference->query('DELETE FROM `user_grid_preferences` WHERE `user_id`='.$user_id.' AND `formname` = \''.$data['formname'].'\'');
         }
+
+        public function client_delete_log() {
+
+                $this->set('currencies', json_encode($this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'))));
+                $this->set('current_year', date('Y'));
+                $arrMarkets = array();
+                $arrRegions = array();
+                $arrCities = array();
+                $regions = $this->Region->find('all', array('order' => 'Region.region Asc'));
+                foreach ($regions as $region) {
+                        $arrRegions[$region['Region']['region']] = $region['Region']['region'];
+                        $markets = $this->Market->find('list', array('fields' => array('Market.country_id', 'Market.market'), 'conditions' => array('Market.region_id' => $region['Region']['id']), 'order' => 'Market.market Asc'));
+                        if(!empty($markets)) {
+                                foreach ($markets as $countryId => $market)
+                                {
+                                        $arrMarkets[$region['Region']['region']][$market] = $market;
+                                        $cities = $this->City->find('list', array('fields' => array('City.city', 'City.city'), 'conditions' => array('City.country_id' => $countryId), 'order' => 'City.city Asc'));
+                                        if(!empty($cities)) {
+                                                $arrCities[$market] = $cities;
+                                        }
+                                }
+                        }
+                }
+                $this->set('regions', json_encode($arrRegions));
+                $this->set('markets', json_encode($arrMarkets));
+                $this->set('cities', json_encode($arrCities));
+        }
+
+        public function get_deleted_records() {
+                $this->autoRender=false;
+
+                $clientData = array();
+                $i = 0;
+                $this->ClientDeleteLog->Behaviors->attach('Containable');
+                $clients = $this->ClientDeleteLog->query("CALL allDeletedClients();");
+                //echo '<pre>'; print_r($clients); exit(0);
+
+                foreach ($clients as $client) {
+                        $clientData[$i]['id'] = $client['ClientDeleteLog']['id'];
+                        $clientData[$i]['RecordId'] = $client['ClientDeleteLog']['record_id'];
+                        $clientData[$i]['Region'] = $client[0]['region'];
+                        if ($client['ClientDeleteLog']['managing_entity'] == 'Global') {
+                                $clientData[$i]['Country'] = 'Global';
+                                $clientData[$i]['City'] = 'Global';
+                        } elseif ($client['ClientDeleteLog']['managing_entity'] == 'Regional') {
+                                $clientData[$i]['Country'] = 'Regional - ' . $client[0]['region'];
+                                $clientData[$i]['City'] = 'Regional - ' . $client[0]['region'];
+                        } else {
+                                $clientData[$i]['Country'] = $client[0]['country'];
+                                $clientData[$i]['City'] = $client[0]['city'];
+                        }
+                        $clientData[$i]['LeadAgency'] = $client[0]['agency'];
+                        $clientData[$i]['ClientName'] = $client['ClientDeleteLog']['client_name'];
+                        $clientData[$i]['SearchClientName'] = strtr( $client['ClientDeleteLog']['client_name'], $this->unwanted_array );
+                        $clientData[$i]['ParentCompany'] = $client['ClientDeleteLog']['parent_company'];
+                        $clientData[$i]['SearchParentCompany'] = strtr( $client['ClientDeleteLog']['parent_company'], $this->unwanted_array );
+                        $clientData[$i]['ClientCategory'] = $client[0]['category'];
+                        if ($client['ClientDeleteLog']['pitch_date'] != '0000-00-00') {
+                                $pitchDate = explode('-', $client['ClientDeleteLog']['pitch_date']);
+                                $clientData[$i]['PitchStart'] = $pitchDate[1] . '/' . $pitchDate[0];
+                        } else {
+                                $clientData[$i]['PitchStart'] = '';
+                        }
+                        $clientData[$i]['PitchStage'] = $client['ClientDeleteLog']['pitch_stage'];
+                        if ($client['ClientDeleteLog']['lost_date'] != '0000-00-00') {
+                                $lostDate = explode('-', $client['ClientDeleteLog']['lost_date']);
+                                $clientData[$i]['Lost'] = $lostDate[1] . '/' . $lostDate[0];
+                        } else {
+                                $clientData[$i]['Lost'] = '';
+                        }
+                        $clientData[$i]['ClientMonth'] = ($client['ClientDeleteLog']['client_since_month'] != 0 && $client['ClientDeleteLog']['client_since_month'] != null) ? $this->months[$client['ClientDeleteLog']['client_since_month']] : '';
+                        $clientData[$i]['ClientYear'] = $client['ClientDeleteLog']['client_since_year'];
+                        if ($client['ClientDeleteLog']['client_since_month'] != 0 && $client['ClientDeleteLog']['client_since_year'] != 0) {
+                                $clientData[$i]['ClientSince'] = $client['ClientDeleteLog']['client_since_month']. '/' .$client['ClientDeleteLog']['client_since_year'];
+                        } elseif ($client['ClientDeleteLog']['client_since_month'] == 0 && $client['ClientDeleteLog']['client_since_year'] != 0) {
+                                $clientData[$i]['ClientSince'] = '01/' .$client['ClientDeleteLog']['client_since_year'];
+                        } else {
+                                $clientData[$i]['ClientSince'] = '';
+                        }
+                        $clientData[$i]['Service'] = $client[0]['service_name'];
+                        $clientData[$i]['ActiveMarkets'] = $client['ClientDeleteLog']['active_markets'];
+
+                        $estimatedRevenue = $client['ClientDeleteLog']['estimated_revenue'];
+                        $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
+                        $clientData[$i]['Currency'] = $client[0]['currency'];
+                        $clientData[$i]['Comments'] = $client['ClientDeleteLog']['comments'];
+                        $clientData[$i]['Year'] = $client['ClientDeleteLog']['year'];
+                        $clientData[$i]['Created'] = $client['ClientDeleteLog']['created'];
+                        $clientData[$i]['Deleted'] = $client['ClientDeleteLog']['deleted'];
+                        if($client['ClientDeleteLog']['deleted_by'] == 1) {
+                                $clientData[$i]['DeletedBy'] = 'System';
+                                $clientData[$i]['SearchDeletedBy'] = 'System';
+                        } else {
+                                $clientData[$i]['DeletedBy'] = $client[0]['deleted_by_name'];
+                                $clientData[$i]['SearchDeletedBy'] = strtr( $client[0]['deleted_by_name'], $this->unwanted_array );
+                        }
+
+                        $i++;
+                }
+                echo json_encode($clientData);
+        }
+
+        public function export_client_delete_log() {
+                set_time_limit(0);
+                ini_set('memory_limit', '-1');
+
+                if ($this->request->isPost()) {
+                        if($this->RequestHandler->isAjax()){
+                                $this->autoRender=false;
+                        }
+                        date_default_timezone_set($this->request->data['timezone']);
+
+                        $arrData = $this->request->data['datarows'];
+
+                        App::import('Vendor', 'PHPExcel', array('file' => 'PhpExcel/PHPExcel.php'));
+                        if (!class_exists('PHPExcel')) {
+                                throw new CakeException('Vendor class PHPExcel not found!');
+                        }
+                        App::import('Vendor', 'PHPExcel_Writer_Excel2007', array('file' => 'PhpExcel/PHPExcel/Writer/Excel2007.php'));
+                        if (!class_exists('PHPExcel_Writer_Excel2007')) {
+                                throw new CakeException('Vendor class PHPExcel not found!');
+                        }
+                        $objPHPExcel = new PHPExcel();
+                        // Set properties
+                        $objPHPExcel->getProperties()->setCreator($this->Auth->user('display_name'));
+                        $objPHPExcel->getProperties()->setLastModifiedBy($this->Auth->user('display_name'));
+                        $objPHPExcel->getProperties()->setTitle("Client Data Deletion log by date " . date('m/d/Y'));
+                        $objPHPExcel->getProperties()->setSubject("Client Data Deletion log " . date('m/d/Y'));
+
+                        // Add some data
+                        $objPHPExcel->setActiveSheetIndex(0);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(30);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(15);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(20);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(40);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(40);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setWidth(35);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(15);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(20);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(30);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(10);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(10);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(10);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(35);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(20);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(40);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("R")->setWidth(15);
+                        $objPHPExcel->getActiveSheet()->getStyle("A1:R1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                        $objPHPExcel->getActiveSheet()->getStyle('A1:F1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
+                        $objPHPExcel->getActiveSheet()->getStyle('G1:J1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
+                        $objPHPExcel->getActiveSheet()->getStyle('K1:R1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
+
+                        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Deleted By');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Region');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'Country');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'City');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Client');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Parent Company');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'Client Category');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('H1', 'Lead Agency');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('I1', 'Status');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('J1', 'Service');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'Client Since (M-Y)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('L1', 'Lost Since(M-Y)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('M1', 'Pitched (M-Y)');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Active Markets');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Currency');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'Estimated Revenue');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'Comments');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('R1', 'Deleted On');
+
+                        $i = 1;
+                        $arrDataExcel = array();
+                        foreach($arrData as $data) {
+                                if($data['ClientSince'] != '') {
+                                        $clientSince = date('m/Y', strtotime($data['ClientSince']));
+                                } else {
+                                        $clientSince = '';
+                                }
+                                if($data['Lost'] != '') {
+                                        $lostDate = date('m/Y', strtotime($data['Lost']));
+                                } else {
+                                        $lostDate = '';
+                                }
+                                if($data['PitchStart'] != '') {
+                                        $pitchDate = date('m/Y', strtotime($data['PitchStart']));
+                                } else {
+                                        $pitchDate = '';
+                                }
+                                $currency = $data['Currency'];
+                                if($data['Deleted'] != '') {
+                                        $deletedDate = date('m/d/Y', strtotime($data['Deleted']));
+                                } else {
+                                        $deletedDate = '01/01/2015';
+                                }
+                                $estimatedRevenue = $data['EstimatedRevenue'];
+
+                                $row = array($data['DeletedBy'], $data['Region'], $data['Country'], $data['City'],
+                                    $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
+                                    $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate,
+                                    $data['ActiveMarkets'], $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue),
+                                    (($data['Comments'] == null) ? '' : $data['Comments']), $deletedDate);
+
+                                $arrDataExcel[] = $row;
+                                $i++;
+                        }
+                        if(!empty($arrDataExcel)) {
+                                $objPHPExcel->getActiveSheet()->getStyle('A2:R'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
+                                $objPHPExcel->getActiveSheet()->setAutoFilter('A1:R'.$i);
+                        }
+
+                        // Rename sheet
+                        $objPHPExcel->getActiveSheet()->setTitle('Client Deletion Log');
+                        // Save Excel 2007 file
+                        $fileName = 'Client_Deleted_Log_' . date('m-d-Y') . '.xlsx';
+                        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+                        $objWriter->save('files/' . $fileName);
+                        $result = array('filename' => $fileName);
+                        $result['success'] = true;
+                        return json_encode($result);
+                }
+        }
 }
