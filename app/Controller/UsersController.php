@@ -296,7 +296,12 @@ class UsersController extends AppController {
 
                 $userData = array();
                 $i = 0;
-                $users = $this->User->find('all', array('order' => 'User.display_name Asc'));
+                $conditions = array();
+                isset($_GET['checked']) ? $_GET['checked'] : $_GET['checked']= 'false';
+                if($_GET['checked'] == 'false'){
+                        $conditions['User.is_active'] = 1;
+                }
+                $users = $this->User->find('all',array('order' => 'User.display_name Asc','conditions'=> $conditions));
                 foreach($users as $user) {
                         $userData[$i]['targetclients'] = '';
 

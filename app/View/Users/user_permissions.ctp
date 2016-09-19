@@ -379,9 +379,18 @@
                     }
                 });
             });
+            $("#users").jqxCheckBox({ checked : false });
+                $("#users").on('change',function(event){
+                      var checked = event.args.checked;
+                      source.data = {checked : checked};
+                      dataAdapter.dataBind();
+                });
         });
     </script>
     <div id='jqxWidget'>
+            <div style="float:right; margin-bottom:10px; margin-right:10px;">
+                <div id="users">Show all Users</div>
+            </div>
         <div id="dataTable"></div>
             <div style='margin-top: 20px;'>
             <div style='float: right; padding-right: 15px; padding-bottom: 30px;'>
