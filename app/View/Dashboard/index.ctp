@@ -15,7 +15,7 @@
             <?php } ?>
         </div>
     </div>
-<?php if(isset($section_details) && !empty($section_details)) { 
+<?php if(isset($section_details) && !empty($section_details)) {
     $sectionCnt = 1;
     foreach($section_details as $section_detail) {
         $brandCnt = 1;
@@ -36,7 +36,7 @@
         <?php }?>
             <div class="brand-client" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>><?php echo $brand_detail['brand_name']; ?></div>
             <div class="brand-service" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>><?php echo $brand_detail['brand_services']; ?></div>
-            <div class="brand-market" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>><?php echo $brand_detail['brand_markets']; ?></div>
+            <div class="brand-market"><?php echo $brand_detail['brand_markets']; ?></div>
             <div class="brand-synopsis">
                 <div class="synopsis-title">SYNOPSIS</div>
                 <div class="synopsis-detail" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>><?php echo $brand_detail['brand_synopsis']; ?></div>
@@ -51,7 +51,7 @@
             <div class="brand-logo" <?php if($loggedUserRole == 'Global') {?>title="Click to upload logo"<?php }?>>LOGO</div>
             <div class="brand-client" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>>CLIENT NAME</div>
             <div class="brand-service" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>>SERVICES</div>
-            <div class="brand-market" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>>MARKETS</div>
+            <div class="brand-market">MARKETS</div>
             <div class="brand-synopsis">
                 <div class="synopsis-title">SYNOPSIS</div>
                 <div class="synopsis-detail" <?php if($loggedUserRole == 'Global') {?> contenteditable="true"<?php }?>>
@@ -80,7 +80,7 @@
             <div class="brand-logo" <?php if($loggedUserRole == 'Global') {?>title="Click to upload logo"<?php }?>>LOGO</div>
             <div class="brand-client" contenteditable="true">CLIENT NAME</div>
             <div class="brand-service" contenteditable="true">SERVICES</div>
-            <div class="brand-market" contenteditable="true">MARKETS</div>
+            <div class="brand-market">MARKETS</div>
             <div class="brand-synopsis">
                 <div class="synopsis-title">SYNOPSIS</div>
                 <div class="synopsis-detail" contenteditable="true">
@@ -97,11 +97,13 @@
     <div class="btn-add-section">Add new section...</div>
 <?php } ?>
 </div>
-<script>
+<script type="text/javascript">
 $(document).ready(function () {
-    var loggedUserRole = "<?php echo $loggedUserRole; ?>";
+    var loggedUserRole = "<?php echo $loggedUserRole; ?>"; // logged user role: page is editable only if role is Global
+    var markets = jQuery.parseJSON('<?php echo $markets; ?>'); // markets list for markets selection dropdown
+    var arrMarkets = $.map(markets, function(el) { return el.toLowerCase(); });
 
-    if(loggedUserRole == "Global") {
+    if(loggedUserRole == "Global") { // if user is Global attach editable to all the section and brands data
         $('.announcement-detail').jqxEditor({
             tools: 'bold italic underline | left center right | link'
         });
@@ -116,14 +118,12 @@ $(document).ready(function () {
         $('.brand-service').jqxEditor({
             tools: ''
         });
-        $('.brand-market').jqxEditor({
-            tools: ''
-        });
         $('.synopsis-detail').jqxEditor({
             tools: ''
         });
     }
 
+    // function to add new brand html under a section
     var brandClick = function () {
         var brandElm = $(this).parent().find('.brand-container:last');
         var brandCnt = brandElm.attr('brandNo');
@@ -142,20 +142,20 @@ $(document).ready(function () {
         $(newBrandElm).find('.brand-service').text('SERVICES').jqxEditor({
             tools: ''
         });
-        $(newBrandElm).find('.brand-market').text('MARKETS').jqxEditor({
-            tools: ''
-        });
+        $(newBrandElm).find('.brand-market').text('MARKETS');
         $(newBrandElm).find('.synopsis-detail').text('click to add text here...').jqxEditor({
             tools: ''
         });
-        $(newBrandElm).find('.brand-client, .brand-service, .brand-market').on('change', saveBrandDetail);
+        $(newBrandElm).find('.brand-client, .brand-service').on('change', saveBrandDetail);
+        $(newBrandElm).find('.brand-market').bind('click', brandMarketSelection);
+        $(newBrandElm).find('.brand-market').bind('contentchanged', saveBrandDetail);
         $(newBrandElm).find('.synopsis-detail').on('change', saveBrandSynopsis);
         $(newBrandElm).attr('brandId', '');
         $(newBrandElm).find('.btn-remove-brand').on('click', removeBrand);
     }
-
     $('.btn-add-brand').click(brandClick);
 
+    // function to add new section html
     $('.btn-add-section').click(function () {
         var sectionElm = $(this).parent().find('.section-container:last');
         var sectionCnt = sectionElm.attr('sectionNo');
@@ -179,19 +179,20 @@ $(document).ready(function () {
         $(newSectionElm).find('.brand-service').text('SERVICES').jqxEditor({
             tools: ''
         });
-        $(newSectionElm).find('.brand-market').text('MARKETS').jqxEditor({
-            tools: ''
-        });
+        $(newSectionElm).find('.brand-market').text('MARKETS');
         $(newSectionElm).find('.synopsis-detail').text('click to add text here...').jqxEditor({
             tools: ''
         });
         $(newSectionElm).find('.section-title').on('change', saveSection);
-        $(newSectionElm).find('.brand-client, .brand-service, .brand-market').on('change', saveBrandDetail);
+        $(newSectionElm).find('.brand-client, .brand-service').on('change', saveBrandDetail);
+        $(newSectionElm).find('.brand-market').bind('click', brandMarketSelection);
+        $(newSectionElm).find('.brand-market').bind('contentchanged', saveBrandDetail);
         $(newSectionElm).find('.synopsis-detail').on('change', saveBrandSynopsis);
         $(newSectionElm).attr('sectionId', '');
         $(newSectionElm).find('.brand-container').attr('brandId', '');
     });
 
+    // save annoucement details when changed
     $('.announcement-detail').on('change', function (event) {
         $.ajax({
             type: "POST",
@@ -212,10 +213,7 @@ $(document).ready(function () {
         });
     });
 
-    /*$('.brand-logo').on('click', function (event) {
-        $(this).jqxFileUpload({ width: 180, uploadUrl: '/dashboard/upload_brand_logo', fileInputName: 'fileToUpload', 'autoUpload': true, 'accept': 'image/*' });
-    });*/
-
+    // save section details when changed
     var saveSection = function (event) {
         var sectionContainer = $(this).parent();
         var sectionTitle = $(this).text();
@@ -266,6 +264,7 @@ $(document).ready(function () {
     }
     $('.section-title').on('change', saveSection);
 
+    // save all brands details under section when any of the brand detail is changed
     var saveBrandDetail = function (event) {
         var sectionContainer = $(this).parent().parent();
         var sectionTitle = $(sectionContainer).find('.section-title').text();
@@ -319,8 +318,9 @@ $(document).ready(function () {
             }
         });
     }
-    $('.brand-client, .brand-service, .brand-market').on('change', saveBrandDetail);
+    $('.brand-client, .brand-service').on('change', saveBrandDetail);
 
+    // save brand synopsis details
     var saveBrandSynopsis = function (event) {
         var sectionContainer = $(this).parent().parent().parent();
         var sectionTitle = $(sectionContainer).find('.section-title').text();
@@ -371,6 +371,7 @@ $(document).ready(function () {
     }
     $('.synopsis-detail').on('change', saveBrandSynopsis);
 
+    // save brand logo images
     var addBrandLogo = function (event) {
         $(this).unbind( "click" );
         var logoContainer = $(this);
@@ -381,6 +382,7 @@ $(document).ready(function () {
 
         if(brandId == '' || brandId == undefined) {
             alert('Enter CLIENT NAME first...!');
+            $(this).on('click', addBrandLogo);
             return false;
         }
 
@@ -401,7 +403,7 @@ $(document).ready(function () {
         // Add events
         $('#logo_image').on('change', prepareUpload);
         // Grab the files and set them to our variable
-        function prepareUpload(event) {
+        var prepareUpload = function (event) {
             files = event.target.files;
         }
 
@@ -424,7 +426,6 @@ $(document).ready(function () {
                 processData:false,        // To send DOMDocument or non processed data file it is set to false
                 success: function(data)   // A function to be called if request succeeds
                 {
-                    //console.log(data);
                     if(data.success) {
                         alert(data.success);
                         $(logoContainer).empty();
@@ -441,26 +442,28 @@ $(document).ready(function () {
     if(loggedUserRole == "Global") {
         $('.brand-logo').on('click', addBrandLogo);
     }
-    
+
+    // show remove brand/section button on hover if user role is Global
     if(loggedUserRole == "Global") {
         $(document).on('mouseenter', '.brand-container', function () {
             $(this).find(".btn-remove-brand").show(700);
         }).on('mouseleave', '.brand-container', function () {
             $(this).find(".btn-remove-brand").hide(700);
         });
-        
+
         $(document).on('mouseenter', '.section-container', function () {
             $(this).find(".btn-remove-section").show(700);
         }).on('mouseleave', '.section-container', function () {
             $(this).find(".btn-remove-section").hide(700);
         });
     }
+    // function to remove a brand under section
     var removeBrand = function (event) {
         var brandContainer = $(this).parent();
         var sectionContainer = $(brandContainer).parent();
         var brandId = $(brandContainer).attr('brandid');
         var sectionId = $(sectionContainer).attr('sectionid');
-        
+
         if(brandId == '' || brandId == undefined) {
             $(brandContainer).remove();
         } else {
@@ -494,11 +497,12 @@ $(document).ready(function () {
     if(loggedUserRole == "Global") {
         $(".btn-remove-brand").on('click', removeBrand);
     }
-    
+
+    // function to remove entire section
     var removeSection = function (event) {
         var sectionContainer = $(this).parent();
         var sectionId = $(sectionContainer).attr('sectionid');
-        
+
         if(sectionId == '' || sectionId == undefined) {
             $(sectionContainer).remove();
         } else {
@@ -528,6 +532,48 @@ $(document).ready(function () {
     if(loggedUserRole == "Global") {
         $(".btn-remove-section").on('click', removeSection);
     }
+
+    /*
+    * function for generating dropdown for selecting markets
+    */
+    var brandMarketSelection = function(event) {
+        var clickedBrandMarket = this; // variable to store the object of div on which user has clicked
+
+        var country = $(clickedBrandMarket).text(); // get the existing markets from the div
+        var eleWidth = $(clickedBrandMarket).width(); // div width to assign to dropdown
+        $(clickedBrandMarket).html('');
+        var inpEntity = $("<div id=\"brandMarketDropDown\"></div>"); // create element for dropdown
+        $(clickedBrandMarket).append(inpEntity); // attach the dropdown div to the market element user has clicked
+        $("#brandMarketDropDown").on('bindingComplete', function (event) {
+            $(clickedBrandMarket).unbind('click', brandMarketSelection); // remove the click event to stop event propogation when user selects markets from dropdown
+        });
+        $("#brandMarketDropDown").on('close', function (event) {
+            var checkedItems = "";
+            var items = $("#brandMarketDropDown").jqxDropDownList('getCheckedItems');
+                $.each(items, function (index) {
+                    checkedItems += (checkedItems) ? ", " + this.label : this.label;
+            });
+            $("#brandMarketDropDown").jqxDropDownList('destroy'); // remove the dropdown when user closes it
+            $(clickedBrandMarket).html(checkedItems ? checkedItems : "MARKETS"); // show selected markets in the market element for the brand
+            $(clickedBrandMarket).bind('click', brandMarketSelection);
+            $(clickedBrandMarket).trigger('contentchanged');
+        });
+        $("#brandMarketDropDown").jqxDropDownList({ source: markets, checkboxes: true, width: eleWidth+"px" });
+        // auto select the existing markets in the dropdown
+        if(country && country != "MARKETS") {
+            var arrCountry = country.split(', ');
+            for(var key in arrCountry) {
+                index = arrMarkets.indexOf(arrCountry[key].toLowerCase());
+                if(index != -1) {
+                   $("#brandMarketDropDown").jqxDropDownList('checkIndex', index);
+                }
+            }
+        }
+        $("#brandMarketDropDown").jqxDropDownList('open');
+    }
+    $('.brand-market').bind('click', brandMarketSelection);
+     // attach custom change event to market div to save data when user selects markets from dropdown
+    $('.brand-market').bind('contentchanged', saveBrandDetail);
 });
 </script>
 <?php } ?>

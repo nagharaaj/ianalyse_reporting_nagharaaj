@@ -43,13 +43,18 @@ class DashboardController extends AppController {
                 }
         }
 
+        /*
+         * Global Strategy action
+         */
         public function index() {
                 $this->set('loggedUser', $this->Auth->user());
                 $this->set('loggedUserRole', $this->Auth->user('role'));
-                
+
                 $this->set('announcement_details', $this->OverviewAnnouncement->find('first'));
                 $this->OverviewSection->Behaviors->attach('Containable');
                 $this->set('section_details', $this->OverviewSection->find('all'));
+                $markets = $this->Market->find('list', array('fields' => array('Market.country_id', 'Market.market'), 'order' => 'Market.market Asc'));
+                $this->set('markets', json_encode($markets));
         }
 
         public function global_growth() {
@@ -64,12 +69,15 @@ class DashboardController extends AppController {
         public function local_growth() {
 
         }
-        
+
+        /*
+         * action to save announcement details on Global Strategy
+         */
         public function save_announcements() {
                 $this->autoRender=false;
 
                 $arrData = $this->request->data;
-                
+
                 if(isset($arrData['announcement'])) {
                         $this->OverviewAnnouncement->query('DELETE FROM `overview_announcements` WHERE 1');
                         $this->OverviewAnnouncement->create();
@@ -90,12 +98,15 @@ class DashboardController extends AppController {
                 $result['success'] = true;
                 return json_encode($result);
         }
-        
+
+        /*
+         * function to save section and brands details on Global Strategy
+         */
         public function save_section_data() {
                 $this->autoRender=false;
 
                 $arrData = $this->request->data;
-                
+
                 if(isset($arrData)) {
                         $brandCnt = count($arrData['brandData']);
                         if(isset($arrData['sectionId']) && $arrData['sectionId'] != null) {
@@ -123,7 +134,7 @@ class DashboardController extends AppController {
                                 );
                                 $sectionId = $this->OverviewSection->getLastInsertId();
                         }
-                        
+
                         $brands = $arrData['brandData'];
                         $arrBrands = array();
                         foreach($brands as $brand) {
@@ -168,10 +179,13 @@ class DashboardController extends AppController {
                 $result['brandIds'] = $arrBrands;
                 return json_encode($result);
         }
-        
+
+        /*
+         * function to save logo images of brands on Global Strategy
+         */
         public function brand_logo_upload() {
                 $this->autoRender=false;
-                
+
                 $sectionId = $_GET['sectionId'];
                 $brandId = $_GET['brandId'];
 
@@ -209,7 +223,10 @@ class DashboardController extends AppController {
                 }
                 return json_encode($data);
         }
-        
+
+        /*
+         * function to remove a brand under section on Global Strategy
+         */
         public function remove_brand() {
                 $this->autoRender=false;
                 $data = array();
@@ -242,13 +259,16 @@ class DashboardController extends AppController {
                                         )
                                 )
                         );
-                        
+
                         $data["success"] = true;
                         $data['brandCnts'] = $arrBrands;
                 }
                 return json_encode($data);
         }
-        
+
+        /*
+         * function to remove entire section on Global Strategy
+         */
         public function remove_section() {
                 $this->autoRender=false;
                 $data = array();
@@ -258,7 +278,7 @@ class DashboardController extends AppController {
                         $this->OverviewSectionBrand->deleteAll(array('section_id' => $arrData['sectionId']));
 
                         $this->OverviewSection->delete($arrData['sectionId']);
-                        
+
                         $data["success"] = true;
                 }
                 return json_encode($data);

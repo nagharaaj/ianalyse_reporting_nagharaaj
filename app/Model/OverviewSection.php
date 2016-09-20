@@ -5,7 +5,7 @@ class OverviewSection extends AppModel {
 
     public $displayField = 'section_title';
 
-    
+
     public $hasMany = array(
                 'OverviewSectionBrand' => array(
 			'className' => 'OverviewSectionBrand',
