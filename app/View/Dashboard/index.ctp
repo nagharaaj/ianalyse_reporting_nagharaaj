@@ -403,7 +403,7 @@ $(document).ready(function () {
         // Add events
         $('#logo_image').on('change', prepareUpload);
         // Grab the files and set them to our variable
-        var prepareUpload = function (event) {
+        function prepareUpload (event) {
             files = event.target.files;
         }
 
