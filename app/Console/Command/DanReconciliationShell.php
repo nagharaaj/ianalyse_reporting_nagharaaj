@@ -425,8 +425,23 @@ class DanReconciliationShell extends AppShell {
                                                 }
                                         } else {
                                         // else read existing client entry for client is, holding company and industry category
-                                                $clientId = $clientSearchResult->results[0]->Id;
-                                                $clientHolidngCompany = $clientSearchResult->results[0]->DACltHoldCompany;
+                                                if(count($clientSearchResult->results) > 0) {
+                                                // if more than one matching client name found
+                                                        $percent1 = 0;
+                                                        foreach($clientSearchResult->results as $clientResult) {
+                                                        // do case-sensetive string match to find best matching client name
+                                                                similar_text(strtr($clientResult->Title, $this->unwanted_array), $rowClientName, $percent2);
+                                                                if($percent2 > $percent1) {
+                                                                // if the client name is most similar than the previous client name in list
+                                                                        $clientId = $clientResult->Id;
+                                                                        $clientHolidngCompany = $clientResult->DACltHoldCompany;
+                                                                        $percent1 = $percent2;
+                                                                }
+                                                        }
+                                                } else {
+                                                        $clientId = $clientSearchResult->results[0]->Id;
+                                                        $clientHolidngCompany = $clientSearchResult->results[0]->DACltHoldCompany;
+                                                }
                                                 $industryCategoryId = array_search($client['ClientCategory']['dan_mapping'], $arrIndustryCategory);
                                         }
 

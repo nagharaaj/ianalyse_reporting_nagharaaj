@@ -43,7 +43,7 @@ class WeeklyMailsShell extends AppShell {
 
         public function weeklyChanges() {
 
-                $currDt = date('Y-m-d');
+                $currDt = date('Y-m-d h:i:s');
                 $lastWeekDt = date('Y-m-d', strtotime('-7 days'));
 
                 $weekNoOfChanges = $this->ClientRevenueByService->find('all', array('fields' => array('COUNT(ClientRevenueByService.id) as no_of_changes', 'Country.country', 'Country.id'), 'conditions' => ('ClientRevenueByService.created between \'' . $lastWeekDt . '\' and \'' . $currDt . '\' or ClientRevenueByService.modified between \'' . $lastWeekDt . '\' and \'' . $currDt . '\''), 'group' => array('Country.country'), 'order' => 'no_of_changes DESC'));
@@ -63,7 +63,7 @@ class WeeklyMailsShell extends AppShell {
 
         public function monthlyChanges() {
 
-                $currDt = date('Y-m-d');
+                $currDt = date('Y-m-d h:i:s');
                 $lastMonthDt = date('Y-m-d', strtotime('-30 days'));
 
                 $monthNoOfChanges = $this->ClientRevenueByService->find('all', array('fields' => array('COUNT(ClientRevenueByService.id) as no_of_changes', 'Country.country', 'Country.id'), 'conditions' => ('ClientRevenueByService.created between \'' . $lastMonthDt . '\' and \'' . $currDt . '\' or ClientRevenueByService.modified between \'' . $lastMonthDt . '\' and \'' . $currDt . '\''), 'group' => array('Country.country'), 'order' => 'no_of_changes DESC'));
