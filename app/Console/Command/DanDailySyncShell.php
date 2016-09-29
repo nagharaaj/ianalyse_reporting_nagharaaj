@@ -129,10 +129,10 @@ class DanDailySyncShell extends AppShell {
                 $pitchStatusResult = $pitchStatusContent->d->results;
                 foreach($pitchStatusResult as $result) {
                         $arrPitchStatus[$result->Id] = $result->Title;
-                        if($result->Title == 'Offensive Pitch') {
+                        if($result->Title == 'Offensive Pitch' && $result->DAParentStatus == 'New') {
                                 $offensivePitchId = $result->Id;
                         }
-                        if($result->Title == 'Defensive Pitch') {
+                        if($result->Title == 'Defensive Pitch' && $result->DAParentStatus == 'New') {
                                 $defensivePitchId = $result->Id;
                         }
                 }

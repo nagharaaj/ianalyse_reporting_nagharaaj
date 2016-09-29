@@ -82,12 +82,20 @@ class DanReconciliationShell extends AppShell {
 
                 // NBR pitch status array id => pitch status
                 $arrPitchStatus = array();
+                $offensivePitchId = null;
+                $defensivePitchId = null;
                 $pitchStatusUrl = $siteUrl . "_api/web/lists(guid'c47bb064-faa5-4ab7-812c-3b005843314d')/items";
                 curl_setopt( $ch, CURLOPT_URL, $pitchStatusUrl );
                 $pitchStatusContent = json_decode(curl_exec( $ch ));
                 $pitchStatusResult = $pitchStatusContent->d->results;
                 foreach($pitchStatusResult as $result) {
                         $arrPitchStatus[$result->Id] = $result->Title;
+                        if($result->Title == 'Offensive Pitch' && $result->DAParentStatus == 'New') {
+                                $offensivePitchId = $result->Id;
+                        }
+                        if($result->Title == 'Defensive Pitch' && $result->DAParentStatus == 'New') {
+                                $defensivePitchId = $result->Id;
+                        }
                 }
                 // NBR pitch stage array id => pitch stage
                 $arrPitchStage = array();
@@ -568,7 +576,13 @@ class DanReconciliationShell extends AppShell {
                                                 $typeOfNetwork = 'Digital and Creative';
                                                 $holdingBrand = 'iProspect';
                                                 $isArchivePitch = false;
-                                                $pitchStatusId = array_search($pitchStatus, $arrPitchStatus);
+                                                if($pitchStatus == 'Defensive Pitch') {
+                                                        $pitchStatusId = $defensivePitchId;
+                                                } elseif ($pitchStatus == 'Offensive Pitch') {
+                                                        $pitchStatusId = $offensivePitchId;
+                                                } else {
+                                                        $pitchStatusId = array_search($pitchStatus, $arrPitchStatus);
+                                                }
                                                 $pitchStageId = (!empty($pitchStage) ? array_search($pitchStage, $arrPitchStage) : 0);
                                                 $networkBrandId = array_search($networkBrand, $arrNetworkBrand);
                                                 // abort the script if any of the pitch stage, pitch status or network brand mappings not found.
