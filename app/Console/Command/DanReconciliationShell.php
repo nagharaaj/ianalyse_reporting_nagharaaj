@@ -311,7 +311,7 @@ class DanReconciliationShell extends AppShell {
                         if(array_key_exists($country, $arrCountryCode) === false) {
                         // check if country code already exists in array
                                 // request to pull country information like id, name and country code from NBR
-                                $countryCodeUrl = $siteUrl . '_api/web/lists/getbytitle(\'Country\')/items?$select=Id,Title,DACountryCode,DACurrencyId&$filter=' . urlencode('Title eq \'' . $country . '\'');
+                                $countryCodeUrl = $siteUrl . '_api/web/lists/getbytitle(\'Country\')/items?$select=Id,Title,DACountryCode,DACurrencyId&$filter=' . urlencode('Title eq \'' . $country . '\' and DAArchivePitch eq 0');
                                 curl_setopt( $ch, CURLOPT_URL, $countryCodeUrl );
                                 $countryCodeData = json_decode(curl_exec( $ch ));
                                 if(isset($countryCodeData->d) && empty($countryCodeData->d->results)) {
@@ -616,7 +616,7 @@ class DanReconciliationShell extends AppShell {
 
                                                 //request to check whether entry of a pitch for the client exists under the country pitch list
                                                 $pitchExistsUrl = $siteUrl . $countryCode .'/_api/web/lists/getbytitle(\'Pitch\')/items';
-                                                $pitchExistsFilter = urlencode('DACLient eq ' . $clientId . ' and DALeadCountry eq ' . $countryId . ' and DANetworkBrand eq ' . $networkBrandId . ' and DAPitchStatus eq ' . $pitchStatusId . ''); // and DATypeOfNetwork eq \'Digital and Creative\'
+                                                $pitchExistsFilter = urlencode('DACLient eq ' . $clientId . ' and DALeadCountry eq ' . $countryId . ' and DANetworkBrand eq ' . $networkBrandId . ' and DAPitchStatus eq ' . $pitchStatusId . ' and DAArchivePitch eq 0'); // and DATypeOfNetwork eq \'Digital and Creative\'
                                                 $pitchExistsUrl = $pitchExistsUrl . '?$filter=' . $pitchExistsFilter;
                                                 curl_setopt( $ch, CURLOPT_URL, $pitchExistsUrl );
                                                 $pitchExistsContent = json_decode(curl_exec( $ch ));
