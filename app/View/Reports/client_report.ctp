@@ -86,6 +86,7 @@
                     { name: 'ClientSince', type: 'date' },
                     { name: 'Lost', type: 'date' },
                     { name: 'Service', type: 'string' },
+                    { name: 'MarketScope', type: 'string' },
                     { name: 'ActiveMarkets', type: 'string' },
                     { name: 'Currency', type: 'string' },
                     { name: 'EstimatedRevenue', type: 'number' },
@@ -242,6 +243,7 @@
                   { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy' },
                   { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy' },
                   { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy' },
+                  { text: 'Scope', datafield: 'MarketScope', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Active Markets', columngroup: 'ActiveMarkets', datafield: 'ActiveMarkets', width: 160, cellClassName: cellclass, filtertype: 'checkedlist' },
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', hidden: ((userRole == 'Viewer') ? true : false) },
                   { text: estimatedRevenueColumnTitle, columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
@@ -416,6 +418,7 @@
                     //may want to use $.trim in here
                     return $(this).text() == revenueCurrency;
                 }).prop('selected', true);
+                $('#jqxgrid').jqxGrid('showloadelement');
                 dataAdapter.dataBind();
                 calculateStats();
                 $("#popupWindow").jqxWindow('close');

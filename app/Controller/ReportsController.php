@@ -224,6 +224,7 @@ class ReportsController extends AppController {
                         } else {
                                 $lostDate = '0000-00-00';
                         }
+                        $marketScope = $arrData['MarketScope'];
                         $activeMarkets = $arrData['ActiveMarkets'];
                         $companyName = $arrData['ParentCompany'];
                         $clientName = $arrData['ClientName'];
@@ -250,6 +251,7 @@ class ReportsController extends AppController {
                                                 'managing_entity' => $managingEntity,
                                                 'country_id' => $countryId,
                                                 'city_id' => $cityId,
+                                                'market_scope' => $marketScope,
                                                 'active_markets' => $activeMarkets,
                                                 'service_id' => $serviceId,
                                                 'currency_id' => $currencyId,
@@ -330,6 +332,7 @@ class ReportsController extends AppController {
                                                                 'managing_entity' => $clientRecord['ClientRevenueByService']['managing_entity'],
                                                                 'country_id' => $clientRecord['ClientRevenueByService']['country_id'],
                                                                 'city_id' => $clientRecord['ClientRevenueByService']['city_id'],
+                                                                'market_scope' => $clientRecord['ClientRevenueByService']['market_scope'],
                                                                 'active_markets' => $clientRecord['ClientRevenueByService']['active_markets'],
                                                                 'service_id' => $clientRecord['ClientRevenueByService']['service_id'],
                                                                 'currency_id' => $clientRecord['ClientRevenueByService']['currency_id'],
@@ -432,6 +435,7 @@ class ReportsController extends AppController {
                                 $clientData[$i]['ClientSince'] = '';
                         }
                         $clientData[$i]['Service'] = $client[0]['service_name'];
+                        $clientData[$i]['MarketScope'] = $client['ClientRevenueByService']['market_scope'];
                         $clientData[$i]['ActiveMarkets'] = $client['ClientRevenueByService']['active_markets'];
                         $clientData[$i]['Currency'] = $client[0]['currency'];
                         $clientData[$i]['EstimatedRevenue'] = (($client['ClientRevenueByService']['estimated_revenue'] == 0) ? '' : $client['ClientRevenueByService']['estimated_revenue']);
@@ -516,6 +520,7 @@ class ReportsController extends AppController {
                                 $clientData[$i]['ClientSince'] = '';
                         }
                         $clientData[$i]['Service'] = $client[0]['service_name'];
+                        $clientData[$i]['MarketScope'] = $client['ClientRevenueByService']['market_scope'];
                         $clientData[$i]['ActiveMarkets'] = $client['ClientRevenueByService']['active_markets'];
 
                         $estimatedRevenue = 0;
@@ -683,6 +688,7 @@ class ReportsController extends AppController {
                         } else {
                                 $lostDate = '';
                         }
+                        $marketScope = trim($arrData['MarketScope']);
                         $activeMarkets = trim($arrData['ActiveMarkets']);
                         $companyName = trim($arrData['ParentCompany']);
                         $clientName = trim($arrData['ClientName']);
@@ -709,6 +715,7 @@ class ReportsController extends AppController {
                                                 'client_since_month' => $clientMonth,
                                                 'client_since_year' => $clientYear,
                                                 'lost_date' => $lostDate,
+                                                'market_scope' => $marketScope,
                                                 'active_markets' => $activeMarkets,
                                                 'service_id' => $serviceId,
                                                 'currency_id' => $currencyId,
@@ -889,8 +896,8 @@ class ReportsController extends AppController {
                         $arrData = $this->request->data['datarows'];
                         $exportCurrency = $this->request->data['currency'];
                         $exportFormat = $this->request->data['format'];
-                        $exportRevenue=$this->request->data['revenue'];
-                        $exportOption=$this->request->data['exportOpt'];
+                        $exportRevenue = isset($this->request->data['revenue']) ? $this->request->data['revenue'] : 'NO';
+                        $exportOption = isset($this->request->data['exportOpt']) ? $this->request->data['exportOpt'] : 'export_download';
                         $currencies = $this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'));
                         $convertRatio = array_search($exportCurrency, $currencies);
 
@@ -931,12 +938,13 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(10); 
                         $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(10);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(10);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(35);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(15);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(35);
                         if ($this->Auth->user('role') != 'Viewer') {
-                                $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(20);
                                 $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
                                 $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(20);
-                                $col=16;
+                                $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(20);
+                                $col=17;
                                 if($exportRevenue=="YES"){
                                         foreach($noYears as $year){
                                                 $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
@@ -953,23 +961,23 @@ class ReportsController extends AppController {
                                 $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
                                 $objPHPExcel->getActiveSheet()->getColumnDimension($colName)->setWidth(14);
                         } else {
-                                $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(40);
+                                $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(40);
                         }
                         if ($this->Auth->user('role') != 'Viewer') {
                                 if($exportFormat != 'csv') {
                                         $objPHPExcel->getActiveSheet()->getStyle("A1:".$colName.'1')->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                                 }
                         } else {
-                                $objPHPExcel->getActiveSheet()->getStyle("A1:N1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                $objPHPExcel->getActiveSheet()->getStyle("A1:O1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                         }
                         $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('F1:J1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
+                        $objPHPExcel->getActiveSheet()->getStyle('F1:L1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
                         if ($this->Auth->user('role') != 'Viewer') {
                                 if($exportFormat != 'csv') {
-                                        $objPHPExcel->getActiveSheet()->getStyle('K1:'.$colName.'1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
+                                        $objPHPExcel->getActiveSheet()->getStyle('M1:'.$colName.'1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
                                 }
                         } else {
-                                $objPHPExcel->getActiveSheet()->getStyle('K1:N1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
+                                $objPHPExcel->getActiveSheet()->getStyle('M1:O1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
                         }
                         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Region');
                         $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Country');
@@ -983,14 +991,15 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->SetCellValue('J1', 'Client Since (M-Y)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'Lost Since(M-Y)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('L1', 'Pitched (M-Y)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('M1', 'Active Markets');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('M1', 'Scope');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Active Markets');
                         if ($this->Auth->user('role') == 'Viewer') {
-                                $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Comments');
+                                $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Comments');
                         } else {
-                                $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Currency');
-                                $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'iP '.date('Y').' Estimated Revenue');
-                                $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'iP '.(date('Y')-1).' Actual Revenue');
-                                $col = 16;
+                                $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Currency');
+                                $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'iP '.date('Y').' Estimated Revenue');
+                                $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'iP '.(date('Y')-1).' Actual Revenue');
+                                $col = 17;
                                 if($exportRevenue == "YES") {
                                         foreach($noYears as $year)
                                         {
@@ -1081,7 +1090,7 @@ class ReportsController extends AppController {
 
                                         $row = array($data['Region'], $data['Country'], $data['City'],
                                             $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
-                                            $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate,
+                                            $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate, $data['MarketScope'],
                                             $data['ActiveMarkets'], $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue), (($actualRevenue == 0) ? '' : $actualRevenue));
                                         
                                         if($exportRevenue == "YES") {
@@ -1110,25 +1119,25 @@ class ReportsController extends AppController {
                                 } else {
                                         $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'],
                                             $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
-                                            $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate,
-                                            $data['ActiveMarkets'], $data['Comments']);
+                                            $data['PitchStage'], $data['Service'], $clientSince, $lostDate, $pitchDate,
+                                            $data['MarketScope'], $data['ActiveMarkets'], $data['Comments']);
                                 } 
                                 $i++;
                         }
                         if(!empty($arrDataExcel)) {
                                 if ($this->Auth->user('role') != 'Viewer') {
                                         $objPHPExcel->getActiveSheet()->getStyle('A2:'.$colName.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
-                                        $objPHPExcel->getActiveSheet()->getStyle('O2:O'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
                                         $objPHPExcel->getActiveSheet()->getStyle('P2:P'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
+                                        $objPHPExcel->getActiveSheet()->getStyle('Q2:Q'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
                                         $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
-                                        $objPHPExcel->getActiveSheet()->setAutoFilter('A1:Q'.$i);
+                                        $objPHPExcel->getActiveSheet()->setAutoFilter('A1:'.$colName.$i);
                                 } else {
                                         if($exportFormat != 'csv') {
-                                                $objPHPExcel->getActiveSheet()->getStyle('A2:N'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                                $objPHPExcel->getActiveSheet()->getStyle('A2:O'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                                         }
                                         $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
                                         if($exportFormat != 'csv') {
-                                                $objPHPExcel->getActiveSheet()->setAutoFilter('A1:N'.$i);
+                                                $objPHPExcel->getActiveSheet()->setAutoFilter('A1:O'.$i);
                                         }
                                 }
                         }
@@ -1574,14 +1583,6 @@ class ReportsController extends AppController {
                 return json_encode($result);
         }
 
-        public function associate_records() {
-
-        }
-
-        public function deassociate_records() {
-
-        }
-
         public function get_actual_revenue() {
                 if($this->RequestHandler->isAjax()) {
                         $this->autoRender=false;
@@ -1714,6 +1715,7 @@ class ReportsController extends AppController {
                                 $clientData[$i]['ClientSince'] = '';
                         }
                         $clientData[$i]['Service'] = $client[0]['service_name'];
+                        $clientData[$i]['MarketScope'] = $client['ClientDeleteLog']['market_scope'];
                         $clientData[$i]['ActiveMarkets'] = $client['ClientDeleteLog']['active_markets'];
 
                         $estimatedRevenue = $client['ClientDeleteLog']['estimated_revenue'];
@@ -1778,15 +1780,16 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(10);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(10);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(10);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(35);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(15);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(35);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(20);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(40);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("R")->setWidth(15);
-                        $objPHPExcel->getActiveSheet()->getStyle("A1:R1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(20);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("R")->setWidth(40);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("S")->setWidth(15);
+                        $objPHPExcel->getActiveSheet()->getStyle("A1:S1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                         $objPHPExcel->getActiveSheet()->getStyle('A1:F1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('G1:J1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        $objPHPExcel->getActiveSheet()->getStyle('K1:R1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
+                        $objPHPExcel->getActiveSheet()->getStyle('G1:M1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
+                        $objPHPExcel->getActiveSheet()->getStyle('N1:S1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
 
                         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Deleted By');
                         $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Region');
@@ -1801,11 +1804,12 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'Client Since (M-Y)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('L1', 'Lost Since(M-Y)');
                         $objPHPExcel->getActiveSheet()->SetCellValue('M1', 'Pitched (M-Y)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Active Markets');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Currency');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'Estimated Revenue');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'Comments');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('R1', 'Deleted On');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Scope');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Active Markets');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'Currency');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'Estimated Revenue');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('R1', 'Comments');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('S1', 'Deleted On');
 
                         $i = 1;
                         $arrDataExcel = array();
@@ -1835,7 +1839,7 @@ class ReportsController extends AppController {
 
                                 $row = array($data['DeletedBy'], $data['Region'], $data['Country'], $data['City'],
                                     $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
-                                    $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate,
+                                    $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate, $data['MarketScope'],
                                     $data['ActiveMarkets'], $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue),
                                     (($data['Comments'] == null) ? '' : $data['Comments']), $deletedDate);
 
@@ -1843,9 +1847,9 @@ class ReportsController extends AppController {
                                 $i++;
                         }
                         if(!empty($arrDataExcel)) {
-                                $objPHPExcel->getActiveSheet()->getStyle('A2:R'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                $objPHPExcel->getActiveSheet()->getStyle('A2:S'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                                 $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
-                                $objPHPExcel->getActiveSheet()->setAutoFilter('A1:R'.$i);
+                                $objPHPExcel->getActiveSheet()->setAutoFilter('A1:S'.$i);
                         }
 
                         // Rename sheet

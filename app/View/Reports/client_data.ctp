@@ -23,6 +23,7 @@
              var arrRegions = $.map(regions, function(el) { return el; });
              var stages = jQuery.parseJSON('<?php echo $stages; ?>');
              var arrStages = $.map(stages, function(el) { return el; });
+             var scopes = ['Global', 'Regional', 'Multi-market', 'Local'];
              var widthPreferences_client_data = jQuery.parseJSON('<?php echo $widthPreferences_client_data; ?>');
              var arrMonths = ['Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)'];
              var currMonth = '<?php echo $currMonth; ?>';
@@ -117,6 +118,7 @@
                     { name: 'ClientSince', type: 'date' },
                     { name: 'Lost', type: 'date' },
                     { name: 'Service', type: 'string' },
+                    { name: 'MarketScope', type: 'string' },
                     { name: 'ActiveMarkets', type: 'string' },
                     { name: 'Currency', type: 'string' },
                     { name: 'EstimatedRevenue', type: 'float' },
@@ -279,6 +281,7 @@
                   { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
+                  { text: 'Scope', datafield: 'MarketScope', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Active Markets', datafield: 'ActiveMarkets', width: 160, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: estimatedRevenueColumnTitle, datafield: 'EstimatedRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
@@ -417,6 +420,7 @@
                         var clientsince = data.ClientSince;
                         var lostdate = data.Lost;
                         var service = data.Service;
+                        var marketscope = data.MarketScope;
                         var activemarkets = data.ActiveMarkets;
                         var currency = data.Currency;
                         var estimatedrevenue = data.EstimatedRevenue;
@@ -579,6 +583,12 @@
                                 $("#divService").append(inpService);
                                 $("#update_service").jqxDropDownList({ source: services }).val(service);
                         }
+                        if(marketscope != null) {
+                                $("#update_marketscope").jqxDropDownList({ source: scopes }).val(marketscope);
+                        } else {
+                                $("#update_marketscope").jqxDropDownList({ source: scopes, selectedIndex: -1 });
+                                rules.push(validator.marketscope);
+                        }
                         $("#update_activemarket").jqxDropDownList('uncheckAll');
                         $("#update_activemarket").jqxDropDownList({ source: countries, checkboxes: true });
                         var entities = activemarkets.split(',');
@@ -730,6 +740,7 @@
                         var clientsincemonth = data.ClientMonth;
                         var clientsinceyear = data.ClientYear;
                         var lostdate = data.Lost;
+                        var marketscope = data.MarketScope;
                         var activemarkets = data.ActiveMarkets;
                         var currency = data.Currency;
                         var comments = data.Comments;
@@ -770,6 +781,7 @@
                         var lostDate = new Date(lostdate);
                         $("#lostdate").val(lostDate);
                         $("#service").jqxDropDownList({ source: services, selectedIndex: -1 });
+                        $("#marketscope").jqxDropDownList({ source: scopes }).val(marketscope);
                         $("#activemarket").jqxDropDownList({ source: countries, checkboxes: true });
                         var entities = activemarkets.split(',');
                         for(key in entities) {
@@ -1030,6 +1042,7 @@
                 $("#clientsince").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                 $("#lostdate").jqxDateTimeInput({ formatString: 'MM/yyyy', width: 100, height: 25 });
                 $("#service").jqxDropDownList({ source: services, selectedIndex: -1 });
+                $("#marketscope").jqxDropDownList({ source: scopes, selectedIndex: -1 });
                 $("#activemarket").jqxDropDownList({ source: countries, checkboxes: true, selectedIndex: -1});
                 $("#currency").jqxDropDownList({ source: currencies, selectedIndex: -1 });
                 $("#estrevenue").jqxInput({ height: 25, width: 100, rtl:true }).val('');
@@ -1098,42 +1111,42 @@
                                         return true;
                                 }
                                 return false;
-                            } 
+                            }
                         },
                         { input: '#city', message: 'City is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
                                 }
                                 return false;
-                            } 
+                            }
                         },
                         { input: '#agency', message: 'Lead agency is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
                                 }
                                 return false;
-                            } 
+                            }
                         },
                         { input: '#nameofentity', message: 'Entity is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
                                 }
                                 return false;
-                            } 
+                            }
                         },
                         { input: '#category', message: 'Category is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
                                 }
                                 return false;
-                            } 
+                            }
                         },
                         { input: '#pitchstage', message: 'Stage is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
                                 }
                                 return false;
-                            } 
+                            }
                         },
                         { input: '#clientsince', message: 'Client Since is required!', action: 'change', rule: function (input) {
                                 var pitchstage = $('#pitchstage').val();
@@ -1141,7 +1154,7 @@
                                         return false;
                                 }
                                 return true;
-                            } 
+                            }
                         },
                         { input: '#lostdate', message: 'Lost Date is required!', action: 'change', rule: function (input) {
                                 var pitchstage = $('#pitchstage').val();
@@ -1149,28 +1162,35 @@
                                         return false;
                                 }
                                 return true;
-                            } 
+                            }
                         },
                         { input: '#service', message: 'Service is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
                                 }
                                 return false;
-                            } 
+                            }
+                        },
+                        { input: '#marketscope', message: 'Scope is required!', action: 'change', rule: function (input) {
+                                if (input.val() != '') {
+                                        return true;
+                                }
+                                return false;
+                            }
                         },
                         { input: '#activemarket', message: 'Active Market is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
                                 }
                                 return false;
-                            } 
+                            }
                         },
                         { input: '#currency', message: 'Currency is required!', action: 'change', rule: function (input) {
                                 if (input.val() != '') {
                                         return true;
                                 }
                                 return false;
-                            } 
+                            }
                         },
                         { input: '#estrevenue', message: 'iP estimated revenue is required!', action: 'keyup, blur', rule: 'required' },
                         { input: '#estrevenue', message: 'iP estimated revenue should be numeric!', action: 'keyup, blur', rule: function (input) {
@@ -1178,7 +1198,7 @@
                                         return true;
                                 }
                                 return false;
-                            } 
+                            }
                         }
                 ]
             });
@@ -1212,8 +1232,8 @@
                 var row = { ClientName: $("#advertisername").val(), ParentCompany: $("#parentcompany").val(), Region: $("#region").val(),
                     Country: $("#nameofentity").val(), City: $("#city").val(), LeadAgency: $("#agency").val(), ClientCategory: $("#category").val(), 
                     PitchStart: $("#pitchstart").val(),PitchStage: $("#pitchstage").val(),
-                    ClientSince: $("#clientsince").val(), LostDate: $("#lostdate").val(),
-                    Service: $("#service").val(),ActiveMarkets: $("#activemarket").val(), Currency: $("#currency").val(),
+                    ClientSince: $("#clientsince").val(), LostDate: $("#lostdate").val(), Service: $("#service").val(),
+                    MarketScope: $("#marketscope").val(), ActiveMarkets: $("#activemarket").val(), Currency: $("#currency").val(),
                     EstimatedRevenue: $("#estrevenue").val(), Comments: $("#notes").val(), parentId: $('#parentrecordid').val()
                 };
                 $.ajax({
@@ -1248,7 +1268,7 @@
                                     return true;
                             }
                             return false;
-                        } 
+                        }
                 },
                 category: {
                         input: '#update_category', message: 'Category is required!', action: 'change', rule: function (input) {
@@ -1256,7 +1276,7 @@
                                     return true;
                             }
                             return false;
-                        } 
+                        }
                 },
                 service : {
                         input: '#update_service', message: 'Service is required!', action: 'change', rule: function (input) {
@@ -1264,7 +1284,7 @@
                                     return true;
                             }
                             return false;
-                        } 
+                        }
                 },
                 pitchstage : {
                         input: '#update_pitchstage', message: 'Stage is required!', action: 'change', rule: function (input) {
@@ -1284,7 +1304,7 @@
                                 return false;
                         }
                         return true;
-                    } 
+                    }
                 },
                 lostdate: { input: '#update_lostdate', message: 'Lost Date is required!', action: 'change', rule: function (input) {
                         if($('#update_pitchstage').val()) {
@@ -1296,14 +1316,21 @@
                                 return false;
                         }
                         return true;
-                    } 
+                    }
+                },
+                marketscope: { input: '#update_marketscope', message: 'Scope is required!', action: 'change', rule: function (input) {
+                        if (input.val() != '') {
+                                return true;
+                        }
+                        return false;
+                    }
                 },
                 activemarkets: { input: '#update_activemarket', message: 'Active Market is required!', action: 'change', rule: function (input) {
                         if (input.val() != '') {
                                 return true;
                         }
                         return false;
-                    } 
+                    }
                 },
                 currency: {
                         input: '#update_currency', message: 'Currency is required!', action: 'change', rule: function (input) {
@@ -1311,7 +1338,7 @@
                                     return true;
                             }
                             return false;
-                        } 
+                        }
                 },
                 estrevenueRequired: { input: '#update_estrevenue', message: 'iP estimated revenue is required!', action: 'keyup, blur', rule: function (input) {
                         if($('#update_pitchstage').val()) {
@@ -1339,7 +1366,7 @@
                                 return true;
                         }
                         return false;
-                    } 
+                    }
                 },
                 actualrevenueRequired: { input: '#update_actualrevenue', message: 'iP Actual revenue is required!', action: 'keyup, blur', rule: function (input) {
                         if($('#update_pitchstage').val()) {
@@ -1367,7 +1394,7 @@
                                 return true;
                         }
                         return false;
-                    } 
+                    }
                 }
             };
 
@@ -1439,6 +1466,7 @@
                 } else {
                         var service = $('#divService').text();
                 }
+                var marketscope = $('#update_marketscope').val();
                 var activemarkets = $('#update_activemarket').val();
                 if($('#update_currency').val()) {
                         var currency = $('#update_currency').val();
@@ -1460,8 +1488,8 @@
                 var row = { RecordId: recordid, ClientName: clientname, ParentCompany: parentcompany, Region: region,
                     Country: country, City: city, LeadAgency: leadagency, ClientCategory: clientcategory,
                     PitchStart: pitchstart,PitchStage: pitchstage,
-                    ClientSince: clientsince, LostDate: lostdate,
-                    Service: service, ActiveMarkets: activemarkets, Currency: currency,
+                    ClientSince: clientsince, LostDate: lostdate, Service: service,
+                    MarketScope: marketscope, ActiveMarkets: activemarkets, Currency: currency,
                     EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
                 };
 
@@ -1600,6 +1628,11 @@
                     <td style="width: 150px"></td>
                 </tr>
                 <tr>
+                    <td align="right">Scope</td>
+                    <td align="left" style="padding-bottom: 5px;"><div id="marketscope"></div></td>
+                    <td style="width: 150px"></td>
+                </tr>
+                <tr>
                     <td align="right">Active Market</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="activemarket"></div></td>
                     <td style="width: 150px"></td>
@@ -1695,6 +1728,11 @@
                     <td style="width: 150px"></td>
                 </tr>
                 <tr>
+                    <td align="right" style="padding-bottom: 5px; padding-right: 5px">Scope</td>
+                    <td align="left" style="padding-bottom: 5px;"><div id="update_marketscope"></div></td>
+                    <td style="width: 150px"></td>
+                </tr>
+                <tr>
                     <td align="right" style="padding-bottom: 5px; padding-right: 5px">Active Market</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="update_activemarket"></div></td>
                     <td style="width: 150px"></td>
@@ -1745,7 +1783,7 @@
                         <td align="left" style="padding-bottom: 5px;"><div id="revCurrency"></div></td>
                         <td style="width: 150px"></td>
                     </tr>
-                    <tr><td colspan="3"><div id="actualRevenue"><span  width:150px;></span></div></td></tr>
+                    <tr><td colspan="3"><div id="actualRevenue"><span style="width:150px;"></span></div></td></tr>
                </table>
         </div>
         </div>
