@@ -369,6 +369,8 @@ class ReportsController extends AppController {
 
         public function get_client_data() {
                 $this->autoRender=false;
+                set_time_limit(0);
+                ini_set('memory_limit', '-1');
 
                 $clientData = array();
                 $i = 0;
@@ -451,6 +453,8 @@ class ReportsController extends AppController {
 
         public function get_client_report_data() {
                 $this->autoRender=false;
+                set_time_limit(0);
+                ini_set('memory_limit', '-1');
 
                 $clientData = array();
                 $i = 0;
