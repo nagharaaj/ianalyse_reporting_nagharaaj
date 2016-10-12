@@ -14,7 +14,7 @@ class HelpController extends AppController {
         );
 
         public function beforeFilter() {
-                
+
                 $this->Auth->allow('login_help');
 
                 $this->Auth->loginAction = array(
@@ -188,7 +188,7 @@ class HelpController extends AppController {
                         $email->viewVars(array('title_for_layout' => 'Unable to connect', 'type' => 'Login failed', 'data' => $arrData));
                         $email->template('login_fail', 'default')
                             ->emailFormat('html')
-                            ->to(array( 'ama.hughes@iprospect.com'))    //'mathilde.natier@iprospect.com',
+                            ->to(array( 'helena.snowdon@iprospect.com'))
                             ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
                             ->subject('User unable to connect')
                             ->send();
