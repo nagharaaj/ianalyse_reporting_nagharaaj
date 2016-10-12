@@ -23,7 +23,7 @@
              var widthPreferences = jQuery.parseJSON('<?php echo $widthPreferences; ?>');
              var arrCurrencies = new Array();
              var defaultState;
-             
+
              var calculateStats = function () {
                 var dataRows = $('#jqxgrid').jqxGrid('getrows');
                 var rowscount = dataRows.length;
@@ -39,14 +39,14 @@
                         if(dataRows[i].PitchStage.match(/Live/g)) {
                                 pitchesCount++;
                         }
-                    }
+                }
                 $('#no_of_clients span').text(clientsCount);
                 $('#no_of_pitches span').text(pitchesCount);
              }
-             
+
              var horizontalScroll=function(){
                  var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
-                 $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e){
+                 $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e) {
                         e.preventDefault();
                         var position = $('#jqxgrid').jqxGrid('scrollposition');
                         var left = position.left;
@@ -58,15 +58,14 @@
                                 top=top+45;
                                 left=left-25;
                                 $('#jqxgrid').jqxGrid('scrolloffset',top,left);
-                        }
-                         else{
+                        } else {
                                 top=top-45;
                                 left=left+25;
                                 $('#jqxgrid').jqxGrid('scrolloffset', top,left);
                         }
                 });
-           }
-             
+             }
+
              var source =
              {
                 dataType: "json",
@@ -101,20 +100,20 @@
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     // you can pass additional argument to the commit callback which represents the new ID if it is generated from a DB.
                     commit(true);
                 },
                 updateRow: function (rowID, rowData, commit) {
                     // synchronize with the server - send update command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     commit(true);
                 },
                 deleteRow: function (rowID, commit) {
                     // synchronize with the server - send delete command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     commit(true);
                 }
@@ -122,7 +121,6 @@
 
              var dataAdapter = new $.jqx.dataAdapter(source);
              var cellclass = function (row, datafield, value, rowdata) {
-                //console.log(rowdata);
                 var stage = rowdata.PitchStage;
                 if(stage.match(/Won/g) || stage == 'Current client') {
                         return classWon;
@@ -158,7 +156,7 @@
                     var filter_or_operator = 1;
                     var filtervalue = removeSpecialChars(textInput.val());
                     var filtercondition = 'contains';
-                    var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);            
+                    var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
                     filtergroup.addfilter(filter_or_operator, filter1);
                     // add the filters.
                     $("#jqxgrid").jqxGrid('addfilter', "Search"+datafield, filtergroup);
@@ -215,7 +213,7 @@
                     }
                     else menu.height(height);
                 },
-             columns: [
+                columns: [
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'ParentId', datafield: 'ParentId', hidden: true },
                   { text: 'Created', datafield: 'Created', hidden: true },
@@ -261,7 +259,7 @@
                                        $('#jqxgrid').jqxGrid('setcolumnproperty',columnName,'width',columnSettings.width);
                                 });
                         }
-                } 
+                }
             });
             $("#jqxgrid").on("filter", function (event) {
                     calculateStats();
@@ -274,7 +272,7 @@
                     } else {
                         $('#pagerjqxgrid').show();
                     }
-                    
+
                     var filterGroups = $("#jqxgrid").jqxGrid('getfilterinformation');
                     if(filterGroups.length) {
                         for (var i = 0; i < filterGroups.length; i++) {
@@ -284,7 +282,7 @@
                                 var arrCities = new Array();
                                 var filters = filterGroup.filter.getfilters();
                                 for (var j = 0; j < filters.length; j++) {
-                                    $.map(markets[filters[j].value], function(el) { 
+                                    $.map(markets[filters[j].value], function(el) {
                                             arrRegionCountries.push(el);
                                             $.map(cities[el], function(elm) { arrCities.push(elm); });
                                     });
@@ -315,7 +313,7 @@
                     }
                 }
             });
-            $("#jqxgrid").on("columnresized", function (event){
+            $("#jqxgrid").on("columnresized", function (event) {
                     var state=null;
                     state = $("#jqxgrid").jqxGrid('savestate');
                     var obj=[];
@@ -323,13 +321,13 @@
                             state:state,
                             formname:'client_report'
                          };
-                $.ajax({
+                    $.ajax({
                             type: "POST",
                             url: "/reports/user_grid_preferences/",
                             data: JSON.stringify(obj),
                             contentType: "application/json; charset=utf-8",
                             dataType: "json"
-                      });
+                    });
             });
 
             $('#clearfilteringbutton').jqxButton({ theme: theme });
@@ -359,7 +357,7 @@
             });
 
             $("#popupWindow").jqxWindow({
-                width: 320, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none' 
+                width: 320, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none'
             });
             $('#exporttoexcelbutton').click(function () {
                 if(userRole == 'Viewer' || userRole == 'Country - Viewer') {
@@ -374,7 +372,7 @@
                         $.ajax({
                             type: "POST",
                             url: "/reports/export_client_data/",
-                                data: JSON.stringify({datarows: rows, timezone: tz.name(), 
+                                data: JSON.stringify({datarows: rows, timezone: tz.name(),
                                 currency: $("#exportcurrency option:selected").text(),
                                 format: 'excel'
                             }),
@@ -435,7 +433,7 @@
                 $.ajax({
                     type: "POST",
                     url: "/reports/export_client_data/",
-                    data: JSON.stringify({datarows: rows, timezone: tz.name(), 
+                    data: JSON.stringify({datarows: rows, timezone: tz.name(),
                             currency: $("#exportcurrency option:selected").text(),
                             format: $("#exportformat").val(),
                             revenue:$("#exportrevenue option:selected").text(),
@@ -471,12 +469,12 @@
             });
    });
     </script>
-    
+
 <script type="text/javascript">
         $(document).ready(function() {
                 $('#tab-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
         });
-</script>    
+</script>
 
 <div id='jqxWidget'>
         <div style="margin-right: 5px;" align="right">
@@ -511,7 +509,7 @@
             </div>
         </div>
         <div id="jqxgrid"></div>
- 
+
         <div id="popupWindow">
                 <div>Export to excel</div>
                 <div style="overflow: hidden;">

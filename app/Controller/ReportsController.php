@@ -939,7 +939,7 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setWidth(12);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(20);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(30);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(10); 
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(10);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(10);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(10);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(15);
@@ -951,18 +951,18 @@ class ReportsController extends AppController {
                                 $col=17;
                                 if($exportRevenue=="YES"){
                                         foreach($noYears as $year){
-                                                $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
+                                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
                                                 $objPHPExcel->getActiveSheet()->getColumnDimension($colName)->setWidth(14);
                                                 $col++;
                                         }
                                 }
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
+                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
                                 $objPHPExcel->getActiveSheet()->getColumnDimension($colName)->setWidth(14);
                                 $col++;
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
+                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
                                 $objPHPExcel->getActiveSheet()->getColumnDimension($colName)->setWidth(14);
                                 $col++;
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
+                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
                                 $objPHPExcel->getActiveSheet()->getColumnDimension($colName)->setWidth(14);
                         } else {
                                 $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(40);
@@ -1007,18 +1007,18 @@ class ReportsController extends AppController {
                                 if($exportRevenue == "YES") {
                                         foreach($noYears as $year)
                                         {
-                                                $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
+                                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
                                                 $objPHPExcel->getActiveSheet()->SetCellValue($colName.'1', 'iP'.$year.' Actual Revenue');
                                                 $col++;
                                         }
                                 }
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
+                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
                                 $objPHPExcel->getActiveSheet()->SetCellValue($colName.'1', 'Comments');
                                 $col++;
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
+                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
                                 $objPHPExcel->getActiveSheet()->SetCellValue($colName.'1', 'Created on');
                                 $col++;
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col); 
+                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
                                 $objPHPExcel->getActiveSheet()->SetCellValue($colName.'1', 'Last modified on');
                         }
                         if($exportRevenue == "YES") {
@@ -1096,7 +1096,7 @@ class ReportsController extends AppController {
                                             $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
                                             $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate, $data['MarketScope'],
                                             $data['ActiveMarkets'], $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue), (($actualRevenue == 0) ? '' : $actualRevenue));
-                                        
+
                                         if($exportRevenue == "YES") {
                                                 $recordId = $data['RecordId'];
                                                 if(isset($prevRevenue[$recordId])){
@@ -1114,7 +1114,7 @@ class ReportsController extends AppController {
                                                         {
                                                                 $row[] = '';
                                                         }
-                                                } 
+                                                }
                                         }
                                         $row[] = ($data['Comments'] == null) ? '' : $data['Comments'];
                                         $row[] = $createdDate;
@@ -1125,7 +1125,7 @@ class ReportsController extends AppController {
                                             $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
                                             $data['PitchStage'], $data['Service'], $clientSince, $lostDate, $pitchDate,
                                             $data['MarketScope'], $data['ActiveMarkets'], $data['Comments']);
-                                } 
+                                }
                                 $i++;
                         }
                         if(!empty($arrDataExcel)) {
@@ -1158,7 +1158,7 @@ class ReportsController extends AppController {
                         }
                         $objWriter->save('files/' . $fileName);
                         if($exportOption=="export_download"){
-                                $result = array('filename' => $fileName);     
+                                $result = array('filename' => $fileName);
                                 $result['success'] = true;
                         }else{
                                 $user=array();
@@ -1173,11 +1173,11 @@ class ReportsController extends AppController {
                                    ->subject('Client data export');
                                 if($email->send()){
                                         $success="Email has been sent successfully on " . $user['User']['email_id'];
-                                        $result = array('message' => $success); 
+                                        $result = array('message' => $success);
                                         $result['success'] = true;
                                 } else{
-                                        $error="Unable to send email to " . $user['User']['email_id'] . ". Please try later."; 
-                                        $result = array('message' => $error); 
+                                        $error="Unable to send email to " . $user['User']['email_id'] . ". Please try later.";
+                                        $result = array('message' => $error);
                                         $result['success'] = false;
                                }
                         }
@@ -1352,7 +1352,7 @@ class ReportsController extends AppController {
                                         )
                                 );
                                 $cityId = $this->City->getLastInsertId();
-                                
+
                                 $this->Office->create();
                                 $this->Office->save(
                                         array(
@@ -1554,18 +1554,18 @@ class ReportsController extends AppController {
                         $i = 2;
                         $arrDataExcel = array();
                         foreach($arrData as $data) {
-                                $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'], $data['YearEstablished'], 
+                                $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'], $data['YearEstablished'],
                                     $data['TotalEmployee'],
                                     $data['MarketsCovered'],
-                                    strip_tags(str_replace('<br/>', "\n", $data['Executive'])), 
+                                    strip_tags(str_replace('<br/>', "\n", $data['Executive'])),
                                     strip_tags(str_replace('<br/>', "\n", $data['BusinessHead'])),
-                                    strip_tags(str_replace('<br/>', "\n", $data['Affiliates'])), 
+                                    strip_tags(str_replace('<br/>', "\n", $data['Affiliates'])),
                                     strip_tags(str_replace('<br/>', "\n", $data['Content'])),
-                                    strip_tags(str_replace('<br/>', "\n", $data['Data'])), 
-                                    strip_tags(str_replace('<br/>', "\n", $data['Display'])), 
-                                    strip_tags(str_replace('<br/>', "\n", $data['Search'])), 
+                                    strip_tags(str_replace('<br/>', "\n", $data['Data'])),
+                                    strip_tags(str_replace('<br/>', "\n", $data['Display'])),
+                                    strip_tags(str_replace('<br/>', "\n", $data['Search'])),
                                     strip_tags(str_replace('<br/>', "\n", $data['SEO']))
-                                   
+
                                  );
                                 $i++;
                         }
@@ -1599,7 +1599,7 @@ class ReportsController extends AppController {
                 $result['data'] = $arrRevenue;
                 return json_encode($result);
         }
-        
+
         public function user_grid_preferences() {
                 if($this->RequestHandler->isAjax()) {
                         $this->autoRender=false;
@@ -1630,7 +1630,7 @@ class ReportsController extends AppController {
                                 );
                 }
         }
-        
+
         public function delete_grid_preferences() {
                 if($this->RequestHandler->isAjax()) {
                           $this->autoRender=false;

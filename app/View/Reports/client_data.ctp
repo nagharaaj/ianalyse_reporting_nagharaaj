@@ -33,17 +33,17 @@
              localizationobj.loadtext = "Processing";
 
              var months = [
-                     {value: 1, label: "Jan (1)"}, 
-                     {value: 2, label: "Feb (2)"}, 
-                     {value: 3, label: "Mar (3)"}, 
-                     {value: 4, label: "Apr (4)"}, 
-                     {value: 5, label: "May (5)"}, 
+                     {value: 1, label: "Jan (1)"},
+                     {value: 2, label: "Feb (2)"},
+                     {value: 3, label: "Mar (3)"},
+                     {value: 4, label: "Apr (4)"},
+                     {value: 5, label: "May (5)"},
                      {value: 6, label: "Jun (6)"},
-                     {value: 7, label: "Jul (7)"}, 
-                     {value: 8, label: "Aug(8)"}, 
-                     {value: 9, label: "Sep (9)"}, 
-                     {value: 10, label: "Oct (10)"}, 
-                     {value: 11, label: "Nov (11)"}, 
+                     {value: 7, label: "Jul (7)"},
+                     {value: 8, label: "Aug(8)"},
+                     {value: 9, label: "Sep (9)"},
+                     {value: 10, label: "Oct (10)"},
+                     {value: 11, label: "Nov (11)"},
                      {value: 12, label: "Dec (12)"}
              ];
              var monthsSource =
@@ -73,7 +73,7 @@
              var numberrenderer = function (row, column, value) {
                  return '<div style="text-align: center; margin-top: 5px;">' + (1 + value) + '</div>';
              }
-             
+
              var horizontalScroll=function(){
                  var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
                  $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e){
@@ -88,15 +88,14 @@
                                 top=top+45;
                                 left=left-25;
                                 $('#jqxgrid').jqxGrid('scrolloffset',top,left);
-                        }
-                         else{
+                        } else {
                                 top=top-45;
                                 left=left+25;
                                 $('#jqxgrid').jqxGrid('scrolloffset', top,left);
                         }
                 });
-           }
-             
+             }
+
              var source =
              {
                 dataType: "json",
@@ -130,20 +129,20 @@
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     // you can pass additional argument to the commit callback which represents the new ID if it is generated from a DB.
                     commit(true);
                 },
                 updateRow: function (rowID, rowData, commit) {
                     // synchronize with the server - send update command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     commit(true);
                 },
                 deleteRow: function (rowID, commit) {
                     // synchronize with the server - send delete command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     commit(true);
                 }
@@ -186,7 +185,7 @@
                     var filter_or_operator = 1;
                     var filtervalue = removeSpecialChars(textInput.val());
                     var filtercondition = 'contains';
-                    var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);            
+                    var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
                     filtergroup.addfilter(filter_or_operator, filter1);
                     // add the filters.
                     $("#jqxgrid").jqxGrid('addfilter', "Search"+datafield, filtergroup);
@@ -235,7 +234,7 @@
                 columnsresize: true,
                 showpinnedcolumnbackground: false,
                 enablehover: false,
-                
+
                 columnmenuopening: function (menu, datafield, height) {
                     var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                     if (column.filtertype === "custom") {
@@ -254,9 +253,6 @@
                           return "<div align='center'><button style='margin-right: 5px;' data-row='" + row + "' class='deleteButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='deleteClick(event)'>DELETE</button><button style='margin-right: 5px;' data-row='" + row + "' class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='duplicateClick(event)'>DUPLICATE</button><button data-row='" + row + "' class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button></div>";
                       }
                   },
-                  /*{
-                      text: '', columntype: 'checkbox', width: 50, align: 'center', cellsalign: 'center', pinned: true, sortable: false, dataField: null, filterable: false
-                  },*/
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'ParentId', datafield: 'ParentId', hidden: true },
                   { text: '', datafield: 'SearchClientName', hidden: true },
@@ -292,9 +288,9 @@
                       }
                   },
                   { text: 'Comments', datafield: 'Comments', width: 200, cellClassName: cellclass, editable: false }
-                  
+
                 ],
-          
+
                 ready:function()
                 {
                         horizontalScroll();
@@ -332,7 +328,7 @@
                                 var arrCities = new Array();
                                 var filters = filterGroup.filter.getfilters();
                                 for (var j = 0; j < filters.length; j++) {
-                                    $.map(markets[filters[j].value], function(el) { 
+                                    $.map(markets[filters[j].value], function(el) {
                                             arrRegionCountries.push(el);
                                             $.map(cities[el], function(elm) { arrCities.push(elm); });
                                     });
@@ -385,14 +381,7 @@
                             contentType: "application/json; charset=utf-8",
                             dataType: "json"
                       });
-            }); 
-            /*$("#jqxgrid").on("pagechanged", function (event) {
-                    if ($(".editButtons").length > 0) {
-                        $( ".editButtons" ).each(function( i ) {
-                                $(this).parent().parent().css('line-height', $(this).parent().parent().css('height'));
-                        });
-                    }
-            });*/
+            });
 
                 editClick = function (event) {
                         var target = $(event.target);
@@ -465,7 +454,6 @@
                                 $("#update_city").val(city);
                         }
                         if(leadagency != null) {
-                                //$("#divAgency").text(leadagency);
                                 $("#divAgency").html('');
                                 var inpAgency = $("<div id=\"update_agency\"></div>");
                                 $("#divAgency").append(inpAgency);
@@ -487,7 +475,6 @@
                                 $("#update_parentcompany").jqxInput({ height: 25, width: 175 }).val(parentcompany);
                         }
                         if(clientcategory != null) {
-                                //$("#divCategory").text(clientcategory);
                                 $("#divCategory").html('');
                                 var inpCategory = $("<div id=\"update_category\"></div>");
                                 $("#divCategory").append(inpCategory);
@@ -571,7 +558,6 @@
                                 rules.push(validator.lostdate);
                         }
                         if(service != null) {
-                                //$("#divService").text(service);
                                 $("#divService").html('');
                                 var inpService = $("<div id=\"update_service\"></div>");
                                 $("#divService").append(inpService);
@@ -600,7 +586,6 @@
                         }
                         rules.push(validator.activemarkets);
                         if(currency != null) {
-                                //$("#divCurrency").text(currency);
                                 $("#divCurrency").html('');
                                 var inpCurrency = $("<div id=\"update_currency\"></div>");
                                 $("#divCurrency").append(inpCurrency);
@@ -628,10 +613,6 @@
                                 var inpActualRevenue = $("<input type=\"text\" id=\"update_actualrevenue\" />");
                                 $("#divActualRevenue").append(inpActualRevenue);
                                 $("#update_actualrevenue").jqxInput({ height: 25, width: 150, rtl:true }).val(actualrevenue);
-                                /*if(pitchstage == 'Current client') {
-                                        rules.push(validator.actualrevenueRequired);
-                                        rules.push(validator.actualrevenueNumeric);
-                                }*/
                         }
                         $("#update_notes").jqxInput({ height: 25, width: 200 }).val(comments);
                         // show the popup window.
@@ -648,14 +629,8 @@
                             var args = event.args;
                             var item = $('#update_nameofentity').jqxDropDownList('getItem', args.index);
                             if(item != null) {
-                                /*if(item.label == "Global") {
-                                        $("#update_city").jqxDropDownList({ source: ['Global'], checkboxes: false, selectedIndex: 0 });
-                                } else if(item.label.match(/Regional/g)) {
-                                        $("#update_city").jqxDropDownList({ source: [item.label], checkboxes: false, selectedIndex: 0 });
-                                } else {*/
-                                        arrCities = cities[item.label];
-                                        $("#update_city").jqxDropDownList({ source: arrCities, checkboxes: false, selectedIndex: -1 });
-                                /*}*/
+                                arrCities = cities[item.label];
+                                $("#update_city").jqxDropDownList({ source: arrCities, checkboxes: false, selectedIndex: -1 });
                             }
                         });
                         $("#update_pitchstage").bind('select', function (event) {
@@ -807,14 +782,8 @@
                             var args = event.args;
                             var item = $('#nameofentity').jqxDropDownList('getItem', args.index);
                             if(item != null) {
-                                /*if(item.label == "Global") {
-                                        $("#city").jqxDropDownList({ source: ['Global'], checkboxes: false, selectedIndex: 0 });
-                                } else if(item.label.match(/Regional/g)) {
-                                        $("#city").jqxDropDownList({ source: [item.label], checkboxes: false, selectedIndex: 0 });
-                                } else {*/
-                                        arrCities = cities[item.label];
-                                        $("#city").jqxDropDownList({ source: arrCities, checkboxes: false, selectedIndex: -1 });
-                                /*}*/
+                                arrCities = cities[item.label];
+                                $("#city").jqxDropDownList({ source: arrCities, checkboxes: false, selectedIndex: -1 });
                             }
                         });
                         $("#pitchstage").bind('select', function (event) {
@@ -852,7 +821,7 @@
                         });
                         if(pitchstage.match(/Won/g) || pitchstage == "Current client") {
                                 $("#trClientSince").show();
-                                
+
                                 $("#trLostSince").hide();
                         }
                         else if(pitchstage.match(/Live/g)) {
@@ -886,7 +855,6 @@
                     var recordid = $("#jqxgrid").jqxGrid('getCellValue', rowIndex, 'RecordId');
                     var row = { RecordId: recordid };
                     if(confirm('Are you sure to delete this record?')) {
-                        //var state = $("#jqxgrid").jqxGrid('savestate');
                         $('#jqxgrid').jqxGrid('showloadelement');
                         $.ajax({
                             type: "POST",
@@ -906,26 +874,6 @@
                         });
                     }
                 }
-                /*applyFilters = function (filterGroups) {
-                    for (var i = 0; i < filterGroups.length; i++) {
-                        var filterGroup = filterGroups[i];
-                        var filters = filterGroup.filter.getfilters();
-                        for (var j = 0; j < filters.length; j++) {
-                            var filtergroup = new $.jqx.filter();
-                            var filter_or_operator = filters[j].operator;
-                            var filtervalue = filters[j].value;
-                            var filtercondition = filters[j].condition;
-                            if(filterGroup.filtercolumn == 'PitchStart' || filterGroup.filtercolumn == 'Lost') {
-                                var filter = filtergroup.createfilter('datefilter', filtervalue, filtercondition);
-                            } else {
-                                var filter = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
-                            }
-                            filtergroup.addfilter(filter_or_operator, filter);
-                        }
-                        $("#jqxgrid").jqxGrid('addfilter', filterGroup.filtercolumn, filtergroup);
-                    }
-                    $("#jqxgrid").jqxGrid('applyfilters');
-                }*/
 
                 $("#revenueWindow").jqxWindow({position:'center',
                         height:200, width: 400, resizable: false,  isModal: true, autoOpen: false, showCloseButton: true
@@ -968,15 +916,15 @@
                                                         $("#revenueWindow").jqxWindow('open');
                                                 }
                                         }
-                                } 
+                                }
                         });
                 }
 
             $("#popupWindow").jqxWindow({
-                width: 600, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelNew"), maxWidth: 700, maxHeight: 750, showCloseButton: false 
+                width: 600, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelNew"), maxWidth: 700, maxHeight: 750, showCloseButton: false
             });
             $("#updateWindow").jqxWindow({
-                width: 600, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelUpdate"), maxWidth: 700, maxHeight: 750, showCloseButton: false 
+                width: 600, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelUpdate"), maxWidth: 700, maxHeight: 750, showCloseButton: false
             });
             $(".createNew").jqxButton({ theme: theme });
             $(".createNew").click(function () {
@@ -1061,14 +1009,8 @@
                     var args = event.args;
                     var item = $('#nameofentity').jqxDropDownList('getItem', args.index);
                     if(item != null) {
-                        /*if(item.label == "Global") {
-                                $("#city").jqxDropDownList({ source: ['Global'], checkboxes: false, selectedIndex: 0 });
-                        } else if(item.label.match(/Regional/g)) {
-                                $("#city").jqxDropDownList({ source: [item.label], checkboxes: false, selectedIndex: 0 });
-                        } else {*/
-                                arrCities = cities[item.label];
-                                $("#city").jqxDropDownList({ source: arrCities, checkboxes: false, selectedIndex: -1 });
-                        /*}*/
+                        arrCities = cities[item.label];
+                        $("#city").jqxDropDownList({ source: arrCities, checkboxes: false, selectedIndex: -1 });
                     }
                 });
                 $("#pitchstage").bind('select', function (event) {
@@ -1228,9 +1170,9 @@
                 }
                 $("#SaveNew").attr('disabled', true);
                 var state = $("#jqxgrid").jqxGrid('savestate');
-                
+
                 var row = { ClientName: $("#advertisername").val(), ParentCompany: $("#parentcompany").val(), Region: $("#region").val(),
-                    Country: $("#nameofentity").val(), City: $("#city").val(), LeadAgency: $("#agency").val(), ClientCategory: $("#category").val(), 
+                    Country: $("#nameofentity").val(), City: $("#city").val(), LeadAgency: $("#agency").val(), ClientCategory: $("#category").val(),
                     PitchStart: $("#pitchstart").val(),PitchStage: $("#pitchstage").val(),
                     ClientSince: $("#clientsince").val(), LostDate: $("#lostdate").val(), Service: $("#service").val(),
                     MarketScope: $("#marketscope").val(), ActiveMarkets: $("#activemarket").val(), Currency: $("#currency").val(),
@@ -1244,7 +1186,6 @@
                     dataType: "json",
                     success : function(result) {
                         if(result.success == true) {
-                            //alert("Data saved successfully...");
                             $("#jqxgrid").jqxGrid('updateBoundData');
                             if (state) {
                                 $("#jqxgrid").jqxGrid('loadstate', state);
@@ -1405,7 +1346,6 @@
                 if(!$('#updateForm').jqxValidator('validate')) {
                         return false;
                 }
-                //var filterGroups = $('#jqxgrid').jqxGrid('getfilterinformation');
                 var state = $("#jqxgrid").jqxGrid('savestate');
 
                 var recordid = $("#recordid").val();
@@ -1513,10 +1453,6 @@
                             if (state) {
                                 $("#jqxgrid").jqxGrid('loadstate', state);
                             }
-                            /*$("#jqxgrid").on("bindingcomplete", function (event) {
-                                    applyFilters(filterGroups);
-                            });*/
-                            //$('#jqxgrid').jqxGrid('updaterow', recordid, updateRow);
                             $("#updateWindow").jqxWindow('hide');
                         } else {
                             alert(result.errors);
@@ -1527,9 +1463,6 @@
 
             });
 
-            $("#addassociation").click(function () {
-                
-            });
         });
     </script>
     <div id="tab-menu" align="left">
@@ -1539,7 +1472,7 @@
             <div id="-reports-client-data" class="light-grey selected">
                     <a href="/reports/client_data">CREATE/UPDATE YOUR RECORDS</a>
             </div>
-           
+
             <div style="float: right; margin-top: 35px; padding-right: 7px;">
                 <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
                 <button value="Add a new record" class='createNew'>ADD A NEW RECORD</button>
@@ -1551,9 +1484,7 @@
                 $('#nav-menu div#-reports-client_report').addClass('selected');
         });
 </script>
-        <!--<div style="margin-right: 7px; margin-bottom: 5px" align="right">
-            <button style="margin-left: 5px" value="Manage Association" id="addassociation">MANAGE ASSOCIATIONS</button>
-        </div>-->
+
 <div id='jqxWidget'>
         <div id="jqxgrid"></div>
         <div style='margin-top: 20px;'></div>
@@ -1759,7 +1690,7 @@
                 </tr>
             </table>
         </form>
-        
+
         <div style="padding-top: 20px;" align="right"><button style="margin-right: 15px;" id="UpdateClient">UPDATE EXISTING RECORD</button></div>
         </div>
     </div>
