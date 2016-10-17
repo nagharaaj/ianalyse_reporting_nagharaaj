@@ -347,6 +347,7 @@ class DanDailySyncShell extends AppShell {
                         'group_concat(ClientRevenueByService.estimated_revenue) as estimated_revenue', 'group_concat(ClientRevenueByService.currency_id) as currency_id',
                         'group_concat(NULLIF(ClientRevenueByService.active_markets,"")) as active_markets', 'group_concat(ClientRevenueByService.service_id) as service_id',
                         'group_concat(NULLIF(ClientRevenueByService.city_id,"")) as city_id',
+                        'group_concat(NULLIF(ClientRevenueByService.market_scope,"")) as market_scope',
                         'LeadAgency.agency',
                         'Country.country',
                         'ClientCategory.dan_mapping',
@@ -587,6 +588,8 @@ class DanDailySyncShell extends AppShell {
                                                 }
                                         }
                                 }
+                                $activeMarkets = array();
+                                $scope = '';
                                 if($client[0]['active_markets'] != null) {
                                         $client[0]['active_markets'] = str_replace(array('United States', 'United Arab Emirates', 'Serbia and Montenegro', 'Burma'), array('United States of America', 'UAE', 'Serbia', 'Myanmar'), $client[0]['active_markets']);
                                         $activeMarkets = array_unique(explode(',', $client[0]['active_markets']));
@@ -598,14 +601,24 @@ class DanDailySyncShell extends AppShell {
                                                         $responseStatus['reason'] = 'A country \''.$activeMarket.'\' under Other countries involved not found in NBRT';
                                                 }
                                         }
+                                }
+                                if($client[0]['market_scope'] != null) {
+                                        $scopeValue = array_unique(explode(',', $client[0]['market_scope']));
+                                        if(in_array('Global', $scopeValue)) {
+                                                $scope = 'Global';
+                                        } else if(in_array('Regional',$scopeValue)) {
+                                                $scope = 'Regional';
+                                        } else if(in_array('Multi-Market',$scopeValue)){
+                                                $scope = 'Multi-Market';
+                                        } else {
+                                                $scope = 'Local';
+                                        }
+                                }else {
                                         if(count($activeMarkets) > 1) {
                                                 $scope = 'Multi-Market';
                                         } else {
                                                 $scope = 'Local';
                                         }
-                                } else {
-                                        $activeMarkets = array();
-                                        $scope = '';
                                 }
                                 $arrServices = array();
                                 $arrServiceId = array_unique(explode(',', $client[0]['service_id']));
