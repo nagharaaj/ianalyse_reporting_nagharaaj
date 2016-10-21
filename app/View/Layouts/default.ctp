@@ -186,7 +186,7 @@
 		<div id="footer">
                 <?php if ($this->params['controller'].'-'.$this->params['action'] != 'users-login') { ?>
                         <div id="btn-backstage" style="position: fixed;left: 0;bottom: 0; border: 2px solid; text-align: center; padding: 5px 10px; background-color: #ffffff; z-index: 1000">
-                                <a href="http://team.aemedia.com/sites/NewBusiness/iProspect/default.aspx" target="blank" style="text-decoration: none; color: #000000">
+                                <a href="https://team.dentsuaegis.com/sites/globalnewbusiness/default.aspx" target="blank" style="text-decoration: none; color: #000000">
                                         <div style="display: inline-block;margin-right: 10px;">
                                                 <div style="font-weight: bold;">iPROSPECT NEW BUSINESS</div>
                                                 <div style="border: 1px solid #444e53; text-align: center;letter-spacing: 3px;line-height: 14px;">BACKSTAGE</div>
