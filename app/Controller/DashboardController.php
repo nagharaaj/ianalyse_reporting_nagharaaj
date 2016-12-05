@@ -34,7 +34,8 @@ class DashboardController extends AppController {
             'UserMarket',
             'OverviewAnnouncement',
             'OverviewSection',
-            'OverviewSectionBrand'
+            'OverviewSectionBrand',
+            'OverviewNotification'
         );
 
         public function beforeRender() {
@@ -140,6 +141,8 @@ class DashboardController extends AppController {
                         foreach($brands as $brand) {
                                 if($brand['clientName'] != "CLIENT NAME") {
                                         if(isset($brand['brandId']) && $brand['brandId'] != null) {
+                                                $existingMarkets = $this->OverviewSectionBrand->find('first', array('fields' => array('brand_markets', 'brand_services'), 'conditions' => array('OverviewSectionBrand.id' => $brand['brandId'])));
+
                                                 $this->OverviewSectionBrand->id = $brand['brandId'];
                                                 $this->OverviewSectionBrand->save(
                                                         array(
@@ -169,6 +172,48 @@ class DashboardController extends AppController {
                                                         )
                                                 );
                                                 $arrBrands[$brand['brandNo']] = $this->OverviewSectionBrand->getLastInsertId();
+                                        }
+                                        if(isset($brand['markets']) && $brand['markets'] != 'MARKETS') {
+                                                $notifyMarkets = explode(', ', $brand['markets']);
+                                                foreach($notifyMarkets as $notifyMarket) {
+                                                        $notificationExists = $this->OverviewNotification->find('first',
+                                                                array('conditions' => array(
+                                                                    'market' => $notifyMarket,
+                                                                    'section' => $arrData['sectionTitle'],
+                                                                    'brand' => $brand['clientName'],
+                                                                    'services' => (!empty($existingMarkets)) ? $existingMarkets['OverviewSectionBrand']['brand_services']  : $brand['services']
+                                                                ))
+                                                        );
+                                                        if(empty($notificationExists)) {
+                                                                $this->OverviewNotification->create();
+                                                                $this->OverviewNotification->save(
+                                                                        array(
+                                                                            'OverviewNotification' => array(
+                                                                                'market' => $notifyMarket,
+                                                                                'section' => $arrData['sectionTitle'],
+                                                                                'brand' => $brand['clientName'],
+                                                                                'services' => $brand['services'],
+                                                                                'user_id' => $this->Auth->user('id'),
+                                                                                'created' => date('Y-m-d H:i:s')
+                                                                            )
+                                                                        )
+                                                                );
+                                                        } else {
+                                                                $this->OverviewNotification->id = $notificationExists['OverviewNotification']['id'];
+                                                                $this->OverviewNotification->save(
+                                                                        array(
+                                                                            'OverviewNotification' => array(
+                                                                                'market' => $notifyMarket,
+                                                                                'section' => $arrData['sectionTitle'],
+                                                                                'brand' => $brand['clientName'],
+                                                                                'services' => $brand['services'],
+                                                                                'user_id' => $this->Auth->user('id'),
+                                                                                'created' => date('Y-m-d H:i:s')
+                                                                            )
+                                                                        )
+                                                                );
+                                                        }
+                                                }
                                         }
                                 }
                         }
