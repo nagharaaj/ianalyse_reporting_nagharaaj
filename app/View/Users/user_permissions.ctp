@@ -380,11 +380,38 @@
                 });
             });
             $("#users").jqxCheckBox({ checked : false });
-                $("#users").on('change',function(event){
-                      var checked = event.args.checked;
-                      source.data = {checked : checked};
-                      dataAdapter.dataBind();
+            $("#users").on('change',function(event){
+                var checked = event.args.checked;
+                source.data = {checked : checked};
+                dataAdapter.dataBind();
+            });
+
+            $("#loaderWindow").jqxWindow({
+                width: 300, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none' 
+            });
+            $('#exporttoexcelbutton').jqxButton({ theme: theme });
+            $('#exporttoexcelbutton').click(function () {
+                $("#loaderWindow").jqxWindow({ position: { x: 'center', y: 'top' }, height: "100px", maxWidth: 400, isModal: true, draggable: false });
+                $("#loaderWindow").jqxWindow('open');
+
+                var rows = $("#dataTable").jqxDataTable('getRows');
+                $.ajax({
+                    type: "POST",
+                    url: "/users/export_users_data/",
+                    data: JSON.stringify(rows),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success : function(result) {
+                        if(result.success == true) {
+                            $("#loaderWindow").jqxWindow('close');
+                            window.open('/files/Users_Data_<?php echo date('m-d-Y'); ?>.xlsx');
+                        } else {
+                            alert(result.errors);
+                            return false;
+                        }
+                    }
                 });
+            });
         });
     </script>
     <div id='jqxWidget'>
@@ -394,9 +421,20 @@
         <div id="dataTable"></div>
             <div style='margin-top: 20px;'>
             <div style='float: right; padding-right: 15px; padding-bottom: 30px;'>
+                    <button style="margin-right: 5px" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
                     <button value="Create New User" class='createNew'>CREATE NEW USER</button>
             </div>
         </div>
+    </div>
+
+    <div id="loaderWindow">
+            <div>Export to excel</div>
+            <div style="overflow: hidden;">
+                    <div id="divLoader" align="center" style="padding-top: 15px; padding-left: 90px;">
+                            <div class="jqx-grid-load" style="float: left; overflow: hidden; width: 32px; height: 32px;"></div>
+                            <span style="margin-top: 10px; float: left; display: block; margin-left: 5px;">Please wait...</span>
+                    </div>
+            </div>
     </div>
 
     <div id="popupWindow">

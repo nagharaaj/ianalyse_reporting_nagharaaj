@@ -498,4 +498,76 @@ class UsersController extends AppController {
                 $result['success'] = true;
                 return json_encode($result);
         }
+
+        public function export_users_data() {
+                set_time_limit(0);
+                ini_set('memory_limit', '-1');
+
+                if ($this->request->isPost()) {
+                        if($this->RequestHandler->isAjax()){
+                                $this->autoRender=false;
+                        }
+
+                        $arrData = $this->request->data;
+
+                        App::import('Vendor', 'PHPExcel', array('file' => 'PhpExcel/PHPExcel.php'));
+                        if (!class_exists('PHPExcel')) {
+                                throw new CakeException('Vendor class PHPExcel not found!');
+                        }
+                        App::import('Vendor', 'PHPExcel_Writer_Excel2007', array('file' => 'PhpExcel/PHPExcel/Writer/Excel2007.php'));
+                        if (!class_exists('PHPExcel_Writer_Excel2007')) {
+                                throw new CakeException('Vendor class PHPExcel not found!');
+                        }
+
+                        $objPHPExcel = new PHPExcel();
+
+                        // Set properties
+                        $objPHPExcel->getProperties()->setCreator($this->Auth->user('display_name'));
+                        $objPHPExcel->getProperties()->setLastModifiedBy($this->Auth->user('display_name'));
+                        $objPHPExcel->getProperties()->setTitle("Users Data by date " . date('m/d/Y'));
+                        $objPHPExcel->getProperties()->setSubject("Users Data by date " . date('m/d/Y'));
+
+                        // Add some data
+                        $objPHPExcel->setActiveSheetIndex(0);
+                        $objPHPExcel->getActiveSheet()->getStyle("A1:G1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                        $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(34);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(34);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(25);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(43);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(16);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(25);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setWidth(12);
+                        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Name');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Title');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'Location');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'Email');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Permissions');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Entity');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'Active');
+
+                        $i = 1;
+                        $arrDataExcel = array();
+                        foreach($arrData as $data) {
+                                $arrDataExcel[] = array($data['displayname'], $data['title'], $data['location'], $data['email'],
+                                    $data['permission'], $data['nameofentity'], ($data['active']) ? 'Yes' : 'No'
+                                );
+                                $i++;
+                        }
+                        if(!empty($arrDataExcel)) {
+                                $objPHPExcel->getActiveSheet()->getStyle('A2:G'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
+                                $objPHPExcel->getActiveSheet()->setAutoFilter('A1:G'.$i);
+                        }
+                        // Rename sheet
+                        $objPHPExcel->getActiveSheet()->setTitle('Users List');
+
+                        // Save Excel 2007 file
+                        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+                        $objWriter->save('files/Users_Data_' . date('m-d-Y') . '.xlsx');
+                }
+                $result = array();
+                $result['success'] = true;
+                return json_encode($result);
+        }
 }
