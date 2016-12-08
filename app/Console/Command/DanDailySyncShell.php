@@ -1116,7 +1116,7 @@ class DanDailySyncShell extends AppShell {
                 $this->UserLoginRole->Behaviors->attach('Containable');
                 $globalUsers = $this->UserLoginRole->find('all', array('fields' => array('User.display_name', 'User.email_id'), 'contain' => array('User', 'LoginRole'), 'conditions' => array('LoginRole.name' => 'Global', 'User.daily_sync_mail' => 1), 'order' => 'User.display_name'));
 
-                $emailTo = array('sam.pitcher@dentsuaegis.com');
+                $emailTo = array();
                 foreach($globalUsers as $globalUser) {
                         $emailTo[] = $globalUser['User']['email_id'];
                 }
