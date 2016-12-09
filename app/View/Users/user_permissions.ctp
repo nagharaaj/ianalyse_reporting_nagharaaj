@@ -96,12 +96,12 @@
                   { text: '', hidden: true, dataField: 'targetclients' },
                   { text: '', hidden: true, dataField: 'adminlinks' },
                   { text: 'Name', dataField: 'displayname', width: 210, align: 'center' },
-                  { text: 'Title', dataField: 'title', width: 200, align: 'center' },
+                  { text: 'Title', dataField: 'title', width: 180, align: 'center' },
                   { text: 'Location', dataField: 'location', width: 130, align: 'center' },
                   { text: 'Email', dataField: 'email', editable: false, width: 250, align: 'center' },
                   { text: 'Permission', dataField: 'permission', width: 110, align: 'center', columnType: 'template' },
-                  { text: 'Entity', dataField: 'nameofentity', width: 180, align: 'center', columnType: 'template' },
-                  { text: 'Active', datafield: 'active', columntype: 'template', width: 50, align: 'center', cellsalign: 'center',
+                  { text: 'Entity', dataField: 'nameofentity', width: 170, align: 'center', columnType: 'template' },
+                  { text: 'Active', datafield: 'active', columntype: 'template', width: 45, align: 'center', cellsalign: 'center',
                         cellsrenderer: function (row, columnfield, cellvalue) {
                                 if(cellvalue) {
                                         return "Yes";
@@ -111,9 +111,9 @@
                         }
                   },
                   {
-                      text: 'Edit', cellsAlign: 'center', align: "center", columnType: 'none', width: 120, editable: false, sortable: false, dataField: null, cellsRenderer: function (row, column, value) {
+                      text: '', cellsAlign: 'center', align: "center", columnType: 'none', width: 155, editable: false, sortable: false, dataField: null, cellsRenderer: function (row, column, value) {
                           // render custom column.
-                          return "<div align='center'><button data-row='" + row + "' class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button></div>";
+                          return "<div align='center'><button data-row='" + row + "' class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button><button style='margin-left: 5px;' data-row='" + row + "' class='deleteButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='deleteClick(event)'>DELETE</button></div>";
                       }
                   }
                 ]
@@ -412,6 +412,40 @@
                     }
                 });
             });
+
+            deleteClick = function (event) {
+                var target = $(event.target);
+                // get button's value.
+                var value = target.val();
+                // get clicked row.
+                var rowIndex = parseInt(event.target.getAttribute('data-row'));
+                if (isNaN(rowIndex)) {
+                    return;
+                }
+                var selection = $("#dataTable").jqxDataTable('getSelection');
+                for (var i = 0; i < selection.length; i++) {
+                    // get a selected row.
+                    var data = selection[i];
+                }
+                var row = { UserEmail: data.email } ;
+                if(confirm('Are you sure to delete this user?')) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/users/delete_user/",
+                        data: JSON.stringify(row),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success : function(result) {
+                            if(result.success == true) {
+                                $("#dataTable").jqxDataTable('updateBoundData');
+                            } else {
+                                alert(result.errors);
+                                return false;
+                            }
+                        }
+                    });
+                }
+            }
         });
     </script>
     <div id='jqxWidget'>

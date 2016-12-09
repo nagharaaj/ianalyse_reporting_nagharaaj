@@ -178,34 +178,65 @@ class UsersController extends AppController {
                 $arrData = $this->request->data;
 
                 $isActive = $arrData['activeflag'];
+                $isDeleted = false;
+                $userId = null;
 
                 if(isset($arrData['username'])) {
+                        // check if user already exists
                         $userExists = $this->User->find('first', array('conditions' => array('User.username' => $arrData['username'])));
                         if(isset($userExists['User']['id'])) {
-                                $result = array();
-                                $result['success'] = false;
-                                $result['errors'] = 'User already exists...';
-                                return json_encode($result);
+                                // is user already exists and not marked as deleted
+                                if($userExists['User']['is_deleted'] == 0) {
+                                        $result = array();
+                                        $result['success'] = false;
+                                        $result['errors'] = 'User already exists...';
+                                        return json_encode($result);
+                                } else {
+                                // if user is marked as deleted
+                                        $userId = $userExists['User']['id'];
+                                }
                         }
                 }
 
-                $this->User->create();
-                $this->User->save(
-                        array(
-                                'User' => array(
-                                        'display_name' => $arrData['displayname'],
-                                        'username' => $arrData['username'],
-                                        'title' => $arrData['title'],
-                                        'location' => $arrData['location'],
-                                        'email_id' => $arrData['email'],
-                                        'is_active' => $isActive,
-                                        'daily_sync_mail' => $arrData['dailysyncmails'],
-                                        'weekly_summary_mail' => $arrData['weeklysummarymails'],
-                                        'client_specific_mail' => $arrData['clientpitchmails']
+                if($userId) {
+                // if user exists and was marked as deleted, activate existing user record
+                        $this->User->id = $userId;
+                        $this->User->save(
+                                array(
+                                        'User' => array(
+                                                'display_name' => $arrData['displayname'],
+                                                'title' => $arrData['title'],
+                                                'location' => $arrData['location'],
+                                                'email_id' => $arrData['email'],
+                                                'is_active' => $isActive,
+                                                'daily_sync_mail' => $arrData['dailysyncmails'],
+                                                'weekly_summary_mail' => $arrData['weeklysummarymails'],
+                                                'client_specific_mail' => $arrData['clientpitchmails'],
+                                                'is_deleted' => $isDeleted
+                                        )
                                 )
-                        )
-                );
-                $userId = $this->User->getLastInsertId();
+                        );
+                } else {
+                // if user does not exist, create new record
+                        $this->User->create();
+                        $this->User->save(
+                                array(
+                                        'User' => array(
+                                                'display_name' => $arrData['displayname'],
+                                                'username' => $arrData['username'],
+                                                'title' => $arrData['title'],
+                                                'location' => $arrData['location'],
+                                                'email_id' => $arrData['email'],
+                                                'is_active' => $isActive,
+                                                'daily_sync_mail' => $arrData['dailysyncmails'],
+                                                'weekly_summary_mail' => $arrData['weeklysummarymails'],
+                                                'client_specific_mail' => $arrData['clientpitchmails'],
+                                                'is_deleted' => $isDeleted
+                                        )
+                                )
+                        );
+                        $userId = $this->User->getLastInsertId();
+                }
 
                 if(isset($arrData['permission'])) {
                         $loginRole = $this->LoginRole->findByName($arrData['permission']);
@@ -301,6 +332,8 @@ class UsersController extends AppController {
                 if($_GET['checked'] == 'false'){
                         $conditions['User.is_active'] = 1;
                 }
+                // show only users which are not marked as deleted
+                $conditions['User.is_deleted'] = 0;
                 $users = $this->User->find('all',array('order' => 'User.display_name Asc','conditions'=> $conditions));
                 foreach($users as $user) {
                         $userData[$i]['targetclients'] = '';
@@ -499,6 +532,9 @@ class UsersController extends AppController {
                 return json_encode($result);
         }
 
+        /*
+         * function to export all users list data into excel
+         */
         public function export_users_data() {
                 set_time_limit(0);
                 ini_set('memory_limit', '-1');
@@ -565,6 +601,47 @@ class UsersController extends AppController {
                         // Save Excel 2007 file
                         $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
                         $objWriter->save('files/Users_Data_' . date('m-d-Y') . '.xlsx');
+                }
+                $result = array();
+                $result['success'] = true;
+                return json_encode($result);
+        }
+
+        /*
+         *  function to mark existing user as deleted
+         */
+        public function delete_user() {
+                $this->autoRender=false;
+
+                $arrData = $this->request->data;
+
+                $isActive = false;
+                $isDeleted = true;
+
+                if(isset($arrData['UserEmail'])) {
+                        $userExists = $this->User->find('first', array('conditions' => array('User.email_id' => $arrData['UserEmail'])));
+                        if(isset($userExists['User']['id'])) {
+                                // mark user as deleted
+                                $this->User->id = $userExists['User']['id'];
+                                $this->User->save(
+                                        array(
+                                                'User' => array(
+                                                        'is_active' => $isActive,
+                                                        'is_deleted' => $isDeleted
+                                                )
+                                        )
+                                );
+                                // delete records from user associated tables
+                                $this->UserLoginRole->deleteAll(array('user_id' => $userExists['User']['id']));
+                                $this->UserMarket->deleteAll(array('user_id' => $userExists['User']['id']));
+                                $this->UserMailNotificationClient->deleteAll(array('user_id' => $userExists['User']['id']));
+                                $this->UserAdminAccess->deleteAll(array('user_id' => $userExists['User']['id']));
+                        } else {
+                                $result = array();
+                                $result['error'] = 'User does not exist. Please try again.';
+                                $result['success'] = false;
+                                return json_encode($result);
+                        }
                 }
                 $result = array();
                 $result['success'] = true;
