@@ -161,7 +161,8 @@
                         return '';
                 }
              }
-             var textInput;
+             var clientNameFilterInput;
+             var parentCompanyFilterInput;
              var buildFilterPanel = function (filterPanel, datafield) {
                 var textInput = $("<input style='margin:5px;'/>");
                 var applyinput = $("<div class='filter' style='height: 25px; margin-left: 20px; margin-top: 7px;'></div>");
@@ -175,6 +176,11 @@
                 filterclearbutton.jqxButton({ theme: theme, height: 20 });
                 var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                 textInput.jqxInput({ theme: theme, placeHolder: "Enter " + column.text, popupZIndex: 9999999, displayMember: datafield, /*source: dataadapter,*/ height: 23, width: 155 });
+                if(column.text == 'Parent Company') {
+                        parentCompanyFilterInput = textInput;
+                } else {
+                        clientNameFilterInput = textInput;
+                }
                 textInput.keyup(function (event) {
                     if (event.keyCode === 13) {
                         filterbutton.trigger('click');
@@ -1150,9 +1156,8 @@
             // update the edited row when the user clicks the 'Save' button.
             $('#clearfilteringbutton').click(function () {
                 $("#jqxgrid").jqxGrid('clearfilters');
-                if(textInput) {
-                    textInput.val("");
-                }
+                clientNameFilterInput.val("");
+                parentCompanyFilterInput.val("");
                 $.ajax({
                             type: "POST",
                             url: "/reports/delete_grid_preferences/",

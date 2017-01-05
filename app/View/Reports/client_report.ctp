@@ -132,9 +132,10 @@
                         return '';
                 }
              }
-             var textInput;
+             var clientNameFilterInput;
+             var parentCompanyFilterInput;
              var buildFilterPanel = function (filterPanel, datafield) {
-                textInput = $("<input style='margin:5px;'/>");
+                var textInput = $("<input style='margin:5px;'/>");
                 var applyinput = $("<div class='filter' style='height: 25px; margin-left: 20px; margin-top: 7px;'></div>");
                 var filterbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 2px;">Filter</span>');
                 applyinput.append(filterbutton);
@@ -146,6 +147,11 @@
                 filterclearbutton.jqxButton({ theme: theme, height: 20 });
                 var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                 textInput.jqxInput({ theme: theme, placeHolder: "Enter " + column.text, popupZIndex: 9999999, displayMember: datafield, /*source: dataadapter,*/ height: 23, width: 155 });
+                if(column.text == 'Parent Company') {
+                        parentCompanyFilterInput = textInput;
+                } else {
+                        clientNameFilterInput = textInput;
+                }
                 textInput.keyup(function (event) {
                     if (event.keyCode === 13) {
                         filterbutton.trigger('click');
@@ -340,9 +346,8 @@
             // clear the filtering.
             $('#clearfilteringbutton').click(function () {
                 $("#jqxgrid").jqxGrid('clearfilters');
-                if(textInput) {
-                    textInput.val("");
-                }
+                clientNameFilterInput.val("");
+                parentCompanyFilterInput.val("");
                 calculateStats();
                 $.ajax({
                             type: "POST",
