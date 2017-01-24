@@ -57,7 +57,6 @@
                     { name: 'City', type: 'string' },
                     { name: 'YearEstablished', type: 'number' },
                     { name: 'TotalEmployee', type: 'number' },
-                    { name: 'MarketsCovered',type:'string'},
                     { name: 'Executive', type: 'string' },
                     { name: 'BusinessHead', type: 'string' },
                     { name: 'Affiliates', type: 'string' },
@@ -144,7 +143,6 @@
                 filterbutton.click(function () {
                     var filtergroup = new $.jqx.filter();
                     var filter_or_operator = 1;
-                    //var filtervalue = textInput.val();
                     var arrSelectedLang = listInput.jqxListBox('getCheckedItems');
                     var filtervalue = null;
                     var filtercondition = 'contains';
@@ -200,6 +198,8 @@
                 showpinnedcolumnbackground: false,
                 enablebrowserselection: true,
                 enablehover: false,
+                autoshowfiltericon:true,
+                autoshowcolumnsmenubutton: false,
                 columnmenuopening: function (menu, datafield, height) {
                     var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                     if (column.filtertype === "custom") {
@@ -256,11 +256,10 @@
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
                   { text: 'Market', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
-                  { text: 'Location Name (City)', datafield: 'City', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
-                  { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center' },
-                  { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Markets Covered', columngroup: 'GeneralInfo', datafield: 'MarketsCovered', width: 110, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', cellsalign: 'right', align: 'center' },
-                  { text: 'Head of Office', datafield: 'Executive', width: 175, cellClassName: cellclass, align: 'center', filterable: false},
+                  { text: 'Location Name (City)', datafield: 'City', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
+                  { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center' },
+                  { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 120, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: 'Head of Office', datafield: 'Executive', width: 175, cellClassName: cellclass, align: 'center', filtertype: false},
                   { text: 'Head of New Business', datafield: 'BusinessHead', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: 'Head of PPC', datafield: 'Search', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: 'Head of SEO', datafield: 'SEO', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
@@ -431,23 +430,6 @@
                 $("#divEmployeeCount").append(inpEmpCount);
                 $("#employee_count").jqxInput({ height: 25, width: 100 }).val((rowData ? rowData.TotalEmployee : ''));
                 
-                $("#divMarketsCovered").html('');
-                var inpMarketsCovered = $("<div id=\"markets_covered\" />");
-                $("#divMarketsCovered").append(inpMarketsCovered);
-                if(rowData && rowData.MarketsCovered){
-                        $("#markets_covered").jqxDropDownList('uncheckAll');
-                        $("#markets_covered").jqxDropDownList({ source: countries, checkboxes: true });
-                        var entities = rowData.MarketsCovered.split(',');
-                                for(key in entities) {
-                                        if(arrCountries.indexOf(entities[key]) != -1) {
-                                               index = arrCountries.indexOf(entities[key]);
-                                               $("#markets_covered").jqxDropDownList('checkIndex', index);
-                                        }
-                                }
-               } else {
-                        $("#markets_covered").jqxDropDownList({ source: countries, checkboxes :true }).val();
-                      }
-                      
                 if(rowData && rowData.Executive) {
                         arrExecutive = rowData.Executive.split("<br/>-------------------------<br/>");
                         $.each(arrExecutive, function(index, value) {
@@ -574,7 +556,7 @@
 
               var row = {
                         RecordId: $("#recordid").val(), Region: $("#region").val(), Country: $("#country").val(), City: $("#city").val(),
-                        YearEstablished: $("#year_established").val(), EmployeeCount: $("#employee_count").val(), MarketsCovered: $("#markets_covered").val(),
+                        YearEstablished: $("#year_established").val(), EmployeeCount: $("#employee_count").val(), MarketsCovered: '',
                         KeyContacts: keyContacts, ServicesContacts: serviceContacts
                 };
 
@@ -735,10 +717,6 @@
                         <div>
                             <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;">Total employee</div>
                             <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divEmployeeCount"></div></div>
-                        </div>
-                        <div>
-                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;">Markets Covered</div>
-                            <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divMarketsCovered"></div></div>
                         </div>
                     </fieldset>
                 </div>

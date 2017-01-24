@@ -63,7 +63,6 @@
                     { name: 'City', type: 'string' },
                     { name: 'YearEstablished', type: 'number' },
                     { name: 'TotalEmployee', type: 'number' },
-                    { name: 'MarketsCovered',type:'string'},
                     { name: 'Executive', type: 'string' },
                     { name: 'BusinessHead', type: 'string' },
                     { name: 'Affiliates', type: 'string' },
@@ -150,7 +149,6 @@
                 filterbutton.click(function () {
                     var filtergroup = new $.jqx.filter();
                     var filter_or_operator = 1;
-                    //var filtervalue = textInput.val();
                     var arrSelectedLang = listInput.jqxListBox('getCheckedItems');
                     var filtervalue = null;
                     var filtercondition = 'contains';
@@ -207,6 +205,8 @@
                 enablebrowserselection: true,
                 enablehover: false,
                 enableellipsis: false,
+                autoshowfiltericon:true,
+                autoshowcolumnsmenubutton: false,
                 columnmenuopening: function (menu, datafield, height) {
                     var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                     if (column.filtertype === "custom") {
@@ -230,10 +230,9 @@
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
                   { text: 'Market', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
-                  { text: 'Location Name (City)', datafield: 'City', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
-                  { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center' },
-                  { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'MarketsCovered', datafield: 'MarketsCovered',columngroup: 'GeneralInfo', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center'},
+                  { text: 'Location Name (City)', datafield: 'City', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
+                  { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center' },
+                  { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 120, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Head of Office', datafield: 'Executive', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: 'Head of New Business', datafield: 'BusinessHead', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: 'Head of PPC', datafield: 'Search', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
