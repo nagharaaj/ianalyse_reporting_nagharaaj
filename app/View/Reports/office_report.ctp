@@ -1,6 +1,6 @@
     <script type="text/javascript">
          var editClick;
-        
+
          $(document).ready(function () {
 
              var userRole = '<?php echo $userRole;?>';
@@ -13,7 +13,7 @@
              var numberrenderer = function (row, column, value) {
                  return '<div style="text-align: center; margin-top: 5px;">' + (1 + value) + '</div>';
              }
-             
+
              var calculateStats = function () {
                 var dataRows = $('#jqxgrid').jqxGrid('getrows');
                 var rowscount = dataRows.length;
@@ -27,7 +27,7 @@
                 }
                 $('#no_of_employees span').text(Math.round(employeesCount));
              }
-             
+
              var horizontalScroll=function(){
                  var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
                  $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e){
@@ -50,7 +50,7 @@
                         }
                 });
            }
-             
+
              var source =
              {
                 dataType: "json",
@@ -63,7 +63,6 @@
                     { name: 'City', type: 'string' },
                     { name: 'YearEstablished', type: 'number' },
                     { name: 'TotalEmployee', type: 'number' },
-                    { name: 'MarketsCovered',type:'string'},
                     { name: 'Executive', type: 'string' },
                     { name: 'BusinessHead', type: 'string' },
                     { name: 'Affiliates', type: 'string' },
@@ -75,20 +74,20 @@
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     // you can pass additional argument to the commit callback which represents the new ID if it is generated from a DB.
                     commit(true);
                 },
                 updateRow: function (rowID, rowData, commit) {
                     // synchronize with the server - send update command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     commit(true);
                 },
                 deleteRow: function (rowID, commit) {
                     // synchronize with the server - send delete command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     commit(true);
                 }
@@ -150,13 +149,12 @@
                 filterbutton.click(function () {
                     var filtergroup = new $.jqx.filter();
                     var filter_or_operator = 1;
-                    //var filtervalue = textInput.val();
                     var arrSelectedLang = listInput.jqxListBox('getCheckedItems');
                     var filtervalue = null;
                     var filtercondition = 'contains';
                     $.each(arrSelectedLang, function (index) {
                         filtervalue = this.label;
-                        var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);            
+                        var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
                         filtergroup.addfilter(filter_or_operator, filter1);
                     });
                     // add the filters.
@@ -207,6 +205,8 @@
                 enablebrowserselection: true,
                 enablehover: false,
                 enableellipsis: false,
+                autoshowfiltericon:true,
+                autoshowcolumnsmenubutton: false,
                 columnmenuopening: function (menu, datafield, height) {
                     var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                     if (column.filtertype === "custom") {
@@ -230,10 +230,9 @@
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
                   { text: 'Market', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
-                  { text: 'Location Name (City)', datafield: 'City', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
-                  { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center' },
-                  { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'MarketsCovered', datafield: 'MarketsCovered',columngroup: 'GeneralInfo', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center'},
+                  { text: 'Location Name (City)', datafield: 'City', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
+                  { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center' },
+                  { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 120, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
                   { text: 'Head of Office', datafield: 'Executive', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: 'Head of New Business', datafield: 'BusinessHead', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: 'Head of PPC', datafield: 'Search', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
@@ -247,13 +246,13 @@
                       }
                   }
                 ],
-                columngroups: 
+                columngroups:
                 [
                   { text: 'General information', align: 'center', name: 'GeneralInfo' },
                 ]
-               
-            });     
-                
+
+            });
+
             $("#jqxgrid").on("filter", function (event) {
                     calculateStats();
                     var paginginfo = $("#jqxgrid").jqxGrid('getpaginginformation');
@@ -287,7 +286,7 @@
                             contentType: "application/json; charset=utf-8",
                             dataType: "json"
                       });
-            }); 
+            });
             $('#clearfilteringbutton').jqxButton({ theme: theme });
             $('#exporttoexcelbutton').jqxButton({ theme: theme });
             // clear the filtering.
@@ -307,7 +306,7 @@
             });
 
             $("#loaderWindow").jqxWindow({
-                width: 300, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none' 
+                width: 300, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none'
             });
             $('#exporttoexcelbutton').click(function () {
                 $("#loaderWindow").jqxWindow({ position: { x: 'center', y: 'top' }, height: "100px", maxWidth: 400, isModal: true, draggable: false });
@@ -337,7 +336,7 @@
         $(document).ready(function() {
                 $('#tab-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
         });
-</script>    
+</script>
 
 <div id='jqxWidget'>
         <div style="margin-right: 5px; margin-top: 5px; margin-bottom: 10px;" align="right">
@@ -372,7 +371,7 @@
         <div id="jqxgrid"></div>
             <div style='margin-top: 20px;'>
         </div>
-        
+
         <div id="loaderWindow">
                 <div>Export to excel</div>
                 <div style="overflow: hidden;">

@@ -20,7 +20,7 @@
              var numberrenderer = function (row, column, value) {
                  return '<div style="text-align: center; margin-top: 5px;">' + (1 + value) + '</div>';
              }
-             
+
              var horizontalScroll=function(){
                  var mousewheel = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
                  $("#jqxScrollWraphorizontalScrollBarjqxgrid").bind(mousewheel, function(e){
@@ -43,7 +43,7 @@
                         }
                 });
            }
-           
+
              var source =
              {
                 dataType: "json",
@@ -57,7 +57,6 @@
                     { name: 'City', type: 'string' },
                     { name: 'YearEstablished', type: 'number' },
                     { name: 'TotalEmployee', type: 'number' },
-                    { name: 'MarketsCovered',type:'string'},
                     { name: 'Executive', type: 'string' },
                     { name: 'BusinessHead', type: 'string' },
                     { name: 'Affiliates', type: 'string' },
@@ -69,20 +68,20 @@
                 ],
                 addRow: function (rowID, rowData, position, commit) {
                     // synchronize with the server - send insert command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     // you can pass additional argument to the commit callback which represents the new ID if it is generated from a DB.
                     commit(true);
                 },
                 updateRow: function (rowID, rowData, commit) {
                     // synchronize with the server - send update command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     commit(true);
                 },
                 deleteRow: function (rowID, commit) {
                     // synchronize with the server - send delete command
-                    // call commit with parameter true if the synchronization with the server is successful 
+                    // call commit with parameter true if the synchronization with the server is successful
                     // and with parameter false if the synchronization failed.
                     commit(true);
                 }
@@ -144,13 +143,12 @@
                 filterbutton.click(function () {
                     var filtergroup = new $.jqx.filter();
                     var filter_or_operator = 1;
-                    //var filtervalue = textInput.val();
                     var arrSelectedLang = listInput.jqxListBox('getCheckedItems');
                     var filtervalue = null;
                     var filtercondition = 'contains';
                     $.each(arrSelectedLang, function (index) {
                         filtervalue = this.label;
-                        var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);            
+                        var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
                         filtergroup.addfilter(filter_or_operator, filter1);
                     });
                     // add the filters.
@@ -200,6 +198,8 @@
                 showpinnedcolumnbackground: false,
                 enablebrowserselection: true,
                 enablehover: false,
+                autoshowfiltericon:true,
+                autoshowcolumnsmenubutton: false,
                 columnmenuopening: function (menu, datafield, height) {
                     var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                     if (column.filtertype === "custom") {
@@ -256,11 +256,10 @@
                   { text: 'RecordId', datafield: 'RecordId', hidden: true },
                   { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
                   { text: 'Market', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
-                  { text: 'Location Name (City)', datafield: 'City', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
-                  { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center' },
-                  { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 100, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
-                  { text: 'Markets Covered', columngroup: 'GeneralInfo', datafield: 'MarketsCovered', width: 110, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', cellsalign: 'right', align: 'center' },
-                  { text: 'Head of Office', datafield: 'Executive', width: 175, cellClassName: cellclass, align: 'center', filterable: false},
+                  { text: 'Location Name (City)', datafield: 'City', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', align: 'center', pinned: true },
+                  { text: 'Year established', columngroup: 'GeneralInfo', datafield: 'YearEstablished', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', cellsalign: 'right', align: 'center' },
+                  { text: 'Total employee', columngroup: 'GeneralInfo', datafield: 'TotalEmployee', width: 120, cellClassName: cellclass, cellsalign: 'right', align: 'center' },
+                  { text: 'Head of Office', datafield: 'Executive', width: 175, cellClassName: cellclass, align: 'center', filtertype: false},
                   { text: 'Head of New Business', datafield: 'BusinessHead', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: 'Head of PPC', datafield: 'Search', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
                   { text: 'Head of SEO', datafield: 'SEO', width: 175, cellClassName: cellclass, align: 'center', filterable: false },
@@ -269,8 +268,8 @@
                   { text: 'Head of Content', datafield: 'Content', width: 175, cellClassName: cellclass, align: 'center', filterable: false},
                   { text: 'Head of Data & Insights', datafield: 'Data', width: 175, cellClassName: cellclass, align: 'center', filterable: false},
                 ],
-                
-                columngroups: 
+
+                columngroups:
                 [
                   { text: 'General information', align: 'center', name: 'GeneralInfo' }
                 ]
@@ -282,7 +281,7 @@
                     } else {
                         $('#pagerjqxgrid').show();
                     }
-                    
+
                     if ($(".editButtons").length > 0) {
                         $( ".editButtons" ).each(function( i ) {
                                 $(this).parent().parent().css('line-height', $(this).parent().parent().parent().css('height'));
@@ -303,7 +302,7 @@
                         });
                     }
                 }
-            }); 
+            });
             $("#jqxgrid").on("pagechanged", function (event) {
                     if ($(".editButtons").length > 0) {
                         $( ".editButtons" ).each(function( i ) {
@@ -380,7 +379,7 @@
             }
 
             $("#popupWindow").jqxWindow({
-                width: 1100, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelNew"), maxWidth: 1200, maxHeight: 750, showCloseButton: false 
+                width: 1100, resizable: false,  isModal: true, autoOpen: false, cancelButton: $("#CancelNew"), maxWidth: 1200, maxHeight: 750, showCloseButton: false
             });
             if($(".createNew").is(':visible')) {
                 $(".createNew").jqxButton({ theme: theme });
@@ -430,24 +429,7 @@
                 var inpEmpCount = $("<input type=\"text\" id=\"employee_count\" />");
                 $("#divEmployeeCount").append(inpEmpCount);
                 $("#employee_count").jqxInput({ height: 25, width: 100 }).val((rowData ? rowData.TotalEmployee : ''));
-                
-                $("#divMarketsCovered").html('');
-                var inpMarketsCovered = $("<div id=\"markets_covered\" />");
-                $("#divMarketsCovered").append(inpMarketsCovered);
-                if(rowData && rowData.MarketsCovered){
-                        $("#markets_covered").jqxDropDownList('uncheckAll');
-                        $("#markets_covered").jqxDropDownList({ source: countries, checkboxes: true });
-                        var entities = rowData.MarketsCovered.split(',');
-                                for(key in entities) {
-                                        if(arrCountries.indexOf(entities[key]) != -1) {
-                                               index = arrCountries.indexOf(entities[key]);
-                                               $("#markets_covered").jqxDropDownList('checkIndex', index);
-                                        }
-                                }
-               } else {
-                        $("#markets_covered").jqxDropDownList({ source: countries, checkboxes :true }).val();
-                      }
-                      
+
                 if(rowData && rowData.Executive) {
                         arrExecutive = rowData.Executive.split("<br/>-------------------------<br/>");
                         $.each(arrExecutive, function(index, value) {
@@ -481,8 +463,8 @@
                         $("#business_head_contact_name_0").jqxInput({ height: 25, width: 310 }).val('');
                         $("#business_head_contact_title_0").jqxInput({ height: 25, width: 310 }).val('');
                         $("#business_head_contact_email_0").jqxInput({ height: 25, width: 310 }).val('');
-                } 
-                
+                }
+
                 for (i = 0; i < arrServices.length; i++) {
                         if(rowData && rowData[arrServices[i]]) {
                                 arrServiceContact = rowData[arrServices[i]].split("<br/>-------------------------<br/>");
@@ -544,8 +526,8 @@
                 item['dept_name'] = 'Executive';
                 item['dept_contacts'] = executiveContacts;
                 keyContacts.push(item);
-                
-             var businessContacts = [];
+
+                var businessContacts = [];
                 for (var i = 0; i <= parseInt($("#businessHeadCount").val()); i++) {
                         if($("#business_head_contact_name_" + i).val() != '') {
                                 businessContact = $("#business_head_contact_name_" + i).val() + '/' + ($("#business_head_contact_title_" + i).val() != '' ? $("#business_head_contact_title_" + i).val() : 'title') + '/' + ($("#business_head_contact_email_" + i).val() != '' ? $("#business_head_contact_email_" + i).val() : 'email');
@@ -556,7 +538,7 @@
                 item['dept_name'] = 'BusinessHead';
                 item['dept_contacts'] = businessContacts;
                 keyContacts.push(item);
-                
+
                 var serviceContacts = [];
                 for (i = 0; i < arrServices.length; i++) {
                         var serviceContact = [];
@@ -572,9 +554,9 @@
                         serviceContacts.push(item);
                 }
 
-              var row = {
+                var row = {
                         RecordId: $("#recordid").val(), Region: $("#region").val(), Country: $("#country").val(), City: $("#city").val(),
-                        YearEstablished: $("#year_established").val(), EmployeeCount: $("#employee_count").val(), MarketsCovered: $("#markets_covered").val(),
+                        YearEstablished: $("#year_established").val(), EmployeeCount: $("#employee_count").val(), MarketsCovered: '',
                         KeyContacts: keyContacts, ServicesContacts: serviceContacts
                 };
 
@@ -607,7 +589,7 @@
                                         return true;
                                 }
                                 return false;
-                        } 
+                        }
                 },
                 country : {
                         input: '#country', message: 'Market is required!', action: 'change', rule: function (input) {
@@ -623,7 +605,7 @@
                                         return true;
                                 }
                                 return false;
-                        } 
+                        }
                 }
             }
 
@@ -680,7 +662,7 @@
             <div id="-reports-client-data" class="light-grey selected">
                     <a href="/reports/office_data">UPDATE YOUR RECORDS</a>
             </div>
-        
+
          <?php if($userRole == 'Global') { ?>
         <div style='float: right; padding-right: 7px; margin-top: 35px;'>
             <button value="Reset" id="clearfilteringbutton" title="Reset filters">RESET</button>
@@ -688,7 +670,7 @@
         </div>
         <?php } ?>
     </div>
-    
+
 <script type="text/javascript">
         $(document).ready(function() {
                 $('#tab-menu div#-<?php echo $this->params['controller'].'-'.$this->params['action']; ?>').addClass('selected');
@@ -735,10 +717,6 @@
                         <div>
                             <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;">Total employee</div>
                             <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divEmployeeCount"></div></div>
-                        </div>
-                        <div>
-                            <div style="width: 150px; padding-bottom: 5px; padding-right: 5px; text-align: right; display: inline-block;">Markets Covered</div>
-                            <div align="left" style="padding-bottom: 5px; display: inline-block;"><div id="divMarketsCovered"></div></div>
                         </div>
                     </fieldset>
                 </div>
