@@ -1095,7 +1095,7 @@ class ReportsController extends AppController {
                                         $row = array($data['Region'], $data['Country'], $data['City'],
                                             $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
                                             $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate, $data['MarketScope'],
-                                            $data['ActiveMarkets'], $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue), (($actualRevenue == 0) ? '' : $actualRevenue));
+                                            html_entity_decode($data['ActiveMarkets']), $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue), (($actualRevenue == 0) ? '' : $actualRevenue));
 
                                         if($exportRevenue == "YES") {
                                                 $recordId = $data['RecordId'];
@@ -1124,7 +1124,7 @@ class ReportsController extends AppController {
                                         $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'],
                                             $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
                                             $data['PitchStage'], $data['Service'], $clientSince, $lostDate, $pitchDate,
-                                            $data['MarketScope'], $data['ActiveMarkets'], $data['Comments']);
+                                            $data['MarketScope'], html_entity_decode($data['ActiveMarkets']), $data['Comments']);
                                 }
                                 $i++;
                         }
@@ -1837,7 +1837,7 @@ class ReportsController extends AppController {
                                 $row = array($data['DeletedBy'], $data['Region'], $data['Country'], $data['City'],
                                     $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
                                     $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate, $data['MarketScope'],
-                                    $data['ActiveMarkets'], $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue),
+                                    html_entity_decode($data['ActiveMarkets']), $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue),
                                     (($data['Comments'] == null) ? '' : $data['Comments']), $deletedDate);
 
                                 $arrDataExcel[] = $row;
