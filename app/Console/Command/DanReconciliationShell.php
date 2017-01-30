@@ -548,7 +548,8 @@ class DanReconciliationShell extends AppShell {
                                                         if (($key = array_search($country, $activeMarkets)) !== false) {
                                                                 unset($activeMarkets[$key]);
                                                         }
-                                                        foreach($activeMarkets as $activeMarket) {
+                                                        foreach($activeMarkets as &$activeMarket) {
+                                                                $activeMarket = html_entity_decode($activeMarket);
                                                                 if(array_search(trim($activeMarket), $arrNbrCountry) == false) {
                                                                         $responseStatus['reason'] = 'A country \''.$activeMarket.'\' under Other countries involved not found in NBR';
                                                                 }
