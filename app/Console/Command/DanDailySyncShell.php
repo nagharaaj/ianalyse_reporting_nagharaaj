@@ -261,11 +261,16 @@ class DanDailySyncShell extends AppShell {
                         if(array_key_exists($country, $arrCountryCode) === false) {
                         // check if country code already exists in array
                                 // request to pull country information like id, name and country code from NBR
-                                $countryCodeUrl = $siteUrl . '_api/web/lists/getbytitle(\'Country\')/items?$select=Id,Title,DACountryCode&$filter=' . urlencode('Title eq \'' . $country . '\'');
+                                $countryCodeUrl = $siteUrl . '_api/web/lists/getbytitle(\'Country\')/items?$select=Id,Title,DACountryCode,DACurrencyId,DARegion,DASubRegion,DACluster&$filter=' . urlencode('Title eq \'' . $country . '\'');
                                 curl_setopt( $ch, CURLOPT_URL, $countryCodeUrl );
                                 $countryCodeData = json_decode(curl_exec( $ch ));
                                 $arrCountryCode[$country] = $countryCodeData->d->results[0]->DACountryCode;
                                 $arrCountryId[$country] = $countryCodeData->d->results[0]->Id;
+                                $arrCountryCurrency[$country] = $arrNbrCurrencies[$countryCodeData->d->results[0]->DACurrencyId];
+                                $arrCountryInfo[$country]['Region'] = $countryCodeData->d->results[0]->DARegion;
+                                $arrCountryInfo[$country]['SubRegion'] = $countryCodeData->d->results[0]->DASubRegion;
+                                $arrCountryInfo[$country]['Cluster'] = $countryCodeData->d->results[0]->DACluster;
+                                $arrRecordsByCountry[$country] = 0;
                         }
                         $countryCode = $arrCountryCode[$country];
                         $countryId = $arrCountryId[$country];
