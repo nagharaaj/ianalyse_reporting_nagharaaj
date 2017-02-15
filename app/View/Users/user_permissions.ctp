@@ -8,6 +8,7 @@
              var regions = jQuery.parseJSON('<?php echo $regions; ?>');
              var arrRegions = $.map(regions, function(el) { return el; });
              var permissions = jQuery.parseJSON('<?php echo $loginRoles; ?>');
+             var userRole = '<?php echo $userRole;?>'; //used to hide options like delete, export if user role is not Global
 
              var theme = 'base';
              // renderer for grid cells.
@@ -113,7 +114,11 @@
                   {
                       text: '', cellsAlign: 'center', align: "center", columnType: 'none', width: 155, editable: false, sortable: false, dataField: null, cellsRenderer: function (row, column, value) {
                           // render custom column.
-                          return "<div align='center'><button data-row='" + row + "' class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button><button style='margin-left: 5px;' data-row='" + row + "' class='deleteButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='deleteClick(event)'>DELETE</button></div>";
+                          if(userRole != 'Global') {
+                                return "<div align='center'><button data-row='" + row + "' class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button><button style='margin-left: 5px; display: none;' data-row='" + row + "' class='deleteButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='deleteClick(event)'>DELETE</button></div>";
+                          } else {
+                                return "<div align='center'><button data-row='" + row + "' class='editButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='editClick(event)'>EDIT</button><button style='margin-left: 5px;' data-row='" + row + "' class='deleteButtons jqx-rc-all jqx-button jqx-widget jqx-fill-state-normal' onClick='deleteClick(event)'>DELETE</button></div>";
+                          }
                       }
                   }
                 ]
@@ -146,7 +151,7 @@
             });
             function openPopup(rowData) {
                 var offset = $("#dataTable").offset();
-                $("#popupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 20, y: parseInt(offset.top) + 20 }, height: "490px", maxWidth: 1200, isModal: true });
+                $("#popupWindow").jqxWindow({ position: { x: parseInt(offset.left) + 20, y: parseInt(offset.top) + 20 }, height: (userRole != 'Global') ? 250 : "490px", maxWidth: 1200, isModal: true });
                 if(rowData) {
                         $('#popupWindow').jqxWindow('setTitle', 'Update Existing User');
                         $("#SaveNewUser").html('UPDATE USER');
@@ -449,13 +454,13 @@
         });
     </script>
     <div id='jqxWidget'>
-            <div style="float:right; margin-bottom:10px; margin-right:10px;">
+            <div style="float:right; margin-bottom:10px; margin-right:10px; <?php if($userRole != 'Global') { ?> display: none; <?php } ?>">
                 <div id="users">Show all Users</div>
             </div>
         <div id="dataTable"></div>
             <div style='margin-top: 20px;'>
             <div style='float: right; padding-right: 15px; padding-bottom: 30px;'>
-                    <button style="margin-right: 5px" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
+                    <button style="margin-right: 5px; <?php if($userRole != 'Global') { ?> display: none; <?php } ?>" value="Export to Excel" id="exporttoexcelbutton">EXPORT .XLS</button>
                     <button value="Create New User" class='createNew'>CREATE NEW USER</button>
             </div>
         </div>
@@ -501,7 +506,7 @@
                 </tr>
             </table>
             <br/><br/>
-            <table width="99%" cellpadding="5">
+            <table width="99%" cellpadding="5" <?php if($userRole != 'Global') { ?> style="display: none;" <?php } ?>>
                 <tr style="height: 25px; border-color: #aaa; background: none repeat scroll 0 0 #e8e8e8; border-style: solid; border-width: 0 1px 0 0; font-family: Verdana,Arial,sans-serif; font-size: 13px; font-style: normal;">
                     <td>Manage email notifications (Global permission only)</td>
                 </tr>
@@ -519,7 +524,7 @@
                 </tr>
             </table>
             <br/>
-            <table width="99%" cellpadding="5">
+            <table width="99%" cellpadding="5" <?php if($userRole != 'Global') { ?> style="display: none;" <?php } ?>>
                 <tr style="height: 25px; border-color: #aaa; background: none repeat scroll 0 0 #e8e8e8; border-style: solid; border-width: 0 1px 0 0; font-family: Verdana,Arial,sans-serif; font-size: 13px; font-style: normal;">
                     <td>Manage administration access (Global permission only)</td>
                 </tr>

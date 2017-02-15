@@ -113,14 +113,26 @@ class UsersController extends AppController {
         public function user_permissions() {
 
                 $this->set('countries', json_encode($this->Country->find('list', array('fields' => array('Country.country', 'Country.country'), 'order' => 'Country.country Asc')), JSON_HEX_APOS));
-                $markets = $this->Market->find('all', array('order' => 'Country.country Asc'));
+                if($this->Auth->user('role') == 'Regional') {
+                // if user is not global, fetch regions to which user have access
+                        $userRegions = $this->UserMarket->find('list', array('fields' => array('UserMarket.market_id'), 'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                }
+                if($this->Auth->user('role') != 'Global') {
+                // if user is not global, fetch only regions and markets to which user have access
+                        $this->set('loginRoles', json_encode($this->LoginRole->find('list', array('conditions' => array('LoginRole.name NOT IN ("Global", "Viewer")'), 'order' => 'LoginRole.id Asc'))));
+                        $this->set('regions', json_encode($this->Region->find('list', array('conditions' => array('Region.id in (' . implode(',', $userRegions) . ')'), 'order' => 'Region.region Asc'))));
+                        $markets = $this->Market->find('all', array('conditions' => array('Market.region_id in (' . implode(',', $userRegions) . ')'), 'order' => 'Country.country Asc'));
+                } else {
+                        $this->set('loginRoles', json_encode($this->LoginRole->find('list', array('order' => 'LoginRole.id Asc'))));
+                        $this->set('regions', json_encode($this->Region->find('list', array('order' => 'Region.region Asc'))));
+                        $markets = $this->Market->find('all', array('order' => 'Country.country Asc'));
+                }
                 foreach ($markets as $market) {
                         $arrMarkets[$market['Market']['market']] = $market['Market']['market'];
                 }
                 $this->set('markets', json_encode($arrMarkets));
-                $this->set('regions', json_encode($this->Region->find('list', array('order' => 'Region.region Asc'))));
-                $this->set('loginRoles', json_encode($this->LoginRole->find('list', array('order' => 'LoginRole.id Asc'))));
                 $this->set('adminLinks', $this->AdministrationLink->find('list', array('order' => 'AdministrationLink.id Asc')));
+                $this->set('userRole', $this->Auth->user('role'));
         }
 
         /*
@@ -328,13 +340,55 @@ class UsersController extends AppController {
                 $userData = array();
                 $i = 0;
                 $conditions = array();
+                $joins = array();
                 isset($_GET['checked']) ? $_GET['checked'] : $_GET['checked']= 'false';
                 if($_GET['checked'] == 'false'){
                         $conditions['User.is_active'] = 1;
                 }
                 // show only users which are not marked as deleted
                 $conditions['User.is_deleted'] = 0;
-                $users = $this->User->find('all',array('order' => 'User.display_name Asc','conditions'=> $conditions));
+                // if user role is regional then fetch users created in the assigned region only
+                if($this->Auth->user('role') != 'Global') {
+                        $userRegions = $this->UserMarket->find('list', array('fields' => array('market_id'), 'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                        $userCountries = $this->Market->find('list', array('fields' => array('Market.country_id'), 'conditions' => array('Market.region_id IN (' . implode(',', $userRegions) . ')')));
+                        $joins[] = array(
+                            'table' => 'user_login_roles',
+                            'alias' => 'UserLoginRole',
+                            'type' => 'INNER',
+                            'conditions' => array(
+                                'UserLoginRole.user_id = User.id'
+                            )
+                        );
+                        $joins[] = array(
+                            'table' => 'login_roles',
+                            'alias' => 'LoginRole',
+                            'type' => 'INNER',
+                            'conditions' => array(
+                                'UserLoginRole.role_id = LoginRole.id'
+                            )
+                        );
+                        $joins[] = array(
+                            'table' => 'user_markets',
+                            'alias' => 'UserMarket',
+                            'type' => 'INNER',
+                            'conditions' => array(
+                                'UserMarket.user_id = User.id'
+                            )
+                        );
+                        $conditions[] = array(
+                            'OR' => array(
+                                array(
+                                    "LoginRole.name = 'Regional'",
+                                    'UserMarket.market_id IN (' . implode(',', $userRegions) . ')'
+                                ),
+                                array(
+                                    "LoginRole.name IN ('Country','Country - Viewer')",
+                                    'UserMarket.market_id IN (' . implode(',', $userCountries) . ')'
+                                )
+                            )
+                        );
+                }
+                $users = $this->User->find('all',array('order' => 'User.display_name Asc', 'joins' => $joins, 'conditions'=> $conditions));
                 foreach($users as $user) {
                         $userData[$i]['targetclients'] = '';
 
