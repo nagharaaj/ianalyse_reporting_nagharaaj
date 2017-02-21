@@ -188,7 +188,7 @@ class HelpController extends AppController {
                         $email->viewVars(array('title_for_layout' => 'Unable to connect', 'type' => 'Login failed', 'data' => $arrData));
                         $email->template('login_fail', 'default')
                             ->emailFormat('html')
-                            ->to(array( 'helena.snowdon@iprospect.com'))
+                            ->to(array( 'helena.snowdon@iprospect.com','ramiz.abusham@iprospect.com','patrick.woods@iprospect.com'))
                             ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
                             ->subject('User unable to connect')
                             ->send();
