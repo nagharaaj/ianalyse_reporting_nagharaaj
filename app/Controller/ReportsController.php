@@ -76,7 +76,7 @@ class ReportsController extends AppController {
                 $this->set('countries', json_encode($countries, JSON_HEX_APOS));
                 $this->set('currencies', json_encode($this->Currency->find('list', array('fields' => array('Currency.currency', 'Currency.currency'), 'order' => 'Currency.currency Asc'))));
                 $this->set('agencies', json_encode($this->LeadAgency->find('list', array('fields' => array('LeadAgency.agency', 'LeadAgency.agency'), 'order' => 'LeadAgency.agency Asc'))));
-                $this->set('stages', json_encode($this->PitchStage->find('list', array('fields' => array('PitchStage.pitch_stage', 'PitchStage.pitch_stage'), 'order' => 'PitchStage.id Asc'))));
+                $this->set('stages', json_encode($this->PitchStage->find('list', array('conditions' => array('NOT' => array('PitchStage.id' => array(11)))),array('fields' => array('PitchStage.pitch_stage', 'PitchStage.pitch_stage'), 'order' => 'PitchStage.id Asc'))));
                 //$arrMarkets = array('Global' => 'Global');
                 $arrMarkets = array();
                 $arrRegions = array();
