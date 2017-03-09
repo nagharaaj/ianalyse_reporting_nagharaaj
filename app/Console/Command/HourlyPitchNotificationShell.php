@@ -7,6 +7,7 @@ class HourlyPitchNotificationShell extends AppShell {
             'Country',
             'ClientCategory',
             'ClientRevenueByService',
+            'ClientDeleteLog',
             'Market',
             'Service',
             'User',
@@ -22,11 +23,13 @@ class HourlyPitchNotificationShell extends AppShell {
 
                 $newPitches = $this->newPitches();
                 $updatedPitches = $this->updatedPitches();
+                $deletedPitches = $this->deletedPitches();
 
                 if(!empty($newPitches) || !empty($updatedPitches)) {
                         $arrData = array(
                             'newPitches' => $newPitches,
                             'updatedPitches' => $updatedPitches,
+                            'deletedPitches' => $deletedPitches
                         );
 
                         $this->UserLoginRole->Behaviors->attach('Containable');
@@ -46,7 +49,7 @@ class HourlyPitchNotificationShell extends AppShell {
                             ->emailFormat('html')
                             ->to($emailTo)
                             ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
-                            ->subject('Hourly new/update pitches log')
+                            ->subject('Hourly new/update/delete pitches log')
                             ->send();
                 }
         }
@@ -77,5 +80,19 @@ class HourlyPitchNotificationShell extends AppShell {
                 //echo '<pre>'; print_r($updatedPitches); echo '</pre>';
 
                 return $updatedPitches;
+        }
+
+        /*
+         * function to fetch deleted pitches in last one hour
+         */
+        public function deletedPitches() {
+
+                $currTime = date('Y-m-d H:i:s');
+                $pastHrTime = date('Y-m-d H:i:s', strtotime('-1 hour'));
+
+                $deletedPitches = $this->ClientDeleteLog->find('all', array('fields' => array('pitch_date', 'pitch_stage', 'client_name', 'parent_company', 'ClientCategory.category', 'City.city', 'Country.country', 'Service.service_name', 'User.display_name'), 'conditions' => ('ClientDeleteLog.deleted between \'' . $pastHrTime . '\' and \'' . $currTime . '\''), 'order' => 'Country.country, ClientDeleteLog.client_name'));
+                //echo '<pre>'; print_r($deletedPitches); echo '</pre>';
+
+                return $deletedPitches;
         }
 }

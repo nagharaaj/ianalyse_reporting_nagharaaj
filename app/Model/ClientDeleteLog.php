@@ -59,6 +59,13 @@ class ClientDeleteLog extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+                'User' => array(
+			'className' => 'User',
+			'foreignKey' => 'deleted_by',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 }

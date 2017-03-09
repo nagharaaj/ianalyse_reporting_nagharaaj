@@ -346,19 +346,6 @@ class ReportsController extends AppController {
                                                         )
                                                 )
                                         );
-
-                                        try {
-                                                $email = new CakeEmail('gmail');
-                                                $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
-                                                $email->template('delete_pitch', 'default')
-                                                    ->emailFormat('html')
-                                                    ->to(array('Helena.Snowdon@iprospect.com'))    //'mathilde.natier@iprospect.com',
-                                                    ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
-                                                    ->subject('Pitch is deleted')
-                                                    ->send();
-                                        } catch (Exception $e) {
-                                                $result['mailError'] = $e->getMessage();
-                                        }
                                 }
 
                                 $result['success'] = true;

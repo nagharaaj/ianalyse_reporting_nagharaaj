@@ -70,6 +70,38 @@
         <?php } ?>
                 </tbody>
         </table>
+        <br/>
+<?php } ?>
+<?php if(!empty($data['deletedPitches'])) { ?>
+        <h2>Deleted pitches</h2>
+        <table border="1" width="100%" cellspacing="0" cellpadding="0">
+                <thead>
+                        <th>Pitch Date</th>
+                        <th>Pitch Status</th>
+                        <th>Client</th>
+                        <th>Parent Company</th>
+                        <th>Client Category</th>
+                        <th>City</th>
+                        <th>Country</th>
+                        <th>Service</th>
+                        <th>Deleted by</th>
+                </thead>
+                <tbody>
+        <?php foreach($data['deletedPitches'] as $deletedPitch) { ?>
+                        <tr>
+                                <td nowrap><?php echo date('m/d/Y', strtotime($deletedPitch['ClientDeleteLog']['pitch_date'])); ?></td>
+                                <td nowrap><?php echo $deletedPitch['ClientDeleteLog']['pitch_stage']; ?></td>
+                                <td nowrap><?php echo $deletedPitch['ClientDeleteLog']['client_name']; ?></td>
+                                <td nowrap><?php echo $deletedPitch['ClientDeleteLog']['parent_company']; ?></td>
+                                <td nowrap><?php echo $deletedPitch['ClientCategory']['category']; ?></td>
+                                <td nowrap><?php echo $deletedPitch['City']['city']; ?></td>
+                                <td nowrap><?php echo $deletedPitch['Country']['country']; ?></td>
+                                <td nowrap><?php echo $deletedPitch['Service']['service_name']; ?></td>
+                                <td nowrap><?php echo $deletedPitch['User']['display_name']; ?></td>
+                        </tr>
+        <?php } ?>
+                </tbody>
+        </table>
 <?php } ?>
 </div>
 <br/>
