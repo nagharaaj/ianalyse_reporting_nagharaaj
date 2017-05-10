@@ -74,7 +74,11 @@
                 }
              });
              this.editrow = -1;
-
+             var renderer = function (text, align, height) {
+                var sort = "<div style='margin-top:8px;'><div style='text-align:center padding-bottom:5px; margin-left:90px;'>"+ text +"<div class='jqx-grid-column-sortascbutton' style='width: 16px; height: 16px; float:right'>"
+                 "</div></div></div>"
+                 return sort;
+             }
              $("#dataTable").jqxDataTable(
              {
                 width: (parseInt(screen.availWidth) - 30),
@@ -84,7 +88,7 @@
                 pagerButtonsCount:5,
                 filterable:true,
                 filterMode:'simple',
-                sortable: false,
+                sortable: true,
                 altRows: true,
                 editable: false,
                 autoRowHeight: true,
@@ -96,13 +100,13 @@
                   { text: '', hidden: true, dataField: 'clientpitchmail' },
                   { text: '', hidden: true, dataField: 'targetclients' },
                   { text: '', hidden: true, dataField: 'adminlinks' },
-                  { text: 'Name', dataField: 'displayname', width: 210, align: 'center' },
-                  { text: 'Title', dataField: 'title', width: 180, align: 'center' },
-                  { text: 'Location', dataField: 'location', width: 130, align: 'center' },
-                  { text: 'Email', dataField: 'email', editable: false, width: 250, align: 'center' },
-                  { text: 'Permission', dataField: 'permission', width: 110, align: 'center', columnType: 'template' },
-                  { text: 'Entity', dataField: 'nameofentity', width: 170, align: 'center', columnType: 'template' },
-                  { text: 'Active', datafield: 'active', columntype: 'template', width: 45, align: 'center', cellsalign: 'center',
+                  { text: 'Name', dataField: 'displayname', width: 210, align: 'center', renderer: renderer },
+                  { text: 'Title', dataField: 'title', width: 180, align: 'center',sortable:false },
+                  { text: 'Location', dataField: 'location', width: 210, align: 'center',renderer: renderer },
+                  { text: 'Email', dataField: 'email', editable: false, width: 250, align: 'center',sortable:false },
+                  { text: 'Permission', dataField: 'permission', width: 210, align: 'center', columnType: 'template',renderer: renderer },
+                  { text: 'Entity', dataField: 'nameofentity', width: 170, align: 'center', columnType: 'template',sortable:false },
+                  { text: 'Active', datafield: 'active', columntype: 'template', width: 45, align: 'center', cellsalign: 'center',sortable:false,
                         cellsrenderer: function (row, columnfield, cellvalue) {
                                 if(cellvalue) {
                                         return "Yes";
