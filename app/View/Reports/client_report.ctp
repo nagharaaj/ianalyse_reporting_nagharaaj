@@ -28,20 +28,35 @@
                 var dataRows = $('#jqxgrid').jqxGrid('getrows');
                 var rowscount = dataRows.length;
                 $('#no_of_records span').text(rowscount);
-                var clientsCount = 0;
-                var pitchesCount = 0;
+                var aggressivePitchesCount = 0;
+                var defensivePitchesCount = 0;
+                var totalClients = new Array();
+                var totalAggressiveClients = new Array();
+                var totalDefensiveClients = new Array();
                 for(var i = 0; i < rowscount; i++) {
                         if(dataRows[i].PitchStage.match(/Won/g) || dataRows[i].PitchStage == 'Current client') {
-                                if(dataRows[i].ParentId == 0 || dataRows[i].ParentId == null || dataRows[i].ParentId == '') {
-                                        clientsCount++;
+                                if($.inArray(dataRows[i].ClientName, totalClients) == -1) {
+                                        totalClients.push(dataRows[i].ClientName);
                                 }
                         }
-                        if(dataRows[i].PitchStage.match(/Live/g)) {
-                                pitchesCount++;
+                        if(dataRows[i].PitchStage == 'Live - aggressive') {
+                                aggressivePitchesCount++;
+                                if($.inArray(dataRows[i].ClientName, totalAggressiveClients) == -1) {
+                                        totalAggressiveClients.push(dataRows[i].ClientName);
+                                }
+                        }
+                        if(dataRows[i].PitchStage == 'Live - defensive') {
+                                defensivePitchesCount++;
+                                if($.inArray(dataRows[i].ClientName, totalDefensiveClients) == -1) {
+                                        totalDefensiveClients.push(dataRows[i].ClientName);
+                                }
                         }
                 }
-                $('#no_of_clients span').text(clientsCount);
-                $('#no_of_pitches span').text(pitchesCount);
+                $('#no_of_clients span').text(totalClients.length);
+                $('#no_of_aggressive_pitches_client span').text(totalAggressiveClients.length);
+                $('#no_of_aggressive_pitches span').text(aggressivePitchesCount);
+                $('#no_of_defensive_pitches_client span').text(totalDefensiveClients.length);
+                $('#no_of_defensive_pitches span').text(defensivePitchesCount);
              }
 
              var horizontalScroll=function(){
@@ -483,11 +498,14 @@
 
 <div id='jqxWidget'>
         <div style="margin-right: 5px;" align="right">
-                <fieldset style="width: 260px; margin-top:2px;">
+                <fieldset style="width: 300px; margin-top:2px;">
                         <legend>QUICK STATS</legend>
-                        <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 110px;"></span></div>
-                        <div id="no_of_clients" style="padding-bottom: 5px">Clients <span style="display: inline-block; width: 110px;"></span></div>
-                        <div id="no_of_pitches" style="padding-bottom: 5px">Pitches <span style="display: inline-block; width: 110px;"></span></div>
+                        <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 70px;"></span></div>
+                        <div id="no_of_clients" style="padding-bottom: 5px">Number of Clients <span style="display: inline-block; width: 70px;"></span></div>
+                        <div id="no_of_aggressive_pitches_client" style="padding-bottom: 5px">Aggressive Pitches (Clients Total) <span style="display: inline-block; width: 70px;"></span></div>
+                        <div id="no_of_aggressive_pitches" style="padding-bottom: 5px">Aggressive Pitches (Product Total) <span style="display: inline-block; width: 70px;"></span></div>
+                        <div id="no_of_defensive_pitches_client" style="padding-bottom: 5px">Defensive Pitches (Client Total) <span style="display: inline-block; width: 70px;"></span></div>
+                        <div id="no_of_defensive_pitches" style="padding-bottom: 5px">Defensive Pitches (Product Total) <span style="display: inline-block; width: 70px;"></span></div>
                 </fieldset>
         </div>
         <div id="tab-menu" align="left">
