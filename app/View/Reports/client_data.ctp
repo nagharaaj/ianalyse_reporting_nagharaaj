@@ -32,7 +32,6 @@
              var defaultState;
              var localizationobj = {};
              localizationobj.loadtext = "Processing";
-             
              var months = [
                      {value: 1, label: "Jan (1)"},
                      {value: 2, label: "Feb (2)"},

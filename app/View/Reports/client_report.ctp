@@ -24,7 +24,6 @@
              var widthPreferences = jQuery.parseJSON('<?php echo $widthPreferences; ?>');
              var arrCurrencies = new Array();
              var defaultState;
-             
              var calculateStats = function () {
                 var dataRows = $('#jqxgrid').jqxGrid('getrows');
                 var rowscount = dataRows.length;

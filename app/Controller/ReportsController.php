@@ -349,19 +349,6 @@ class ReportsController extends AppController {
                                                         )
                                                 )
                                         );
-
-                                        try {
-                                                $email = new CakeEmail('gmail');
-                                                $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
-                                                $email->template('delete_pitch', 'default')
-                                                    ->emailFormat('html')
-                                                    ->to(array('Helena.Snowdon@iprospect.com'))    //'mathilde.natier@iprospect.com',
-                                                    ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
-                                                    ->subject('Pitch is deleted')
-                                                    ->send();
-                                        } catch (Exception $e) {
-                                                $result['mailError'] = $e->getMessage();
-                                        }
                                 }
 
                                 $result['success'] = true;
@@ -472,7 +459,6 @@ class ReportsController extends AppController {
                         foreach ($regions as $region) {
                                 $arrRegions[] = $region['UserMarket']['market_id'];
                         }
-                        //$condition = 'ClientRevenueByService.region_id = ' . $region['UserMarket']['market_id'];
                 }
                 if ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                         $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
@@ -480,7 +466,6 @@ class ReportsController extends AppController {
                         foreach ($countries as $country) {
                                 $arrCountries[] = $country['UserMarket']['market_id'];
                         }
-                        //$condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')';
                 }
                 $this->ClientRevenueByService->Behaviors->attach('Containable');
                 $clients = $this->ClientRevenueByService->query("CALL allClientsWithFilter('{$condition}');");
