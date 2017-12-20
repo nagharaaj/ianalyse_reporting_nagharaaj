@@ -122,7 +122,7 @@ class ReportsController extends AppController {
                 $this->set('currMonth', date('n'));
                 $this->set('currYear', date('Y'));
 	}
-
+        
         function search_client() {
 
                 $this->autoRender=false;
@@ -229,6 +229,7 @@ class ReportsController extends AppController {
                         $companyName = $arrData['ParentCompany'];
                         $clientName = $arrData['ClientName'];
                         $estimatedRevenue = $arrData['EstimatedRevenue'];
+                        $fiscalRevenue = $arrData['FiscalRevenue'];
                         $comments = $arrData['Comments'];
                         $parentId = $arrData['parentId'];
 
@@ -256,6 +257,7 @@ class ReportsController extends AppController {
                                                 'service_id' => $serviceId,
                                                 'currency_id' => $currencyId,
                                                 'estimated_revenue' => $estimatedRevenue,
+                                                'fiscal_revenue'=> $fiscalRevenue,
                                                 'year' => date('Y'),
                                                 'parent_id' => $parentId,
                                                 'created' => date('Y-m-d H:i:s')
@@ -337,6 +339,7 @@ class ReportsController extends AppController {
                                                                 'service_id' => $clientRecord['ClientRevenueByService']['service_id'],
                                                                 'currency_id' => $clientRecord['ClientRevenueByService']['currency_id'],
                                                                 'estimated_revenue' => $clientRecord['ClientRevenueByService']['estimated_revenue'],
+                                                                'fiscal_revenue' => $clientRecord['ClientRevenueByService']['fiscal_revenue'],
                                                                 'actual_revenue' => $clientRecord['ClientRevenueByService']['actual_revenue'],
                                                                 'year' => $clientRecord['ClientRevenueByService']['year'],
                                                                 'created' => ($clientRecord['ClientRevenueByService']['created'] != '') ? $clientRecord['ClientRevenueByService']['created'] : 'NULL',
@@ -346,6 +349,19 @@ class ReportsController extends AppController {
                                                         )
                                                 )
                                         );
+
+                                        try {
+                                                $email = new CakeEmail('gmail');
+                                                $email->viewVars(array('title_for_layout' => 'Client & New Business data', 'type' => 'Delete Pitch', 'data' => $clientRecord));
+                                                $email->template('delete_pitch', 'default')
+                                                    ->emailFormat('html')
+                                                    ->to(array('Helena.Snowdon@iprospect.com'))    //'mathilde.natier@iprospect.com',
+                                                    ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
+                                                    ->subject('Pitch is deleted')
+                                                    ->send();
+                                        } catch (Exception $e) {
+                                                $result['mailError'] = $e->getMessage();
+                                        }
                                 }
 
                                 $result['success'] = true;
@@ -379,7 +395,7 @@ class ReportsController extends AppController {
                         $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')';
                 }
                 $clients = $this->ClientRevenueByService->query("CALL allClientsWithFilter('{$condition}');");
-
+            
                 foreach ($clients as $client) {
                         $clientData[$i]['id'] = $client['ClientRevenueByService']['id'];
                         $clientData[$i]['RecordId'] = $client['ClientRevenueByService']['id'];
@@ -428,6 +444,7 @@ class ReportsController extends AppController {
                         $clientData[$i]['ActiveMarkets'] = $client['ClientRevenueByService']['active_markets'];
                         $clientData[$i]['Currency'] = $client[0]['currency'];
                         $clientData[$i]['EstimatedRevenue'] = (($client['ClientRevenueByService']['estimated_revenue'] == 0) ? '' : $client['ClientRevenueByService']['estimated_revenue']);
+                        $clientData[$i]['FiscalRevenue'] = (($client['ClientRevenueByService']['fiscal_revenue'] == 0) ? '' : $client['ClientRevenueByService']['fiscal_revenue']);
                         $clientData[$i]['ActualRevenue'] = $client['ClientRevenueByService']['actual_revenue'];
                         $clientData[$i]['Comments'] = $client['ClientRevenueByService']['comments'];
                         $clientData[$i]['Year'] = $client['ClientRevenueByService']['year'];
@@ -437,7 +454,7 @@ class ReportsController extends AppController {
                 }
                 echo json_encode($clientData);
         }
-
+        
         public function get_client_report_data() {
                 $this->autoRender=false;
                 set_time_limit(0);
@@ -516,10 +533,12 @@ class ReportsController extends AppController {
 
                         $estimatedRevenue = 0;
                         $actualRevenue = 0;
+                        $fiscalRevenue = 0;
                         $currency = '';
                         if($revenueCurrency == "Actual currencies") {
                                 $estimatedRevenue = $client['ClientRevenueByService']['estimated_revenue'];
                                 $actualRevenue = $client['ClientRevenueByService']['actual_revenue'];
+                                $fiscalRevenue = $client['ClientRevenueByService']['fiscal_revenue'];
                                 $currency = $client[0]['currency'];
                         } else {
                                 $currency = $revenueCurrency;
@@ -549,35 +568,54 @@ class ReportsController extends AppController {
                                                 }
                                         }
                                 }
+                                if(is_numeric($client['ClientRevenueByService']['fiscal_revenue'])) {
+                                        if($client[0]['currency'] == $revenueCurrency) {
+                                                $fiscalRevenue = $client['ClientRevenueByService']['fiscal_revenue'];
+                                        } else {
+                                                $dollarConvertRatio = array_search($client[0]['currency'], $currencies);
+                                                if($revenueCurrency == "USD") {
+                                                     $fiscalRevenue = ($client['ClientRevenueByService']['fiscal_revenue'] * $dollarConvertRatio);
+                                                } else {
+                                                     $dollarEstRevenue = ($client['ClientRevenueByService']['fiscal_revenue'] * $dollarConvertRatio);
+                                                     $fiscalRevenue = ($dollarEstRevenue / $convertRatio);
+                                                }
+                                        }
+                                }
                         }
                         if ($this->Auth->user('role') == 'Viewer') {
                                 $clientData[$i]['EstimatedRevenue'] = '';
                                 $clientData[$i]['ActualRevenue'] = '';
+                                $clientData[$i]['FiscalRevenue'] = '';
                                 $clientData[$i]['Currency'] = '';
                         } else {
                                 if ($this->Auth->user('role') == 'Regional') {
                                         if (in_array($client['ClientRevenueByService']['region_id'], $arrRegions)) {
                                                 $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
                                                 $clientData[$i]['ActualRevenue'] = $actualRevenue;
+                                                $clientData[$i]['FiscalRevenue'] = $fiscalRevenue;
                                                 $clientData[$i]['Currency'] = $currency;
                                         } else {
                                                 $clientData[$i]['EstimatedRevenue'] = '';
                                                 $clientData[$i]['ActualRevenue'] = '';
+                                                $clientData[$i]['FiscalRevenue'] = '';
                                                 $clientData[$i]['Currency'] = '';
                                         }
                                 } elseif ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                                         if (in_array($client['ClientRevenueByService']['country_id'], $arrCountries)) {
                                                 $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
                                                 $clientData[$i]['ActualRevenue'] = $actualRevenue;
+                                                $clientData[$i]['FiscalRevenue'] = $fiscalRevenue;
                                                 $clientData[$i]['Currency'] = $currency;
                                         } else {
                                                 $clientData[$i]['EstimatedRevenue'] = '';
                                                 $clientData[$i]['ActualRevenue'] = '';
+                                                $clientData[$i]['FiscalRevenue'] = '';
                                                 $clientData[$i]['Currency'] = '';
                                         }
                                 } else {
                                         $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
                                         $clientData[$i]['ActualRevenue'] = $actualRevenue;
+                                        $clientData[$i]['FiscalRevenue'] = (($fiscalRevenue == 0) ? '' : $fiscalRevenue);
                                         $clientData[$i]['Currency'] = $currency;
                                 }
                         }
@@ -591,7 +629,7 @@ class ReportsController extends AppController {
                 }
                 echo json_encode($clientData);
         }
-
+        
         public function update_client_record() {
                 if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()) {
@@ -684,6 +722,7 @@ class ReportsController extends AppController {
                         $companyName = trim($arrData['ParentCompany']);
                         $clientName = trim($arrData['ClientName']);
                         $estimatedRevenue = $arrData['EstimatedRevenue'];
+                        $fiscalRevenue = $arrData['FiscalRevenue'];
                         $actualRevenue = $arrData['ActualRevenue'];
                         $comments = trim($arrData['Comments']);
                         $parentId = $arrData['ParentId'];
@@ -711,6 +750,7 @@ class ReportsController extends AppController {
                                                 'service_id' => $serviceId,
                                                 'currency_id' => $currencyId,
                                                 'estimated_revenue' => $estimatedRevenue,
+                                                'fiscal_revenue' => $fiscalRevenue,
                                                 'actual_revenue' => $actualRevenue,
                                                 'year' => date('Y'),
                                                 'modified' => date('Y-m-d H:i:s')
@@ -935,7 +975,8 @@ class ReportsController extends AppController {
                                 $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
                                 $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(20);
                                 $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(20);
-                                $col=17;
+                                $objPHPExcel->getActiveSheet()->getColumnDimension("R")->setWidth(20);
+                                $col=18;
                                 if($exportRevenue=="YES"){
                                         foreach($noYears as $year){
                                                 $colName = PHPExcel_Cell::stringFromColumnIndex($col);
@@ -989,8 +1030,9 @@ class ReportsController extends AppController {
                         } else {
                                 $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Currency');
                                 $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'iP '.date('Y').' Estimated Revenue');
-                                $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'iP '.(date('Y')-1).' Actual Revenue');
-                                $col = 17;
+                                $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'Fiscal Yr. ' .date('Y').' Revenue');
+                                $objPHPExcel->getActiveSheet()->SetCellValue('R1', 'iP '.(date('Y')-1).' Actual Revenue');
+                                $col = 18;
                                 if($exportRevenue == "YES") {
                                         foreach($noYears as $year)
                                         {
@@ -1046,10 +1088,12 @@ class ReportsController extends AppController {
                                 }
                                 $estimatedRevenue = 0;
                                 $actualRevenue = 0;
+                                $fiscalRevenue = 0;
                                 if ($this->Auth->user('role') != 'Viewer') {
                                         if($exportCurrency == "Actual currencies") {
                                                 $estimatedRevenue = $data['EstimatedRevenue'];
                                                 $actualRevenue = $data['ActualRevenue'];
+                                                $fiscalRevenue = $data['FiscalRevenue'];
                                         } else {
                                                 if(is_numeric($data['EstimatedRevenue'])) {
                                                         if($data['Currency'] == $exportCurrency) {
@@ -1077,12 +1121,25 @@ class ReportsController extends AppController {
                                                                 }
                                                         }
                                                 }
+                                                if(is_numeric($data['FiscalRevenue'])) {
+                                                        if($data['Currency'] == $exportCurrency) {
+                                                                $actualRevenue = $data['FiscalRevenue'];
+                                                        } else {
+                                                                $dollarConvertRatio = array_search($data['Currency'], $currencies);
+                                                                if($exportCurrency == "USD") {
+                                                                     $actualRevenue = ($data['FiscalRevenue'] * $dollarConvertRatio);
+                                                                } else {
+                                                                     $dollarEstRevenue = ($data['FiscalRevenue'] * $dollarConvertRatio);
+                                                                     $actualRevenue = ($dollarEstRevenue / $convertRatio);
+                                                                }
+                                                        }
+                                                }
                                         }
 
                                         $row = array($data['Region'], $data['Country'], $data['City'],
                                             $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
                                             $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate, $data['MarketScope'],
-                                            html_entity_decode($data['ActiveMarkets']), $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue), (($actualRevenue == 0) ? '' : $actualRevenue));
+                                            html_entity_decode($data['ActiveMarkets']), $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue), (($fiscalRevenue == 0) ? '' : $fiscalRevenue),(($actualRevenue == 0) ? '' : $actualRevenue));
 
                                         if($exportRevenue == "YES") {
                                                 $recordId = $data['RecordId'];
@@ -1120,6 +1177,7 @@ class ReportsController extends AppController {
                                         $objPHPExcel->getActiveSheet()->getStyle('A2:'.$colName.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                                         $objPHPExcel->getActiveSheet()->getStyle('P2:P'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
                                         $objPHPExcel->getActiveSheet()->getStyle('Q2:Q'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
+                                        $objPHPExcel->getActiveSheet()->getStyle('R2:R'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
                                         $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
                                         $objPHPExcel->getActiveSheet()->setAutoFilter('A1:'.$colName.$i);
                                 } else {
@@ -1703,7 +1761,9 @@ class ReportsController extends AppController {
                         $clientData[$i]['ActiveMarkets'] = $client['ClientDeleteLog']['active_markets'];
 
                         $estimatedRevenue = $client['ClientDeleteLog']['estimated_revenue'];
+                        $fiscalRevenue =$client['ClientDeleteLog']['fiscal_revenue']; 
                         $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
+                        $clientData[$i]['FiscalRevenue'] = (($fiscalRevenue == 0) ? '' : $fiscalRevenue);
                         $clientData[$i]['Currency'] = $client[0]['currency'];
                         $clientData[$i]['Comments'] = $client['ClientDeleteLog']['comments'];
                         $clientData[$i]['Year'] = $client['ClientDeleteLog']['year'];
@@ -1770,10 +1830,11 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(20);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("R")->setWidth(40);
                         $objPHPExcel->getActiveSheet()->getColumnDimension("S")->setWidth(15);
+                        $objPHPExcel->getActiveSheet()->getColumnDimension("T")->setWidth(15);
                         $objPHPExcel->getActiveSheet()->getStyle("A1:S1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                         $objPHPExcel->getActiveSheet()->getStyle('A1:F1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
                         $objPHPExcel->getActiveSheet()->getStyle('G1:M1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        $objPHPExcel->getActiveSheet()->getStyle('N1:S1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
+                        $objPHPExcel->getActiveSheet()->getStyle('N1:T1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
 
                         $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Deleted By');
                         $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Region');
@@ -1792,8 +1853,9 @@ class ReportsController extends AppController {
                         $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Active Markets');
                         $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'Currency');
                         $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'Estimated Revenue');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('R1', 'Comments');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('S1', 'Deleted On');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('R1', 'Fiscal Revenue');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('S1', 'Comments');
+                        $objPHPExcel->getActiveSheet()->SetCellValue('T1', 'Deleted On');
 
                         $i = 1;
                         $arrDataExcel = array();
@@ -1820,20 +1882,22 @@ class ReportsController extends AppController {
                                         $deletedDate = '01/01/2015';
                                 }
                                 $estimatedRevenue = $data['EstimatedRevenue'];
+                                $fiscalRevenue = $data['FiscalRevenue'];
 
                                 $row = array($data['DeletedBy'], $data['Region'], $data['Country'], $data['City'],
                                     $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
                                     $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate, $data['MarketScope'],
                                     html_entity_decode($data['ActiveMarkets']), $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue),
-                                    (($data['Comments'] == null) ? '' : $data['Comments']), $deletedDate);
+                                    (($fiscalRevenue == 0) ? '' : $fiscalRevenue),(($data['Comments'] == null) ? '' : $data['Comments']), $deletedDate);
+                                    
 
                                 $arrDataExcel[] = $row;
                                 $i++;
                         }
                         if(!empty($arrDataExcel)) {
-                                $objPHPExcel->getActiveSheet()->getStyle('A2:S'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
+                                $objPHPExcel->getActiveSheet()->getStyle('A2:T'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
                                 $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
-                                $objPHPExcel->getActiveSheet()->setAutoFilter('A1:S'.$i);
+                                $objPHPExcel->getActiveSheet()->setAutoFilter('A1:T'.$i);
                         }
 
                         // Rename sheet

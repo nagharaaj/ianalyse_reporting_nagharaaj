@@ -56,6 +56,7 @@
                     { name: 'ActiveMarkets', type: 'string' },
                     { name: 'Currency', type: 'string' },
                     { name: 'EstimatedRevenue', type: 'number' },
+                    { name: 'FiscalRevenue',type:'number'},
                     { name: 'Comments', type: 'string' },
                     { name: 'Year', type: 'number' },
                     { name: 'Created', type: 'date' },
@@ -204,7 +205,8 @@
                   { text: 'Scope', datafield: 'MarketScope', width: 100, filtertype: 'checkedlist' },
                   { text: 'Active Markets', columngroup: 'ActiveMarkets', datafield: 'ActiveMarkets', width: 160, filtertype: 'checkedlist' },
                   { text: 'Currency', datafield: 'Currency', width: 100, filtertype: 'checkedlist' },
-                  { text: 'Estimeted Revenue', columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 200, align: 'left', cellsalign: 'right', cellsFormat: 'f2' },
+                  { text: 'Estimated Revenue', columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 200, align: 'left', cellsalign: 'right', cellsFormat: 'f2' },
+                  { text: 'Fiscal Revenue', columngroup: 'FiscalRevenue', datafield: 'FiscalRevenue', width: 200, align: 'left', cellsalign: 'right', cellsFormat: 'f2' },
                   { text: 'Comments', columngroup: 'Comments', datafield: 'Comments', width: 230 }
                 ],
                 ready:function()

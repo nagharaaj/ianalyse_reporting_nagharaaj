@@ -5,6 +5,7 @@
              var userRole = '<?php echo $userRole; ?>';
              var estimatedRevenueColumnTitle = '<?php echo 'iP '. date('Y') . ' Estimated Revenue';?>';
              var actualRevenueColumnTitle = '<?php echo 'iP '. (date('Y')-1) . ' Actual Revenue';?>';
+             var fiscalRevenueColumnTitle = '<?php echo 'Fiscal Yr. '. date('Y') . ' Revenue'; ?>';
              var cities = jQuery.parseJSON('<?php echo $cities; ?>');
              var arrCities = $.map(cities, function(el) { return el; });
              var categories = jQuery.parseJSON('<?php echo $categories; ?>');
@@ -31,7 +32,7 @@
              var defaultState;
              var localizationobj = {};
              localizationobj.loadtext = "Processing";
-
+             
              var months = [
                      {value: 1, label: "Jan (1)"},
                      {value: 2, label: "Feb (2)"},
@@ -122,6 +123,7 @@
                     { name: 'Currency', type: 'string' },
                     { name: 'EstimatedRevenue', type: 'float' },
                     { name: 'ActualRevenue', type: 'float' },
+                    { name: 'FiscalRevenue',type:'float'},
                     { name: 'Comments', type: 'string' },
                     { name: 'ParentId', type: 'number' },
                     { name: 'SearchClientName', type: 'string' },
@@ -244,7 +246,7 @@
                 columnmenuopening: function (menu, datafield, height) {
                     var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                     if (column.filtertype === "custom") {
-                        menu.height(155);
+                            menu.height(155);
                         setTimeout(function () {
                             menu.find('input').focus();
                         }, 25);
@@ -287,6 +289,7 @@
                   { text: 'Active Markets', datafield: 'ActiveMarkets', width: 160, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: estimatedRevenueColumnTitle, datafield: 'EstimatedRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
+                  { text: fiscalRevenueColumnTitle,datafield: 'FiscalRevenue',width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2',editable: false},
                   { text: actualRevenueColumnTitle, datafield: 'ActualRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', editable: false },
                   { text: 'Expand Data', cellsAlign: 'center', align: "left", columnType: 'none', width: 110, editable: false, sortable: false, dataField: null,filterable:false,autoshowcolumnsmenubutton: true,
                       cellsRenderer: function (row, column, value) {
@@ -419,6 +422,7 @@
                         var activemarkets = data.ActiveMarkets;
                         var currency = data.Currency;
                         var estimatedrevenue = data.EstimatedRevenue;
+                        var fiscalrevenue = data.FiscalRevenue;
                         var actualrevenue = data.ActualRevenue;
                         var comments = data.Comments;
 
@@ -606,6 +610,7 @@
                         if(pitchstage.match(/Lost/g)) {
                                 $("#divEstRevenue").text(estimatedrevenue);
                                 $("#divActualRevenue").text(actualrevenue);
+                                $("#divFiscRevenue").text(fiscalrevenue);
                         } else {
                                 $("#divEstRevenue").html('');
                                 var inpEstRevenue = $("<input type=\"text\" id=\"update_estrevenue\" />");
@@ -615,7 +620,12 @@
                                         rules.push(validator.estrevenueRequired);
                                         rules.push(validator.estrevenueNumeric);
                                 }
-                                $("#divActualRevenue").html('');
+                                $("#divFiscRevenue").html('');
+                                var inpFiscalRevenue = $("<input type=\"text\" id=\"update_fiscrevenue\" />");
+                                $("#divFiscRevenue").append(inpFiscalRevenue);
+                                $("#update_fiscrevenue").jqxInput({ height: 25, width: 150, rtl:true }).val(fiscalrevenue);
+                               
+                               $("#divActualRevenue").html('');
                                 var inpActualRevenue = $("<input type=\"text\" id=\"update_actualrevenue\" />");
                                 $("#divActualRevenue").append(inpActualRevenue);
                                 $("#update_actualrevenue").jqxInput({ height: 25, width: 150, rtl:true }).val(actualrevenue);
@@ -773,6 +783,7 @@
                         }
                         $("#currency").jqxDropDownList({ source: currencies }).val(currency);
                         $("#estrevenue").jqxInput({ height: 25, width: 100, rtl:true }).val('');
+                        $("#fiscrevenue").jqxInput({ height:25,width:100,rtl:true}).val('');
                         $("#notes").jqxInput({ height: 25, width: 200 }).val(comments);
                         // show the popup window.
                         $("#popupWindow").jqxWindow('open');
@@ -1000,6 +1011,7 @@
                 $("#activemarket").jqxDropDownList({ source: countries, checkboxes: true, selectedIndex: -1});
                 $("#currency").jqxDropDownList({ source: currencies, selectedIndex: -1 });
                 $("#estrevenue").jqxInput({ height: 25, width: 100, rtl:true }).val('');
+                $("#fiscrevenue").jqxInput({ height: 25, width: 100, rtl:true }).val('');
                 $("#notes").jqxInput({ height: 25, width: 200 }).val('');
                 // show the popup window.
                 $("#popupWindow").jqxWindow('open');
@@ -1173,7 +1185,7 @@
                 if(!$('#testForm').jqxValidator('validate')) {
                         return false;
                 }
-                $("#SaveNew").attr('disabled', true);
+                $("#SaveNew").jqxButton({ disabled: true });
                 var state = $("#jqxgrid").jqxGrid('savestate');
 
                 var row = { ClientName: $("#advertisername").val(), ParentCompany: $("#parentcompany").val(), Region: $("#region").val(),
@@ -1181,7 +1193,7 @@
                     PitchStart: $("#pitchstart").val(),PitchStage: $("#pitchstage").val(),
                     ClientSince: $("#clientsince").val(), LostDate: $("#lostdate").val(), Service: $("#service").val(),
                     MarketScope: $("#marketscope").val(), ActiveMarkets: $("#activemarket").val(), Currency: $("#currency").val(),
-                    EstimatedRevenue: $("#estrevenue").val(), Comments: $("#notes").val(), parentId: $('#parentrecordid').val()
+                    EstimatedRevenue: $("#estrevenue").val(),FiscalRevenue: $("#fiscrevenue").val(), Comments: $("#notes").val(), parentId: $('#parentrecordid').val()
                 };
                 $.ajax({
                     type: "POST",
@@ -1305,7 +1317,7 @@
                                 var pitchstage = $('#update_pitchstage').text();
                         }
                         if ((pitchstage.match(/Won/g) || pitchstage == 'Current client')) {
-                                if (!isNaN(parseFloat(input.val())) && isFinite(input.val())) {
+                                if(!isNaN(parseFloat(input.val())) && isFinite(input.val())) {
                                         return true;
                                 }
                         } else {
@@ -1423,6 +1435,11 @@
                 } else {
                         var estimatedrevenue = $('#divEstRevenue').text();
                 }
+                if($('#update_fiscrevenue').val()) {
+                        var fiscalrevenue = $('#update_fiscrevenue').val();
+                } else {
+                        var fiscalrevenue = $('#divFiscRevenue').text();
+                }
                 if($('#update_actualrevenue').val()) {
                         var actualrevenue = $('#update_actualrevenue').val();
                 } else {
@@ -1435,7 +1452,7 @@
                     PitchStart: pitchstart,PitchStage: pitchstage,
                     ClientSince: clientsince, LostDate: lostdate, Service: service,
                     MarketScope: marketscope, ActiveMarkets: activemarkets, Currency: currency,
-                    EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
+                    EstimatedRevenue: estimatedrevenue,FiscalRevenue: fiscalrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
                 };
 
                 var updateRow = { RecordId: recordid, ClientName: clientname, ParentCompany: parentcompany, Region: region,
@@ -1443,7 +1460,7 @@
                     PitchStart: pitchstart, PitchStage: pitchstage,
                     ClientSince: clientsince, LostDate: lostdate,
                     Service: service, ActiveMarkets: activemarkets, Currency: currency,
-                    EstimatedRevenue: estimatedrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
+                    EstimatedRevenue: estimatedrevenue,FiscalRevenue: fiscalrevenue, ActualRevenue: actualrevenue, Comments: comments, ParentId: parentrecordid
                 };
 
                 $.ajax({
@@ -1584,6 +1601,11 @@
                     <td style="width: 150px"></td>
                 </tr>
                 <tr>
+                    <td align="right">Fiscal year Revenue</td>
+                    <td align="left" style="padding-bottom: 5px;"><input type="text" id="fiscrevenue"/></td>
+                    <td style="width: 150px"></td>
+                </tr>
+                <tr>
                     <td align="right">Notes</td>
                     <td align="left" style="padding-bottom: 5px;"><input type="text" id="notes"/></td>
                     <td style="width: 150px"></td>
@@ -1681,6 +1703,11 @@
                 <tr>
                     <td align="right" style="padding-bottom: 5px; padding-right: 5px">iP estimated revenue</td>
                     <td align="left" style="padding-bottom: 5px;"><div id="divEstRevenue"></div></td>
+                    <td style="width: 150px"></td>
+                </tr>
+                <tr>
+                    <td align="right" style="padding-bottom: 5px; padding-right: 5px">Fiscal year Revenue</td>
+                    <td align="left" style="padding-bottom: 5px;"><div id="divFiscRevenue"></div></td>
                     <td style="width: 150px"></td>
                 </tr>
                 <tr>

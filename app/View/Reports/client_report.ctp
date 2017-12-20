@@ -11,6 +11,7 @@
              }
              var estimatedRevenueColumnTitle = '<?php echo 'iP '. date('Y') . ' Estimated Revenue';?>';
              var actualRevenueColumnTitle = '<?php echo 'iP '. (date('Y')-1) . ' Actual Revenue';?>';
+             var fiscalRevenueColumnTitle = '<?php echo 'Fiscal Yr. '. date('Y') . ' Revenue'; ?>';
              var cities = jQuery.parseJSON('<?php echo $cities; ?>');
              var arrCities = $.map(cities, function(el) { return el; });
              var markets = jQuery.parseJSON('<?php echo $markets; ?>');
@@ -23,7 +24,7 @@
              var widthPreferences = jQuery.parseJSON('<?php echo $widthPreferences; ?>');
              var arrCurrencies = new Array();
              var defaultState;
-
+             
              var calculateStats = function () {
                 var dataRows = $('#jqxgrid').jqxGrid('getrows');
                 var rowscount = dataRows.length;
@@ -104,6 +105,7 @@
                     { name: 'ActiveMarkets', type: 'string' },
                     { name: 'Currency', type: 'string' },
                     { name: 'EstimatedRevenue', type: 'number' },
+                    { name: 'FiscalRevenue',type:'number'},
                     { name: 'ActualRevenue', type: 'number' },
                     { name: 'Comments', type: 'string' },
                     { name: 'Year', type: 'number' },
@@ -227,7 +229,7 @@
                 columnmenuopening: function (menu, datafield, height) {
                     var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                     if (column.filtertype === "custom") {
-                        menu.height(155);
+                            menu.height(155);
                         setTimeout(function () {
                             menu.find('input').focus();
                         }, 25);
@@ -266,6 +268,7 @@
                   { text: 'Active Markets', columngroup: 'ActiveMarkets', datafield: 'ActiveMarkets', width: 160, cellClassName: cellclass, filtertype: 'checkedlist' },
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', hidden: ((userRole == 'Viewer') ? true : false) },
                   { text: estimatedRevenueColumnTitle, columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
+                  { text: fiscalRevenueColumnTitle, columngroup: 'FiscalRevenue',datafield: 'FiscalRevenue',width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false)},
                   { text: actualRevenueColumnTitle, columngroup: 'ActualRevenue', datafield: 'ActualRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
                   { text: 'Comments', columngroup: 'Comments', datafield: 'Comments', width: 230, cellClassName: cellclass }
                 ],
