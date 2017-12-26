@@ -115,6 +115,24 @@ class ReportsController extends AppController {
                 } else {
                         $this->set('widthPreferences_client_data', '{}');
                 }
+                $arrClientSinceYear = array();
+                $clientsinceyears = $this->ClientRevenueByService->find('all',array('fields' => array('ClientRevenueByService.client_since_year'), 'conditions' => array("client_since_year != '0000-00-00'"),'order' => 'ClientRevenueByService.client_since_year Asc', 'group' => 'client_since_year'));
+                foreach($clientsinceyears as $clientsinceyear) {
+                    $arrClientSinceYear[] = $clientsinceyear['ClientRevenueByService']['client_since_year'];
+                }
+                $this->set('clientSinceYear',json_encode($arrClientSinceYear));
+                $arrLostYear = array();
+                $lostsinceyears = $this->ClientRevenueByService->find('all',array('fields' => array('YEAR(ClientRevenueByService.lost_date) as lost_year'), 'conditions' => array("lost_date != '0000-00-00'"), 'order' => 'ClientRevenueByService.lost_date Asc', 'group' => 'lost_year'));
+                foreach($lostsinceyears as $lostsinceyear) {
+                    $arrLostYear[] = $lostsinceyear[0]['lost_year'];
+                }
+                $this->set('lostsinceyear',json_encode($arrLostYear));
+                $arrPitchedYear = array();
+                $pitchedyears = $this->ClientRevenueByService->find('all',array('fields' => array('YEAR(ClientRevenueByService.pitch_date) as pitch_year'), 'conditions' => array("pitch_date != '0000-00-00'"), 'order' => 'ClientRevenueByService.pitch_date Asc', 'group' => 'pitch_year'));
+                foreach($pitchedyears as $pitchedyears) {
+                    $arrPitchedYear[] = $pitchedyears[0]['pitch_year'];
+                }
+                $this->set('pitchyear',json_encode($arrPitchedYear));
                 $this->set('regions', json_encode($arrRegions));
                 $this->set('markets', json_encode($arrMarkets));
                 $this->set('cities', json_encode($arrCities));
@@ -122,6 +140,81 @@ class ReportsController extends AppController {
                 $this->set('currMonth', date('n'));
                 $this->set('currYear', date('Y'));
 	}
+        
+        public function current_client_data(){
+            
+                $this->autoRender=false;
+                $this->set('userRole', $this->Auth->user('role'));
+                $this->set('categories', json_encode($this->ClientCategory->find('list', array('fields' => array('ClientCategory.category', 'ClientCategory.category'), 'order' => 'ClientCategory.category Asc'))));
+                $countries = $this->Country->find('list', array('fields' => array('Country.country', 'Country.country'), 'order' => 'Country.country Asc'));
+                $this->set('countries', json_encode($countries, JSON_HEX_APOS));
+                $this->set('currencies', json_encode($this->Currency->find('list', array('fields' => array('Currency.currency', 'Currency.currency'), 'order' => 'Currency.currency Asc'))));
+                $this->set('agencies', json_encode($this->LeadAgency->find('list', array('fields' => array('LeadAgency.agency', 'LeadAgency.agency'), 'order' => 'LeadAgency.agency Asc'))));
+                $this->set('stages', json_encode($this->PitchStage->find('list', array('conditions' => array("PitchStage.pitch_stage ='Current client'")),array('fields' => array('PitchStage.pitch_stage', 'PitchStage.pitch_stage'), 'order' => 'PitchStage.id Asc'))));
+                $arrClientSinceYear = array();
+                $clientsinceyears = $this->ClientRevenueByService->find('all',array('fields' => array('ClientRevenueByService.client_since_year'), 'conditions' => array("client_since_year != '0000-00-00'"),'order' => 'ClientRevenueByService.client_since_year Asc', 'group' => 'client_since_year'));
+                foreach($clientsinceyears as $clientsinceyear) {
+                    $arrClientSinceYear[] = $clientsinceyear['ClientRevenueByService']['client_since_year'];
+                }
+                $this->set('clientSinceYear',json_encode($arrClientSinceYear));
+                $arrLostYear = array();
+                $lostsinceyears = $this->ClientRevenueByService->find('all',array('fields' => array('YEAR(ClientRevenueByService.lost_date) as lost_year'), 'conditions' => array("lost_date != '0000-00-00'"), 'order' => 'ClientRevenueByService.lost_date Asc', 'group' => 'lost_year'));
+                foreach($lostsinceyears as $lostsinceyear) {
+                    $arrLostYear[] = $lostsinceyear[0]['lost_year'];
+                }
+                $this->set('lostsinceyear',json_encode($arrLostYear));
+                $arrPitchedYear = array();
+                $pitchedyears = $this->ClientRevenueByService->find('all',array('fields' => array('YEAR(ClientRevenueByService.pitch_date) as pitch_year'), 'conditions' => array("pitch_date != '0000-00-00'"), 'order' => 'ClientRevenueByService.pitch_date Asc', 'group' => 'pitch_year'));
+                foreach($pitchedyears as $pitchedyears) {
+                    $arrPitchedYear[] = $pitchedyears[0]['pitch_year'];
+                }
+                $this->set('pitchyear',json_encode($arrPitchedYear));
+                //$arrMarkets = array('Global' => 'Global');
+                $arrMarkets = array();
+                $arrRegions = array();
+                $arrCities = array();
+                if ($this->Auth->user('role') == 'Regional') {
+                        $userRegion = $this->UserMarket->find('list', array('fields' => array('UserMarket.id', 'UserMarket.market_id'), 'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                        $regions = $this->Region->find('all', array('conditions' => array('Region.id IN (' . implode(',', $userRegion) . ')'), 'order' => 'Region.region Asc'));
+                } elseif($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
+                        $userCountry = $this->UserMarket->find('list', array('fields' => array('UserMarket.id', 'UserMarket.market_id'), 'conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                        $userRegion = $this->Market->find('list', array('fields' => array('Market.id', 'Market.region_id'), 'conditions' => array('Market.country_id IN (' . implode(',', $userCountry) . ')'), 'order' => 'Market.region_id Asc', 'group' => 'Market.region_id'));
+                        $regions = $this->Region->find('all', array('conditions' => array('Region.id IN (' . implode(',', $userRegion) . ')'), 'order' => 'Region.region Asc'));
+                } else {
+                        $regions = $this->Region->find('all', array('order' => 'Region.region Asc'));
+                }
+                foreach ($regions as $region) {
+                        //$arrMarkets[$region['Region']['region']] = 'Regional - ' . $region['Region']['region'];
+                        $arrRegions[$region['Region']['region']] = $region['Region']['region'];
+                        if($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
+                                $markets = $this->Market->find('list', array('fields' => array('Market.country_id', 'Market.market'), 'conditions' => array('Market.region_id' => $region['Region']['id'], 'Market.country_id IN (' . implode(',', $userCountry) . ')'), 'order' => 'Market.market Asc'));
+                        } else {
+                                $markets = $this->Market->find('list', array('fields' => array('Market.country_id', 'Market.market'), 'conditions' => array('Market.region_id' => $region['Region']['id']), 'order' => 'Market.market Asc'));
+                        }
+                        if(!empty($markets)) {
+                                foreach ($markets as $countryId => $market) {
+                                        $arrMarkets[$region['Region']['region']][$market] = $market;
+                                        $cities = $this->City->find('list', array('fields' => array('City.city', 'City.city'), 'conditions' => array('City.country_id' => $countryId), 'order' => 'City.city Asc'));
+                                        if(!empty($cities)) {
+                                                $arrCities[$market] = $cities;
+                                        }
+                                }
+                        }
+                }
+                $arrPreference = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>'client_data')));
+                if(!empty($arrPreference)) {
+                        $this->set('widthPreferences_client_data', $arrPreference['UserGridPreference']['preference']);
+                } else {
+                        $this->set('widthPreferences_client_data', '{}');
+                }
+                $this->set('regions', json_encode($arrRegions));
+                $this->set('markets', json_encode($arrMarkets));
+                $this->set('cities', json_encode($arrCities));
+                $this->set('services', json_encode($this->Service->find('list', array('fields' => array('Service.service_name', 'Service.service_name'), 'order' => 'Service.service_name Asc'))));
+                $this->set('currMonth', date('n'));
+                $this->set('currYear', date('Y'));
+  
+        }
         
         function search_client() {
 
@@ -442,6 +535,92 @@ class ReportsController extends AppController {
                 echo json_encode($clientData);
         }
         
+        public function get_current_client_data(){
+            echo "hfjho";
+             $this->autoRender = false;
+                set_time_limit(0);
+                ini_set('memory_limit', '-1');
+
+                $clientData = array();
+                $i = 0;
+                $condition = null;
+                if ($this->Auth->user('role') == 'Regional') {
+                        $regions = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                        $arrRegions = array();
+                        foreach ($regions as $region) {
+                                $arrRegions[] = $region['UserMarket']['market_id'];
+                        }
+                        $condition = 'ClientRevenueByService.region_id IN (' . implode(',', $arrRegions) . ')';
+                }
+                if ($this->Auth->user('role') == 'Country') {
+                        $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                        $arrCountries = array();
+                        foreach ($countries as $country) {
+                                $arrCountries[] = $country['UserMarket']['market_id'];
+                        }
+                        $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')';
+                }
+                $clients = $this->ClientRevenueByService->query("CALL allClientsWithFilter('{$condition}');");
+
+                foreach ($clients as $client) {
+                        $clientData[$i]['id'] = $client['ClientRevenueByService']['id'];
+                        $clientData[$i]['RecordId'] = $client['ClientRevenueByService']['id'];
+                        $clientData[$i]['Region'] = $client[0]['region'];
+                        if ($client['ClientRevenueByService']['managing_entity'] == 'Global') {
+                                $clientData[$i]['Country'] = 'Global';
+                                $clientData[$i]['City'] = 'Global';
+                        } elseif ($client['ClientRevenueByService']['managing_entity'] == 'Regional') {
+                                $clientData[$i]['Country'] = 'Regional - ' . $client[0]['region'];
+                                $clientData[$i]['City'] = 'Regional - ' . $client[0]['region'];
+                        } else {
+                                $clientData[$i]['Country'] = $client[0]['country'];
+                                $clientData[$i]['City'] = $client[0]['city'];
+                        }
+                        $clientData[$i]['LeadAgency'] = $client[0]['agency'];
+                        $clientData[$i]['ClientName'] = $client['ClientRevenueByService']['client_name'];
+                        $clientData[$i]['SearchClientName'] = strtr( $client['ClientRevenueByService']['client_name'], $this->unwanted_array );
+                        $clientData[$i]['ParentCompany'] = $client['ClientRevenueByService']['parent_company'];
+                        $clientData[$i]['SearchParentCompany'] = strtr( $client['ClientRevenueByService']['parent_company'], $this->unwanted_array );
+                        $clientData[$i]['ClientCategory'] = $client[0]['category'];
+                        if ($client['ClientRevenueByService']['pitch_date'] != '0000-00-00') {
+                                $pitchDate = explode('-', $client['ClientRevenueByService']['pitch_date']);
+                                $clientData[$i]['PitchStart'] = $pitchDate[1] . '/' . $pitchDate[0];
+                        } else {
+                                $clientData[$i]['PitchStart'] = '';
+                        }
+                        //$clientData[$i]['PitchLeader'] = $client['ClientRevenueByService']['pitch_leader'];
+                        $clientData[$i]['PitchStage'] = $client['ClientRevenueByService']['pitch_stage'];
+                        if ($client['ClientRevenueByService']['lost_date'] != '0000-00-00') {
+                                $lostDate = explode('-', $client['ClientRevenueByService']['lost_date']);
+                                $clientData[$i]['Lost'] = $lostDate[1] . '/' . $lostDate[0];
+                        } else {
+                                $clientData[$i]['Lost'] = '';
+                        }
+                        $clientData[$i]['ClientMonth'] = ($client['ClientRevenueByService']['client_since_month'] != 0 && $client['ClientRevenueByService']['client_since_month'] != null) ? $this->months[$client['ClientRevenueByService']['client_since_month']] : '';
+                        $clientData[$i]['ClientYear'] = $client['ClientRevenueByService']['client_since_year'];
+                        if ($client['ClientRevenueByService']['client_since_month'] != 0 && $client['ClientRevenueByService']['client_since_year'] != 0) {
+                                $clientData[$i]['ClientSince'] = $client['ClientRevenueByService']['client_since_month']. '/' .$client['ClientRevenueByService']['client_since_year'];
+                        } elseif ($client['ClientRevenueByService']['client_since_month'] == 0 && $client['ClientRevenueByService']['client_since_year'] != 0) {
+                                $clientData[$i]['ClientSince'] = '01/' .$client['ClientRevenueByService']['client_since_year'];
+                        } else {
+                                $clientData[$i]['ClientSince'] = '';
+                        }
+                        $clientData[$i]['Service'] = $client[0]['service_name'];
+                        $clientData[$i]['MarketScope'] = $client['ClientRevenueByService']['market_scope'];
+                        $clientData[$i]['ActiveMarkets'] = $client['ClientRevenueByService']['active_markets'];
+                        $clientData[$i]['Currency'] = $client[0]['currency'];
+                        $clientData[$i]['EstimatedRevenue'] = (($client['ClientRevenueByService']['estimated_revenue'] == 0) ? '' : $client['ClientRevenueByService']['estimated_revenue']);
+                        $clientData[$i]['ActualRevenue'] = $client['ClientRevenueByService']['actual_revenue'];
+                        $clientData[$i]['Comments'] = $client['ClientRevenueByService']['comments'];
+                        $clientData[$i]['Year'] = $client['ClientRevenueByService']['year'];
+                        $clientData[$i]['ParentId'] = $client['ClientRevenueByService']['parent_id'];
+
+                        $i++;
+                }
+                echo json_encode($clientData);
+            
+        }
+
         public function get_client_report_data() {
                 $this->autoRender=false;
                 set_time_limit(0);
@@ -615,6 +794,162 @@ class ReportsController extends AppController {
                 echo json_encode($clientData);
         }
         
+        public function get_current_client_report_data(){            
+            $this->autoRender=false;
+                set_time_limit(0);
+                ini_set('memory_limit', '-1');
+
+                $clientData = array();
+                $i = 0;
+                $condition = null;
+                $revenueCurrency = isset($_GET['revenue_currency']) ? $_GET['revenue_currency'] : 'Actual currencies';
+                $currencies = $this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'));
+                $convertRatio = array_search($revenueCurrency, $currencies);
+//                if ($this->Auth->user('role') == 'Regional') {
+//                        $regions = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+//                        $arrRegions = array();
+//                        foreach ($regions as $region) {
+//                                $arrRegions[] = $region['UserMarket']['market_id'];
+//                        }
+//                        $condition = 'ClientRevenueByService.region_id = ' . $region['UserMarket']['market_id'];
+//                }
+//                if ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
+//                        $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+//                        $arrCountries = array();
+//                        foreach ($countries as $country) {
+//                                $arrCountries[] = $country['UserMarket']['market_id'];
+//                        }
+//                        $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')';
+//                }
+                
+                $condition = 'ClientRevenueByService.pitch_stage="Current client"';
+                $this->ClientRevenueByService->Behaviors->attach('Containable');
+                $clients = $this->ClientRevenueByService->query("CALL allClientsWithFilter('{$condition}');");
+                //print_r($clients);
+                foreach ($clients as $client) {
+                        $clientData[$i]['id'] = $client['ClientRevenueByService']['id'];
+                        $clientData[$i]['RecordId'] = $client['ClientRevenueByService']['id'];
+                        $clientData[$i]['Region'] = $client[0]['region'];
+                        if ($client['ClientRevenueByService']['managing_entity'] == 'Global') {
+                                $clientData[$i]['Country'] = 'Global';
+                                $clientData[$i]['City'] = 'Global';
+                        } elseif ($client['ClientRevenueByService']['managing_entity'] == 'Regional') {
+                                $clientData[$i]['Country'] = 'Regional - ' . $client[0]['region'];
+                                $clientData[$i]['City'] = 'Regional - ' . $client[0]['region'];
+                        } else {
+                                $clientData[$i]['Country'] = $client[0]['country'];
+                                $clientData[$i]['City'] = $client[0]['city'];
+                        }
+                        $clientData[$i]['LeadAgency'] = $client[0]['agency'];
+                        $clientData[$i]['ClientName'] = $client['ClientRevenueByService']['client_name'];
+                        $clientData[$i]['SearchClientName'] = strtr( $client['ClientRevenueByService']['client_name'], $this->unwanted_array );
+                        $clientData[$i]['ParentCompany'] = $client['ClientRevenueByService']['parent_company'];
+                        $clientData[$i]['SearchParentCompany'] = strtr( $client['ClientRevenueByService']['parent_company'], $this->unwanted_array );
+                        $clientData[$i]['ClientCategory'] = $client[0]['category'];
+                        if ($client['ClientRevenueByService']['pitch_date'] != '0000-00-00') {
+                                $pitchDate = explode('-', $client['ClientRevenueByService']['pitch_date']);
+                                $clientData[$i]['PitchStart'] = $pitchDate[1] . '/' . $pitchDate[0];
+                        } else {
+                                $clientData[$i]['PitchStart'] = '';
+                        }
+                        $clientData[$i]['PitchStage'] = $client['ClientRevenueByService']['pitch_stage'];
+                        if ($client['ClientRevenueByService']['lost_date'] != '0000-00-00') {
+                                $lostDate = explode('-', $client['ClientRevenueByService']['lost_date']);
+                                $clientData[$i]['Lost'] = $lostDate[1] . '/' . $lostDate[0];
+                        } else {
+                                $clientData[$i]['Lost'] = '';
+                        }
+                        $clientData[$i]['ClientMonth'] = ($client['ClientRevenueByService']['client_since_month'] != 0 && $client['ClientRevenueByService']['client_since_month'] != null) ? $this->months[$client['ClientRevenueByService']['client_since_month']] : '';
+                        $clientData[$i]['ClientYear'] = $client['ClientRevenueByService']['client_since_year'];
+                        if ($client['ClientRevenueByService']['client_since_month'] != 0 && $client['ClientRevenueByService']['client_since_year'] != 0) {
+                                $clientData[$i]['ClientSince'] = $client['ClientRevenueByService']['client_since_month']. '/' .$client['ClientRevenueByService']['client_since_year'];
+                        } elseif ($client['ClientRevenueByService']['client_since_month'] == 0 && $client['ClientRevenueByService']['client_since_year'] != 0) {
+                                $clientData[$i]['ClientSince'] = '01/' .$client['ClientRevenueByService']['client_since_year'];
+                        } else {
+                                $clientData[$i]['ClientSince'] = '';
+                        }
+                        $clientData[$i]['Service'] = $client[0]['service_name'];
+                        $clientData[$i]['MarketScope'] = $client['ClientRevenueByService']['market_scope'];
+                        $clientData[$i]['ActiveMarkets'] = $client['ClientRevenueByService']['active_markets'];
+
+                        $estimatedRevenue = 0;
+                        $actualRevenue = 0;
+                        $currency = '';
+                        if($revenueCurrency == "Actual currencies") {
+                                $estimatedRevenue = $client['ClientRevenueByService']['estimated_revenue'];
+                                $actualRevenue = $client['ClientRevenueByService']['actual_revenue'];
+                                $currency = $client[0]['currency'];
+                        } else {
+                                $currency = $revenueCurrency;
+                                if(is_numeric($client['ClientRevenueByService']['estimated_revenue'])) {
+                                        if($client[0]['currency'] == $revenueCurrency) {
+                                                $estimatedRevenue = $client['ClientRevenueByService']['estimated_revenue'];
+                                        } else {
+                                                $dollarConvertRatio = array_search($client[0]['currency'], $currencies);
+                                                if($revenueCurrency == "USD") {
+                                                     $estimatedRevenue = ($client['ClientRevenueByService']['estimated_revenue'] * $dollarConvertRatio);
+                                                } else {
+                                                     $dollarEstRevenue = ($client['ClientRevenueByService']['estimated_revenue'] * $dollarConvertRatio);
+                                                     $estimatedRevenue = ($dollarEstRevenue / $convertRatio);
+                                                }
+                                        }
+                                }
+                                if(is_numeric($client['ClientRevenueByService']['actual_revenue'])) {
+                                        if($client[0]['currency'] == $revenueCurrency) {
+                                                $actualRevenue = $client['ClientRevenueByService']['actual_revenue'];
+                                        } else {
+                                                $dollarConvertRatio = array_search($client[0]['currency'], $currencies);
+                                                if($revenueCurrency == "USD") {
+                                                     $actualRevenue = ($client['ClientRevenueByService']['actual_revenue'] * $dollarConvertRatio);
+                                                } else {
+                                                     $dollarEstRevenue = ($client['ClientRevenueByService']['actual_revenue'] * $dollarConvertRatio);
+                                                     $actualRevenue = ($dollarEstRevenue / $convertRatio);
+                                                }
+                                        }
+                                }
+                        }
+                        if ($this->Auth->user('role') == 'Viewer') {
+                                $clientData[$i]['EstimatedRevenue'] = '';
+                                $clientData[$i]['ActualRevenue'] = '';
+                                $clientData[$i]['Currency'] = '';
+                        } else {
+                                if ($this->Auth->user('role') == 'Regional') {
+                                        if (in_array($client['ClientRevenueByService']['region_id'], $arrRegions)) {
+                                                $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
+                                                $clientData[$i]['ActualRevenue'] = $actualRevenue;
+                                                $clientData[$i]['Currency'] = $currency;
+                                        } else {
+                                                $clientData[$i]['EstimatedRevenue'] = '';
+                                                $clientData[$i]['ActualRevenue'] = '';
+                                                $clientData[$i]['Currency'] = '';
+                                        }
+                                } elseif ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
+                                        if (in_array($client['ClientRevenueByService']['country_id'], $arrCountries)) {
+                                                $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
+                                                $clientData[$i]['ActualRevenue'] = $actualRevenue;
+                                                $clientData[$i]['Currency'] = $currency;
+                                        } else {
+                                                $clientData[$i]['EstimatedRevenue'] = '';
+                                                $clientData[$i]['ActualRevenue'] = '';
+                                                $clientData[$i]['Currency'] = '';
+                                        }
+                                } else {
+                                        $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
+                                        $clientData[$i]['ActualRevenue'] = $actualRevenue;
+                                        $clientData[$i]['Currency'] = $currency;
+                                }
+                        }
+                        $clientData[$i]['Comments'] = $client['ClientRevenueByService']['comments'];
+                        $clientData[$i]['Year'] = $client['ClientRevenueByService']['year'];
+                        $clientData[$i]['ParentId'] = $client['ClientRevenueByService']['parent_id'];
+                        $clientData[$i]['Created'] = $client['ClientRevenueByService']['created'];
+                        $clientData[$i]['Modified'] = $client['ClientRevenueByService']['modified'];
+
+                        $i++;
+                }
+                echo json_encode($clientData);
+        }
+
         public function update_client_record() {
                 if ($this->request->isPost()) {
                         if($this->RequestHandler->isAjax()) {
@@ -866,6 +1201,24 @@ class ReportsController extends AppController {
         public function client_report() {
 
                 $this->set('currencies', json_encode($this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'))));
+                $arrClientSinceYear = array();
+                $clientsinceyears = $this->ClientRevenueByService->find('all',array('fields' => array('ClientRevenueByService.client_since_year'), 'conditions' => array("client_since_year != '0000-00-00'"),'order' => 'ClientRevenueByService.client_since_year Asc', 'group' => 'client_since_year'));
+                foreach($clientsinceyears as $clientsinceyear) {
+                    $arrClientSinceYear[] = $clientsinceyear['ClientRevenueByService']['client_since_year'];
+                }
+                $this->set('clientSinceYear',json_encode($arrClientSinceYear));
+                $arrLostYear = array();
+                $lostsinceyears = $this->ClientRevenueByService->find('all',array('fields' => array('YEAR(ClientRevenueByService.lost_date) as lost_year'), 'conditions' => array("lost_date != '0000-00-00'"), 'order' => 'ClientRevenueByService.lost_date Asc', 'group' => 'lost_year'));
+                foreach($lostsinceyears as $lostsinceyear) {
+                    $arrLostYear[] = $lostsinceyear[0]['lost_year'];
+                }
+                $this->set('lostsinceyear',json_encode($arrLostYear));
+                $arrPitchedYear = array();
+                $pitchedyears = $this->ClientRevenueByService->find('all',array('fields' => array('YEAR(ClientRevenueByService.pitch_date) as pitch_year'), 'conditions' => array("pitch_date != '0000-00-00'"), 'order' => 'ClientRevenueByService.pitch_date Asc', 'group' => 'pitch_year'));
+                foreach($pitchedyears as $pitchedyears) {
+                    $arrPitchedYear[] = $pitchedyears[0]['pitch_year'];
+                }
+                $this->set('pitchyear',json_encode($arrPitchedYear));
                 $this->set('current_year', date('Y'));
                 $arrMarkets = array();
                 $arrRegions = array();
@@ -899,6 +1252,43 @@ class ReportsController extends AppController {
                 $this->set('userRole', $this->Auth->user('role'));
         }
 
+        public function current_client_report() {
+            
+            $this->set('currencies', json_encode($this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'))));
+                $this->set('current_year', date('Y'));
+                $arrMarkets = array();
+                $arrRegions = array();
+                $arrCities = array();
+                $regions = $this->Region->find('all', array('order' => 'Region.region Asc'));
+                foreach ($regions as $region) {
+                        $arrRegions[$region['Region']['region']] = $region['Region']['region'];
+                        $markets = $this->Market->find('list', array('fields' => array('Market.country_id', 'Market.market'), 'conditions' => array('Market.region_id' => $region['Region']['id']), 'order' => 'Market.market Asc'));
+                        if(!empty($markets)) {
+                                foreach ($markets as $countryId => $market)
+                                {
+                                        $arrMarkets[$region['Region']['region']][$market] = $market;
+                                        $cities = $this->City->find('list', array('fields' => array('City.city', 'City.city'), 'conditions' => array('City.country_id' => $countryId), 'order' => 'City.city Asc'));
+                                        if(!empty($cities)) {
+                                                $arrCities[$market] = $cities;
+                                        }
+                                }
+                        }
+                }
+                $arrPreference = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>'client_report')));
+                if(!empty($arrPreference)) {
+                        $this->set('widthPreferences', $arrPreference['UserGridPreference']['preference']);
+                } else {
+                        $this->set('widthPreferences', '{}');
+                }
+                $this->set('regions', json_encode($arrRegions));
+                $this->set('markets', json_encode($arrMarkets));
+                $this->set('cities', json_encode($arrCities));
+                $this->set('loggedUser', $this->Auth->user());
+                $this->set('userAcl', $this->Acl);
+                $this->set('userRole', $this->Auth->user('role'));
+       // print_r("fdfdf");
+            
+        }
         public function export_client_data() {
                 set_time_limit(0);
                 ini_set('memory_limit', '-1');
@@ -1746,7 +2136,7 @@ class ReportsController extends AppController {
                         $clientData[$i]['ActiveMarkets'] = $client['ClientDeleteLog']['active_markets'];
 
                         $estimatedRevenue = $client['ClientDeleteLog']['estimated_revenue'];
-                        $fiscalRevenue =$client['ClientDeleteLog']['fiscal_revenue']; 
+                        $fiscalRevenue = $client['ClientDeleteLog']['fiscal_revenue']; 
                         $clientData[$i]['EstimatedRevenue'] = (($estimatedRevenue == 0) ? '' : $estimatedRevenue);
                         $clientData[$i]['FiscalRevenue'] = (($fiscalRevenue == 0) ? '' : $fiscalRevenue);
                         $clientData[$i]['Currency'] = $client[0]['currency'];
