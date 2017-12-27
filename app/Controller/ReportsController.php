@@ -143,32 +143,13 @@ class ReportsController extends AppController {
         
         public function current_client_data(){
             
-                $this->autoRender=false;
                 $this->set('userRole', $this->Auth->user('role'));
                 $this->set('categories', json_encode($this->ClientCategory->find('list', array('fields' => array('ClientCategory.category', 'ClientCategory.category'), 'order' => 'ClientCategory.category Asc'))));
                 $countries = $this->Country->find('list', array('fields' => array('Country.country', 'Country.country'), 'order' => 'Country.country Asc'));
                 $this->set('countries', json_encode($countries, JSON_HEX_APOS));
                 $this->set('currencies', json_encode($this->Currency->find('list', array('fields' => array('Currency.currency', 'Currency.currency'), 'order' => 'Currency.currency Asc'))));
                 $this->set('agencies', json_encode($this->LeadAgency->find('list', array('fields' => array('LeadAgency.agency', 'LeadAgency.agency'), 'order' => 'LeadAgency.agency Asc'))));
-                $this->set('stages', json_encode($this->PitchStage->find('list', array('conditions' => array("PitchStage.pitch_stage ='Current client'")),array('fields' => array('PitchStage.pitch_stage', 'PitchStage.pitch_stage'), 'order' => 'PitchStage.id Asc'))));
-                $arrClientSinceYear = array();
-                $clientsinceyears = $this->ClientRevenueByService->find('all',array('fields' => array('ClientRevenueByService.client_since_year'), 'conditions' => array("client_since_year != '0000-00-00'"),'order' => 'ClientRevenueByService.client_since_year Asc', 'group' => 'client_since_year'));
-                foreach($clientsinceyears as $clientsinceyear) {
-                    $arrClientSinceYear[] = $clientsinceyear['ClientRevenueByService']['client_since_year'];
-                }
-                $this->set('clientSinceYear',json_encode($arrClientSinceYear));
-                $arrLostYear = array();
-                $lostsinceyears = $this->ClientRevenueByService->find('all',array('fields' => array('YEAR(ClientRevenueByService.lost_date) as lost_year'), 'conditions' => array("lost_date != '0000-00-00'"), 'order' => 'ClientRevenueByService.lost_date Asc', 'group' => 'lost_year'));
-                foreach($lostsinceyears as $lostsinceyear) {
-                    $arrLostYear[] = $lostsinceyear[0]['lost_year'];
-                }
-                $this->set('lostsinceyear',json_encode($arrLostYear));
-                $arrPitchedYear = array();
-                $pitchedyears = $this->ClientRevenueByService->find('all',array('fields' => array('YEAR(ClientRevenueByService.pitch_date) as pitch_year'), 'conditions' => array("pitch_date != '0000-00-00'"), 'order' => 'ClientRevenueByService.pitch_date Asc', 'group' => 'pitch_year'));
-                foreach($pitchedyears as $pitchedyears) {
-                    $arrPitchedYear[] = $pitchedyears[0]['pitch_year'];
-                }
-                $this->set('pitchyear',json_encode($arrPitchedYear));
+                $this->set('stages', json_encode($this->PitchStage->find('list', array('conditions' => array('NOT' => array('PitchStage.id' => array(11)))),array('fields' => array('PitchStage.pitch_stage', 'PitchStage.pitch_stage'), 'order' => 'PitchStage.id Asc'))));
                 //$arrMarkets = array('Global' => 'Global');
                 $arrMarkets = array();
                 $arrRegions = array();
@@ -201,7 +182,7 @@ class ReportsController extends AppController {
                                 }
                         }
                 }
-                $arrPreference = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>'client_data')));
+                $arrPreference = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>'current_client_data')));
                 if(!empty($arrPreference)) {
                         $this->set('widthPreferences_client_data', $arrPreference['UserGridPreference']['preference']);
                 } else {
@@ -536,8 +517,7 @@ class ReportsController extends AppController {
         }
         
         public function get_current_client_data(){
-            echo "hfjho";
-             $this->autoRender = false;
+                $this->autoRender = false;
                 set_time_limit(0);
                 ini_set('memory_limit', '-1');
 
@@ -560,8 +540,9 @@ class ReportsController extends AppController {
                         }
                         $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')';
                 }
+                                
+                $condition = 'ClientRevenueByService.pitch_stage = "Current client"';
                 $clients = $this->ClientRevenueByService->query("CALL allClientsWithFilter('{$condition}');");
-
                 foreach ($clients as $client) {
                         $clientData[$i]['id'] = $client['ClientRevenueByService']['id'];
                         $clientData[$i]['RecordId'] = $client['ClientRevenueByService']['id'];
@@ -618,7 +599,7 @@ class ReportsController extends AppController {
                         $i++;
                 }
                 echo json_encode($clientData);
-            
+           
         }
 
         public function get_client_report_data() {
@@ -794,7 +775,7 @@ class ReportsController extends AppController {
                 echo json_encode($clientData);
         }
         
-        public function get_current_client_report_data(){            
+        public function get_currentclient_report_data(){            
             $this->autoRender=false;
                 set_time_limit(0);
                 ini_set('memory_limit', '-1');
@@ -805,24 +786,23 @@ class ReportsController extends AppController {
                 $revenueCurrency = isset($_GET['revenue_currency']) ? $_GET['revenue_currency'] : 'Actual currencies';
                 $currencies = $this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'));
                 $convertRatio = array_search($revenueCurrency, $currencies);
-//                if ($this->Auth->user('role') == 'Regional') {
-//                        $regions = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
-//                        $arrRegions = array();
-//                        foreach ($regions as $region) {
-//                                $arrRegions[] = $region['UserMarket']['market_id'];
-//                        }
-//                        $condition = 'ClientRevenueByService.region_id = ' . $region['UserMarket']['market_id'];
-//                }
-//                if ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
-//                        $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
-//                        $arrCountries = array();
-//                        foreach ($countries as $country) {
-//                                $arrCountries[] = $country['UserMarket']['market_id'];
-//                        }
-//                        $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')';
-//                }
-                
-                $condition = 'ClientRevenueByService.pitch_stage="Current client"';
+                if ($this->Auth->user('role') == 'Regional') {
+                        $regions = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                        $arrRegions = array();
+                        foreach ($regions as $region) {
+                                $arrRegions[] = $region['UserMarket']['market_id'];
+                        }
+                        $condition = 'ClientRevenueByService.region_id = ' . $region['UserMarket']['market_id'];
+                }
+                if ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
+                        $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
+                        $arrCountries = array();
+                        foreach ($countries as $country) {
+                                $arrCountries[] = $country['UserMarket']['market_id'];
+                        }
+                        $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')';
+                }
+                $condition = 'ClientRevenueByService.pitch_stage = "Current client"';
                 $this->ClientRevenueByService->Behaviors->attach('Containable');
                 $clients = $this->ClientRevenueByService->query("CALL allClientsWithFilter('{$condition}');");
                 //print_r($clients);

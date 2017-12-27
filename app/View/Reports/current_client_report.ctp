@@ -110,7 +110,7 @@
              {
                 dataType: "json",
                 id: 'id',
-                url: "/reports/get_current_client_report_data/",
+                url: "/reports/get_currentclient_report_data/",
                 datafields: [
                     { name: 'RecordId', type: 'number' },
                     { name: 'Region', type: 'string' },
@@ -257,7 +257,7 @@
                     var obj=[];
                     obj= {
                             state:state,
-                            formname:'client_report'
+                            formname:'current_client_report'
                          };
                     $.ajax({
                             type: "POST",
@@ -282,14 +282,14 @@
         <?php
                 if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/current_client_report') && !preg_match('/Viewer/', $loggedUser['role'])) {
         ?>
-            <div id="-reports-client-report" class="light-grey selected">
+            <div id="-reports-current-client-report" class="light-grey selected">
                     <a href="/reports/current_client_report">SEARCH</a>
             </div>
         <?php
                 }
                 if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/current_client_data')) {
         ?>
-            <div id="-reports-client-data" class="light-grey">
+            <div id="-reports-current-client-data" class="light-grey">
                     <a href="/reports/current_client_data">CREATE/UPDATE YOUR RECORDS</a>
             </div>
         <?php

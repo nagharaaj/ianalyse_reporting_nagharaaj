@@ -28,13 +28,9 @@
              var arrMonths = ['Jan (1)', 'Feb (2)', 'Mar (3)', 'Apr (4)', 'May (5)', 'Jun (6)', 'Jul (7)', 'Aug (8)', 'Sep (9)', 'Oct (10)', 'Nov (11)', 'Dec (12)'];
              var currMonth = '<?php echo $currMonth; ?>';
              var currYear = '<?php echo $currYear; ?>';
-             var clientSinceYear = jQuery.parseJSON('<?php echo $clientSinceYear; ?>');
-             var lostSinceYear = jQuery.parseJSON('<?php echo $lostsinceyear; ?>');
-             var pitchYear = jQuery.parseJSON('<?php echo $pitchyear; ?>');
              var defaultState;
              var localizationobj = {};
              localizationobj.loadtext = "Processing";
-             
              var months = [
                      {value: 1, label: "Jan (1)"},
                      {value: 2, label: "Feb (2)"},
@@ -221,71 +217,7 @@
                     textInput.val("");
                 });
              }
-             var monthFilterpanel = function(filterPanel,datafield){
-                var applyinput = $("<div class='filter' style='height: 75px; margin-left: 20px; margin-top: 6px;'></div>");
-                var month = $("<div style='height: 28px'><div id='month' style='height: 25px; margin-left:-19px; margin-top: 7px;'></div></div>");
-                var year = $("<div style='height: 28px'><div id='year' style='height: 25px; margin-left:-19px; margin-top: 7px;'></div></div>");
-                var filterbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 2px; margin-top:20px;">Filter</span>');
-                applyinput.append(month);
-                applyinput.append(year);
-                applyinput.append(filterbutton);
-                var filterclearbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 5px;">Clear</span>');
-                applyinput.append(filterclearbutton);
-                filterPanel.append(applyinput);
-                filterbutton.jqxButton({ theme: theme, height: 20 });
-                filterclearbutton.jqxButton({ theme: theme, height: 20 });
-                var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
-                $("#month").jqxDropDownList({
-                    filterable: true, source: monthsAdapter,displayMember:'label',valueMember:'value', itemHeight: 30, height: 20, width: 160
-                });
-                if(column.datafield === 'ClientSince'){
-                    source = clientSinceYear; 
-                }
-                else if(column.datafield === 'Lost'){
-                    source = lostSinceYear;
-                }
-                else {
-                    source = pitchYear;
-                }
-                $("#year").jqxDropDownList({
-                    filterable: true, source: source, itemHeight: 30, height: 20, width: 160
-                });
-                $(".filter").jqxGrid('openmenu', column.datafield);
-                filterbutton.click(function () {
-                    var datefiltergroup = new $.jqx.filter();
-                    var filter_or_operator = 1;
-                    var monthselected = $("#month").jqxDropDownList('val');
-                    var pad = "00";
-                    var monthselected = pad.substring(0, pad.length - monthselected.length) + monthselected;
-                    var yearselected = $("#year").jqxDropDownList('val');
-                    var filtervalue = "01/"+monthselected+'/'+yearselected;
-                    var filtercondition = 'EQUAL';
-                    var filter1 = datefiltergroup.createfilter('datefilter',filtervalue,filtercondition);
-                    datefiltergroup.addfilter(filter_or_operator, filter1);
-                    // add the filters.
-                    $("#jqxgrid").jqxGrid('addfilter',column.datafield, datefiltergroup);
-                    // apply the filters.
-                    $("#jqxgrid").jqxGrid('applyfilters');
-                    $("#jqxgrid").jqxGrid('closemenu');
-                });
-                filterbutton.keydown(function (event) {
-                    if (event.keyCode === 13) {
-                        filterbutton.trigger('click');
-                    }
-                });
-                filterclearbutton.click(function () {
-                  $("#jqxgrid").jqxGrid('removefilter',column.datafield);
-                  $("#month").jqxDropDownList('clearSelection');
-                  $("#year").jqxDropDownList('clearSelection');
-                    // apply the filters.
-                  $("#jqxgrid").jqxGrid('closemenu');
-                });
-                filterclearbutton.keydown(function (event) {
-                    if (event.keyCode === 13) {
-                        filterclearbutton.trigger('click');
-                    }
-                });
-             }
+             
              // initialize jqxGrid
              $("#jqxgrid").jqxGrid(
              {
@@ -312,11 +244,7 @@
                 columnmenuopening: function (menu, datafield, height) {
                     var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
                     if (column.filtertype === "custom") {
-                        if(column.datafield === "ClientName" || column.datafield === "ParentCompany" ){
                             menu.height(155);
-                        }else {
-                            menu.height(180); 
-                        }
                         setTimeout(function () {
                             menu.find('input').focus();
                         }, 25);
@@ -352,21 +280,9 @@
                   { text: 'Lead Agency', datafield: 'LeadAgency', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Status', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
-                  { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 140, cellClassName: cellclass, filtertype: 'custom', cellsformat: 'MM/yyyy', editable: false,
-                        createfilterpanel:function(datafield, filterPanel) {
-                            monthFilterpanel(filterPanel,datafield);
-                        }
-                  },
-                  { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 140, cellClassName: cellclass, filtertype: 'custom', cellsformat: 'MM/yyyy', editable: false,
-                         createfilterpanel:function(datafield, filterPanel) {
-                            monthFilterpanel(filterPanel,datafield);
-                        }
-                  },
-                  { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 140, cellClassName: cellclass, filtertype: 'custom', cellsformat: 'MM/yyyy', editable: false,
-                         createfilterpanel:function(datafield, filterPanel) {
-                            monthFilterpanel(filterPanel,datafield);
-                        }
-                  },
+                  { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 140, cellClassName: cellclass, filtertype: 'custom', cellsformat: 'MM/yyyy', editable: false },
+                  { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 140, cellClassName: cellclass, filtertype: 'custom', cellsformat: 'MM/yyyy', editable: false },
+                  { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 140, cellClassName: cellclass, filtertype: 'custom', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Scope', datafield: 'MarketScope', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Active Markets', datafield: 'ActiveMarkets', width: 160, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
@@ -699,7 +615,7 @@
                                         rules.push(validator.estrevenueRequired);
                                         rules.push(validator.estrevenueNumeric);
                                 }
-                                $("#divActualRevenue").html('');
+                               $("#divActualRevenue").html('');
                                 var inpActualRevenue = $("<input type=\"text\" id=\"update_actualrevenue\" />");
                                 $("#divActualRevenue").append(inpActualRevenue);
                                 $("#update_actualrevenue").jqxInput({ height: 25, width: 150, rtl:true }).val(actualrevenue);
@@ -1250,7 +1166,7 @@
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             data: JSON.stringify({
-                                formname: 'client_data'
+                                formname: 'current_client_data'
                             })
                       });
                       $('#jqxgrid').jqxGrid('loadstate', defaultState);
@@ -1391,7 +1307,7 @@
                                 var pitchstage = $('#update_pitchstage').text();
                         }
                         if ((pitchstage.match(/Won/g) || pitchstage == 'Current client')) {
-                                if (!isNaN(parseFloat(input.val())) && isFinite(input.val())) {
+                                if(!isNaN(parseFloat(input.val())) && isFinite(input.val())) {
                                         return true;
                                 }
                         } else {
