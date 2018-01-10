@@ -1254,7 +1254,7 @@ class ReportsController extends AppController {
                                 }
                         }
                 }
-                $arrPreference = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>'client_report')));
+                $arrPreference = $this->UserGridPreference->find('first', array('fields' =>array('UserGridPreference.preference'),'conditions' => array('UserGridPreference.user_id' => $this->Auth->user('id'),'UserGridPreference.formname' =>'current_client_report')));
                 if(!empty($arrPreference)) {
                         $this->set('widthPreferences', $arrPreference['UserGridPreference']['preference']);
                 } else {
@@ -1266,9 +1266,8 @@ class ReportsController extends AppController {
                 $this->set('loggedUser', $this->Auth->user());
                 $this->set('userAcl', $this->Acl);
                 $this->set('userRole', $this->Auth->user('role'));
-       // print_r("fdfdf");
-            
         }
+
         public function export_client_data() {
                 set_time_limit(0);
                 ini_set('memory_limit', '-1');

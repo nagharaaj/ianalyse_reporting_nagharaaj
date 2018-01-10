@@ -53,35 +53,15 @@
                 var dataRows = $('#jqxgrid').jqxGrid('getrows');
                 var rowscount = dataRows.length;
                 $('#no_of_records span').text(rowscount);
-                var aggressivePitchesCount = 0;
-                var defensivePitchesCount = 0;
                 var totalClients = new Array();
-                var totalAggressiveClients = new Array();
-                var totalDefensiveClients = new Array();
                 for(var i = 0; i < rowscount; i++) {
                         if(dataRows[i].PitchStage.match(/Won/g) || dataRows[i].PitchStage == 'Current client') {
                                 if($.inArray(dataRows[i].ClientName, totalClients) == -1) {
                                         totalClients.push(dataRows[i].ClientName);
                                 }
                         }
-                        if(dataRows[i].PitchStage == 'Live - aggressive') {
-                                aggressivePitchesCount++;
-                                if($.inArray(dataRows[i].ClientName, totalAggressiveClients) == -1) {
-                                        totalAggressiveClients.push(dataRows[i].ClientName);
-                                }
-                        }
-                        if(dataRows[i].PitchStage == 'Live - defensive') {
-                                defensivePitchesCount++;
-                                if($.inArray(dataRows[i].ClientName, totalDefensiveClients) == -1) {
-                                        totalDefensiveClients.push(dataRows[i].ClientName);
-                                }
-                        }
                 }
                 $('#no_of_clients span').text(totalClients.length);
-                $('#no_of_aggressive_pitches_client span').text(totalAggressiveClients.length);
-                $('#no_of_aggressive_pitches span').text(aggressivePitchesCount);
-                $('#no_of_defensive_pitches_client span').text(totalDefensiveClients.length);
-                $('#no_of_defensive_pitches span').text(defensivePitchesCount);
              }
 
              var horizontalScroll=function(){
@@ -172,6 +152,63 @@
                         return '';
                 }
              }
+             var clientNameFilterInput;
+             var parentCompanyFilterInput;
+             var buildFilterPanel = function (filterPanel, datafield) {
+                var textInput = $("<input style='margin:5px;'/>");
+                var applyinput = $("<div class='filter' style='height: 25px; margin-left: 20px; margin-top: 7px;'></div>");
+                var filterbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 2px;">Filter</span>');
+                applyinput.append(filterbutton);
+                var filterclearbutton = $('<span tabindex="0" style="padding: 4px 12px; margin-left: 5px;">Clear</span>');
+                applyinput.append(filterclearbutton);
+                filterPanel.append(textInput);
+                filterPanel.append(applyinput);
+                filterbutton.jqxButton({ theme: theme, height: 20 });
+                filterclearbutton.jqxButton({ theme: theme, height: 20 });
+                var column = $("#jqxgrid").jqxGrid('getcolumn', datafield);
+                textInput.jqxInput({ theme: theme, placeHolder: "Enter " + column.text, popupZIndex: 9999999, displayMember: datafield, /*source: dataadapter,*/ height: 23, width: 155 });
+                if(column.text == 'Parent Company') {
+                        parentCompanyFilterInput = textInput;
+                } else {
+                        clientNameFilterInput = textInput;
+                }
+                textInput.keyup(function (event) {
+                    if (event.keyCode === 13) {
+                        filterbutton.trigger('click');
+                    }
+                });
+                filterbutton.click(function () {
+                    var filtergroup = new $.jqx.filter();
+                    var filter_or_operator = 1;
+                    var filtervalue = removeSpecialChars(textInput.val());
+                    var filtercondition = 'contains';
+                    var filter1 = filtergroup.createfilter('stringfilter', filtervalue, filtercondition);
+                    filtergroup.addfilter(filter_or_operator, filter1);
+                    // add the filters.
+                    $("#jqxgrid").jqxGrid('addfilter', "Search"+datafield, filtergroup);
+                    // apply the filters.
+                    $("#jqxgrid").jqxGrid('applyfilters');
+                    $("#jqxgrid").jqxGrid('closemenu');
+                });
+                filterbutton.keydown(function (event) {
+                    if (event.keyCode === 13) {
+                        filterbutton.trigger('click');
+                    }
+                });
+                filterclearbutton.click(function () {
+                    $("#jqxgrid").jqxGrid('removefilter', "Search"+datafield);
+                    // apply the filters.
+                    $("#jqxgrid").jqxGrid('applyfilters');
+                    $("#jqxgrid").jqxGrid('closemenu');
+                    textInput.val("");
+                });
+                filterclearbutton.keydown(function (event) {
+                    if (event.keyCode === 13) {
+                        filterclearbutton.trigger('click');
+                    }
+                    textInput.val("");
+                });
+             }
              // initialize jqxGrid
              $("#jqxgrid").jqxGrid(
              {
@@ -210,7 +247,7 @@
                   { text: 'Year', datafield: 'Year', hidden: true },
                   { text: '', datafield: 'SearchClientName', hidden: true },
                   { text: '', datafield: 'SearchParentCompany', hidden: true },
-                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true },
+                  { text: 'Region', datafield: 'Region', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', filteritems: arrRegions, pinned: true },
                   { text: 'Country', datafield: 'Country', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true },
                   { text: 'City', datafield: 'City', width: 120, cellClassName: cellclass, filtertype: 'checkedlist', pinned: true },
                   { text: 'Client', columngroup: 'ClientName', datafield: 'ClientName', width: 250, cellClassName: cellclass, pinned: true, filtertype: 'custom',
@@ -225,16 +262,16 @@
                   },
                   { text: 'Client Category', datafield: 'ClientCategory', width: 200, cellClassName: cellclass, filtertype: 'checkedlist' },
                   { text: 'Lead Agency', datafield: 'LeadAgency', width: 130, cellClassName: cellclass, filtertype: 'checkedlist' },
-                  { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist' },
                   { text: 'Status', columntype: 'template', datafield: 'PitchStage', width: 130, cellClassName: cellclass, filtertype: 'checkedlist' },
+                  { text: 'Service', datafield: 'Service', width: 150, cellClassName: cellclass, filtertype: 'checkedlist' },
                   { text: 'Client Since (M-Y)', datafield: 'ClientSince', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Lost Since (M-Y)', datafield: 'Lost', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false },
                   { text: 'Pitched (M-Y)', datafield: 'PitchStart', width: 140, cellClassName: cellclass, filtertype: 'date', cellsformat: 'MM/yyyy', editable: false},
                   { text: 'Scope', datafield: 'MarketScope', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', editable: false },
                   { text: 'Active Markets', columngroup: 'ActiveMarkets', datafield: 'ActiveMarkets', width: 160, cellClassName: cellclass, filtertype: 'checkedlist' },
-                  { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist'},
+                  { text: 'Currency', datafield: 'Currency', width: 100, cellClassName: cellclass, filtertype: 'checkedlist', hidden: ((userRole == 'Viewer') ? true : false) },
                   { text: estimatedRevenueColumnTitle, columngroup: 'EstimatedRevenue', datafield: 'EstimatedRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
-                { text: actualRevenueColumnTitle, columngroup: 'ActualRevenue', datafield: 'ActualRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
+                  { text: actualRevenueColumnTitle, columngroup: 'ActualRevenue', datafield: 'ActualRevenue', width: 200, align: 'left', cellsalign: 'right', cellClassName: cellclass, cellsFormat: 'f2', hidden: ((userRole == 'Viewer') ? true : false) },
                   { text: 'Comments', columngroup: 'Comments', datafield: 'Comments', width: 230, cellClassName: cellclass }
                 ],
                 ready:function()
@@ -250,7 +287,58 @@
                         }
                 }
             });
+            $("#jqxgrid").on("filter", function (event) {
+                    calculateStats();
+                    $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', false);
+                    $("#jqxgrid").jqxGrid('setcolumnproperty', 'Country', 'filteritems', false);
 
+                    var paginginfo = $("#jqxgrid").jqxGrid('getpaginginformation');
+                    if(paginginfo.pagescount <= 1) {
+                        $('#pagerjqxgrid').hide();
+                    } else {
+                        $('#pagerjqxgrid').show();
+                    }
+
+                    var filterGroups = $("#jqxgrid").jqxGrid('getfilterinformation');
+                    if(filterGroups.length) {
+                        for (var i = 0; i < filterGroups.length; i++) {
+                            var filterGroup = filterGroups[i];
+                            if(filterGroup.filtercolumn == 'Region') {
+                                var arrRegionCountries = new Array();
+                                var arrCities = new Array();
+                                var filters = filterGroup.filter.getfilters();
+                                for (var j = 0; j < filters.length; j++) {
+                                    $.map(markets[filters[j].value], function(el) {
+                                            arrRegionCountries.push(el);
+                                            $.map(cities[el], function(elm) { arrCities.push(elm); });
+                                    });
+                                }
+                                arrRegionCountries.sort();
+                                $("#jqxgrid").jqxGrid('setcolumnproperty', 'Country', 'filteritems', arrRegionCountries);
+                                arrCities.sort();
+                                $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', arrCities);
+                            }
+                            if(filterGroup.filtercolumn == 'Country') {
+                                var arrCities = new Array();
+                                var filters = filterGroup.filter.getfilters();
+                                for (var j = 0; j < filters.length; j++) {
+                                    $.map(cities[filters[j].value], function(el) { arrCities.push(el); });
+                                }
+                                arrCities.sort();
+                                $("#jqxgrid").jqxGrid('setcolumnproperty', 'City', 'filteritems', arrCities);
+                            }
+                        }
+                    }
+            });
+            $('#jqxgrid').jqxGrid({ rendered: function() {
+                    var paginginfo = $("#jqxgrid").jqxGrid('getpaginginformation');
+                    if(paginginfo.pagescount <= 1) {
+                        $('#pagerjqxgrid').hide();
+                    } else {
+                        $('#pagerjqxgrid').show();
+                    }
+                }
+            });
             $("#jqxgrid").on("columnresized", function (event) {
                     var state=null;
                     state = $("#jqxgrid").jqxGrid('savestate');
@@ -268,6 +356,49 @@
                     });
             });
  
+            $('#clearfilteringbutton').jqxButton({ theme: theme });
+            $('#selectcurrencybutton').jqxButton({ theme: theme });
+            $('#changeCurrencyButton').jqxButton({ theme: theme });
+            $('#cancelCurrencyButton').jqxButton({ theme: theme });
+
+            $("#popupWindow").jqxWindow({
+                width: 320, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none'
+            });
+
+            $('#selectcurrencybutton').click(function () {
+                $("#popupWindow").jqxWindow({ title: 'Select currency for revenue', position: { x: 'center', y: 'top' }, cancelButton: $('#cancelCurrencyButton'), height: "125px", maxWidth: 400, isModal: true, draggable: false });
+                $('#divSetting').hide();
+                $('#divLoader').hide();
+                $('#divRevenueCurrency').show();
+                $("#popupWindow").jqxWindow('open');
+            });
+
+            $('#changeCurrencyButton').click(function () {
+                var revenueCurrency = $("#revenuecurrency option:selected").text();
+                source.data = { revenue_currency : revenueCurrency };
+                $("#exportcurrency option").filter(function() {
+                    //may want to use $.trim in here
+                    return $(this).text() == revenueCurrency;
+                }).prop('selected', true);
+                $("#statscurrency option").filter(function() {
+                    //may want to use $.trim in here
+                    return $(this).text() == revenueCurrency;
+                }).prop('selected', true);
+                $('#jqxgrid').jqxGrid('showloadelement');
+                dataAdapter.dataBind();
+                calculateStats();
+                $("#popupWindow").jqxWindow('close');
+            });
+
+            var toAppend = '';
+            $.each(currencies,function(value,symbol){
+                toAppend += '<option value="'+ value +'">'+ symbol +'</option>';
+            });
+            $('#statscurrency').append(toAppend);
+            $('#revenuecurrency').append(toAppend);
+            $('#statscurrency').on('change', function () {
+                    calculateStats();
+            });
    });
     </script>
 
@@ -278,6 +409,13 @@
 </script>
 
 <div id='jqxWidget'>
+        <div style="margin-right: 5px;" align="right">
+                <fieldset style="width: 300px; margin-top:2px;">
+                        <legend>QUICK STATS</legend>
+                        <div id="no_of_records" style="padding-bottom: 5px">Number of records <span style="display: inline-block; width: 70px;"></span></div>
+                        <div id="no_of_clients" style="padding-bottom: 5px">Number of Clients <span style="display: inline-block; width: 70px;"></span></div>
+                </fieldset>
+        </div>
         <div id="tab-menu" align="left">
         <?php
                 if($userAcl->check(array('User' => $loggedUser), 'controllers/reports/current_client_report') && !preg_match('/Viewer/', $loggedUser['role'])) {
@@ -303,4 +441,24 @@
         </div>
         <div id="jqxgrid"></div>
 
+        <div id="popupWindow">
+                <div>Export to excel</div>
+                <div style="overflow: hidden;">
+                        <div id="divLoader" align="center" style="display: none; padding-top: 25px; padding-left: 90px;">
+                                <div class="jqx-grid-load" style="float: left; overflow: hidden; width: 32px; height: 32px;"></div>
+                                <span style="margin-top: 10px; float: left; display: block; margin-left: 5px;">Please wait...</span>
+                        </div>
+                        <div id="divRevenueCurrency">
+                                <div style="padding: 10px 5px">
+                                        Select currency:
+                                        <select id="revenuecurrency"><option value="default">Actual currencies</option></select>
+                                </div>
+                                <div style="float: right; margin-top: 10px">
+                                    <button style="margin-bottom: 5px;" id="changeCurrencyButton">SUBMIT</button>
+                                    <button id="cancelCurrencyButton">CANCEL</button>
+                                </div>
+                                <br />
+                        </div>
+                </div>
+        </div>
 </div>
