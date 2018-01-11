@@ -360,6 +360,25 @@
             $('#selectcurrencybutton').jqxButton({ theme: theme });
             $('#changeCurrencyButton').jqxButton({ theme: theme });
             $('#cancelCurrencyButton').jqxButton({ theme: theme });
+            // clear the filtering.
+            $('#clearfilteringbutton').click(function () {
+                $("#jqxgrid").jqxGrid('clearfilters');
+                if(clientNameFilterInput)
+                        clientNameFilterInput.val("");
+                if(parentCompanyFilterInput)
+                        parentCompanyFilterInput.val("");
+                calculateStats();
+                $.ajax({
+                    type: "POST",
+                    url: "/reports/delete_grid_preferences/",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        formname: 'current_client_report'
+                    })
+                });
+                $('#jqxgrid').jqxGrid('loadstate', defaultState);
+            });
 
             $("#popupWindow").jqxWindow({
                 width: 320, resizable: false,  isModal: true, autoOpen: false, maxWidth: 400, maxHeight: 250, showCloseButton: false, keyboardCloseKey: 'none'

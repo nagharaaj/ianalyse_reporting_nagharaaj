@@ -1156,10 +1156,10 @@
             // update the edited row when the user clicks the 'Save' button.
             $('#clearfilteringbutton').click(function () {
                 $("#jqxgrid").jqxGrid('clearfilters');
-                $("#month").jqxDropDownList('clearSelection');
-                $("#year").jqxDropDownList('clearSelection');
-                clientNameFilterInput.val("");
-                parentCompanyFilterInput.val("");
+                if(clientNameFilterInput)
+                        clientNameFilterInput.val("");
+                if(parentCompanyFilterInput)
+                        parentCompanyFilterInput.val("");
                 $.ajax({
                             type: "POST",
                             url: "/reports/delete_grid_preferences/",
