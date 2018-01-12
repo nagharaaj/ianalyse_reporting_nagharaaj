@@ -55,11 +55,9 @@
                 $('#no_of_records span').text(rowscount);
                 var totalClients = new Array();
                 for(var i = 0; i < rowscount; i++) {
-                        if(dataRows[i].PitchStage.match(/Won/g) || dataRows[i].PitchStage == 'Current client') {
-                                if($.inArray(dataRows[i].ClientName, totalClients) == -1) {
-                                        totalClients.push(dataRows[i].ClientName);
-                                }
-                        }
+                       if($.inArray(dataRows[i].ClientName, totalClients) == -1) {
+                               totalClients.push(dataRows[i].ClientName);
+                       }
                 }
                 $('#no_of_clients span').text(totalClients.length);
              }
