@@ -339,6 +339,6 @@ Configure::write('IP.ldap_configuration', array(
     "base_dn" => "DC=global,DC=loc",
     "ldap_server" => "AMDC2DCM05.media.global.loc",
     "ldap_port" => "3268",
-    "ldap_user" => "sysamdc2web02ldap@media.global.loc",
+    "ldap_user" => "sysamdc2web02ldap@globalloc.com",
     "ldap_passwd" => "Neyo48pu39"
 ));
