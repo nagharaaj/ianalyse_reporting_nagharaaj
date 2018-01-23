@@ -485,7 +485,7 @@ class ReportsController extends AppController {
                         }
                         //$clientData[$i]['PitchLeader'] = $client['ClientRevenueByService']['pitch_leader'];
                         $clientData[$i]['PitchStage'] = $client['ClientRevenueByService']['pitch_stage'];
-                        if ($client['ClientRevenueByService']['lost_date'] != '0000-00-00') {
+                       if ($client['ClientRevenueByService']['lost_date'] != '0000-00-00') {
                                 $lostDate = explode('-', $client['ClientRevenueByService']['lost_date']);
                                 $clientData[$i]['Lost'] = $lostDate[1] . '/' . $lostDate[0];
                         } else {
@@ -523,14 +523,14 @@ class ReportsController extends AppController {
 
                 $clientData = array();
                 $i = 0;
-                $condition = null;
+                $condition = 'ClientRevenueByService.pitch_stage = "Current client"';
                 if ($this->Auth->user('role') == 'Regional') {
                         $regions = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         $arrRegions = array();
                         foreach ($regions as $region) {
                                 $arrRegions[] = $region['UserMarket']['market_id'];
                         }
-                        $condition = 'ClientRevenueByService.region_id IN (' . implode(',', $arrRegions) . ')';
+                        $condition = 'ClientRevenueByService.region_id IN (' . implode(',', $arrRegions) . ')' .' AND '. 'ClientRevenueByService.pitch_stage = "Current client"';;
                 }
                 if ($this->Auth->user('role') == 'Country') {
                         $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
@@ -538,10 +538,9 @@ class ReportsController extends AppController {
                         foreach ($countries as $country) {
                                 $arrCountries[] = $country['UserMarket']['market_id'];
                         }
-                        $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')';
+                        $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')' .' AND '. 'ClientRevenueByService.pitch_stage = "Current client"';;
                 }
                                 
-                $condition = 'ClientRevenueByService.pitch_stage = "Current client"';
                 $clients = $this->ClientRevenueByService->query("CALL allClientsWithFilter('{$condition}');");
                 foreach ($clients as $client) {
                         $clientData[$i]['id'] = $client['ClientRevenueByService']['id'];
@@ -774,7 +773,7 @@ class ReportsController extends AppController {
                 }
                 echo json_encode($clientData);
         }
-        
+
         public function get_currentclient_report_data(){            
             $this->autoRender=false;
                 set_time_limit(0);
@@ -782,7 +781,7 @@ class ReportsController extends AppController {
 
                 $clientData = array();
                 $i = 0;
-                $condition = null;
+                $condition = 'ClientRevenueByService.pitch_stage = "Current client"';
                 $revenueCurrency = isset($_GET['revenue_currency']) ? $_GET['revenue_currency'] : 'Actual currencies';
                 $currencies = $this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'));
                 $convertRatio = array_search($revenueCurrency, $currencies);
@@ -792,7 +791,7 @@ class ReportsController extends AppController {
                         foreach ($regions as $region) {
                                 $arrRegions[] = $region['UserMarket']['market_id'];
                         }
-                        $condition = 'ClientRevenueByService.region_id = ' . $region['UserMarket']['market_id'];
+                        $condition = 'ClientRevenueByService.pitch_stage = "Current client"';
                 }
                 if ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                         $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
@@ -800,9 +799,8 @@ class ReportsController extends AppController {
                         foreach ($countries as $country) {
                                 $arrCountries[] = $country['UserMarket']['market_id'];
                         }
-                        $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')';
+                        $condition = 'ClientRevenueByService.pitch_stage = "Current client"';
                 }
-                $condition = 'ClientRevenueByService.pitch_stage = "Current client"';
                 $this->ClientRevenueByService->Behaviors->attach('Containable');
                 $clients = $this->ClientRevenueByService->query("CALL allClientsWithFilter('{$condition}');");
                 //print_r($clients);
@@ -1553,304 +1551,6 @@ class ReportsController extends AppController {
                                 $objWriter = new PHPExcel_Writer_CSV($objPHPExcel);
                         } else {
                                 $fileName = 'Client_Data_' . date('m-d-Y') . '.xlsx';
-                                $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
-                        }
-                        $objWriter->save('files/' . $fileName);
-                        if($exportOption=="export_download"){
-                                $result = array('filename' => $fileName);
-                                $result['success'] = true;
-                        }else{
-                                $user=array();
-                                $user = $this->User->find('first', array('fields' => array('User.email_id'), 'conditions' => array('User.id' => $this->Auth->user('id'))));
-                                $email=new CakeEmail('gmail');
-                                $email->viewVars(array('title_for_layout' => 'Client data export'));
-                                $email->template('clientdata_export', 'default')
-                                   ->emailFormat('html')
-                                   ->attachments('files/'.$fileName)
-                                   ->to(array($user['User']['email_id']))
-                                   ->from(array('connectiprospect@gmail.com' => 'Connect iProspect'))
-                                   ->subject('Client data export');
-                                if($email->send()){
-                                        $success="Email has been sent successfully on " . $user['User']['email_id'];
-                                        $result = array('message' => $success);
-                                        $result['success'] = true;
-                                } else{
-                                        $error="Unable to send email to " . $user['User']['email_id'] . ". Please try later.";
-                                        $result = array('message' => $error);
-                                        $result['success'] = false;
-                               }
-                        }
-                        return json_encode($result);
-                }
-        }
-
-        public function export_currentclient_data() {
-                set_time_limit(0);
-                ini_set('memory_limit', '-1');
-
-                if ($this->request->isPost()) {
-                        if($this->RequestHandler->isAjax()){
-                                $this->autoRender=false;
-                        }
-                        date_default_timezone_set($this->request->data['timezone']);
-
-                        $arrData = $this->request->data['datarows'];
-                        $exportCurrency = $this->request->data['currency'];
-                        $exportFormat = $this->request->data['format'];
-                        $exportRevenue = isset($this->request->data['revenue']) ? $this->request->data['revenue'] : 'NO';
-                        $exportOption = isset($this->request->data['exportOpt']) ? $this->request->data['exportOpt'] : 'export_download';
-                        $currencies = $this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'));
-                        $convertRatio = array_search($exportCurrency, $currencies);
-
-                        App::import('Vendor', 'PHPExcel', array('file' => 'PhpExcel/PHPExcel.php'));
-                        if (!class_exists('PHPExcel')) {
-                                throw new CakeException('Vendor class PHPExcel not found!');
-                        }
-                        if($exportFormat == 'csv') {
-                                App::import('Vendor', 'PHPExcel_Writer_CSV', array('file' => 'PhpExcel/PHPExcel/Writer/CSV.php'));
-                                if (!class_exists('PHPExcel_Writer_CSV')) {
-                                        throw new CakeException('Vendor class PHPExcel not found!');
-                                }
-                        } else {
-                                App::import('Vendor', 'PHPExcel_Writer_Excel2007', array('file' => 'PhpExcel/PHPExcel/Writer/Excel2007.php'));
-                                if (!class_exists('PHPExcel_Writer_Excel2007')) {
-                                        throw new CakeException('Vendor class PHPExcel not found!');
-                                }
-                        }
-                        $objPHPExcel = new PHPExcel();
-                        // Set properties
-                        $objPHPExcel->getProperties()->setCreator("Siddharth Kulkarni");
-                        $objPHPExcel->getProperties()->setLastModifiedBy("Siddharth Kulkarni");
-                        $objPHPExcel->getProperties()->setTitle("Client Data by date " . date('m/d/Y'));
-                        $objPHPExcel->getProperties()->setSubject("Client Data by date " . date('m/d/Y'));
-                        $noYears= $this->ClientActualRevenueByYear->find('list', array('fields' => array('id', 'ClientActualRevenueByYear.fin_year'),'order' => 'ClientActualRevenueByYear.fin_year desc', 'group' => 'ClientActualRevenueByYear.fin_year'));
-
-                        // Add some data
-                        $objPHPExcel->setActiveSheetIndex(0);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("A")->setWidth(15);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("B")->setWidth(20);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("C")->setWidth(20);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("D")->setWidth(40);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("E")->setWidth(40);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("F")->setWidth(35);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("G")->setWidth(12);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("H")->setWidth(20);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("I")->setWidth(30);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("J")->setWidth(10);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("K")->setWidth(10);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("L")->setWidth(10);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("M")->setWidth(15);
-                        $objPHPExcel->getActiveSheet()->getColumnDimension("N")->setWidth(35);
-                        if ($this->Auth->user('role') != 'Viewer') {
-                                $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(20);
-                                $objPHPExcel->getActiveSheet()->getColumnDimension("P")->setWidth(20);
-                                $objPHPExcel->getActiveSheet()->getColumnDimension("Q")->setWidth(20);
-                                $col=17;
-                                if($exportRevenue=="YES"){
-                                        foreach($noYears as $year){
-                                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
-                                                $objPHPExcel->getActiveSheet()->getColumnDimension($colName)->setWidth(14);
-                                                $col++;
-                                        }
-                                }
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
-                                $objPHPExcel->getActiveSheet()->getColumnDimension($colName)->setWidth(14);
-                                $col++;
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
-                                $objPHPExcel->getActiveSheet()->getColumnDimension($colName)->setWidth(14);
-                                $col++;
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
-                                $objPHPExcel->getActiveSheet()->getColumnDimension($colName)->setWidth(14);
-                        } else {
-                                $objPHPExcel->getActiveSheet()->getColumnDimension("O")->setWidth(40);
-                        }
-                        if ($this->Auth->user('role') != 'Viewer') {
-                                if($exportFormat != 'csv') {
-                                        $objPHPExcel->getActiveSheet()->getStyle("A1:".$colName.'1')->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
-                                }
-                        } else {
-                                $objPHPExcel->getActiveSheet()->getStyle("A1:O1")->applyFromArray(array("font" => array( "bold" => true, 'size'  => 12, 'name'  => 'Calibri'), 'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS, 'wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
-                        }
-                        $objPHPExcel->getActiveSheet()->getStyle('A1:E1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('CCC0DA');
-                        $objPHPExcel->getActiveSheet()->getStyle('F1:L1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('C5D9F1');
-                        if ($this->Auth->user('role') != 'Viewer') {
-                                if($exportFormat != 'csv') {
-                                        $objPHPExcel->getActiveSheet()->getStyle('M1:'.$colName.'1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
-                                }
-                        } else {
-                                $objPHPExcel->getActiveSheet()->getStyle('M1:O1')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setRGB('FCD5B4');
-                        }
-                        $objPHPExcel->getActiveSheet()->SetCellValue('A1', 'Region');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Country');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('C1', 'City');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('D1', 'Client');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('E1', 'Parent Company');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('F1', 'Client Category');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('G1', 'Lead Agency');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('H1', 'Status');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('I1', 'Service');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('J1', 'Client Since (M-Y)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('K1', 'Lost Since(M-Y)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('L1', 'Pitched (M-Y)');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('M1', 'Scope');
-                        $objPHPExcel->getActiveSheet()->SetCellValue('N1', 'Active Markets');
-                        if ($this->Auth->user('role') == 'Viewer') {
-                                $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Comments');
-                        } else {
-                                $objPHPExcel->getActiveSheet()->SetCellValue('O1', 'Currency');
-                                $objPHPExcel->getActiveSheet()->SetCellValue('P1', 'iP '.date('Y').' Estimated Revenue');
-                                $objPHPExcel->getActiveSheet()->SetCellValue('Q1', 'iP '.(date('Y')-1).' Actual Revenue');
-                                $col = 17;
-                                if($exportRevenue == "YES") {
-                                        foreach($noYears as $year)
-                                        {
-                                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
-                                                $objPHPExcel->getActiveSheet()->SetCellValue($colName.'1', 'iP'.$year.' Actual Revenue');
-                                                $col++;
-                                        }
-                                }
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
-                                $objPHPExcel->getActiveSheet()->SetCellValue($colName.'1', 'Comments');
-                                $col++;
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
-                                $objPHPExcel->getActiveSheet()->SetCellValue($colName.'1', 'Created on');
-                                $col++;
-                                $colName = PHPExcel_Cell::stringFromColumnIndex($col);
-                                $objPHPExcel->getActiveSheet()->SetCellValue($colName.'1', 'Last modified on');
-                        }
-                        if($exportRevenue == "YES") {
-                                $prevRevenue = $this->ClientActualRevenueByYear->find('list', array('fields' => array('ClientActualRevenueByYear.fin_year', 'ClientActualRevenueByYear.actual_revenue','ClientActualRevenueByYear.client_service_id'), 'order' => 'ClientActualRevenueByYear.fin_year desc'));
-                        }
-                        $i = 1;
-                        $arrDataExcel = array();
-                        foreach($arrData as $data) {
-                                if($data['ClientSince'] != '') {
-                                        $clientSince = trim($data['ClientSince']);
-                                } else {
-                                        $clientSince = '';
-                                }
-                                if($data['Lost'] != '') {
-                                        $lostDate = trim($data['Lost']);
-                                } else {
-                                        $lostDate = '';
-                                }
-                                if($data['PitchStart'] != '') {
-                                        $pitchDate = trim($data['PitchStart']);
-                                } else {
-                                        $pitchDate = '';
-                                }
-                                if($exportCurrency == "Actual currencies") {
-                                        $currency = $data['Currency'];
-                                } else {
-                                        $currency = $exportCurrency;
-                                }
-                                if($data['Created'] != '') {
-                                        $createdDate = date('m/d/Y', strtotime($data['Created']));
-                                } else {
-                                        $createdDate = '01/01/2015';
-                                }
-                                if($data['Modified'] != '') {
-                                        $modifiedDate = date('m/d/Y', strtotime($data['Modified']));
-                                } else {
-                                        $modifiedDate = '';
-                                }
-                                $estimatedRevenue = 0;
-                                $actualRevenue = 0;
-                                if ($this->Auth->user('role') != 'Viewer') {
-                                        if($exportCurrency == "Actual currencies") {
-                                                $estimatedRevenue = $data['EstimatedRevenue'];
-                                                $actualRevenue = $data['ActualRevenue'];
-                                        } else {
-                                                if(is_numeric($data['EstimatedRevenue'])) {
-                                                        if($data['Currency'] == $exportCurrency) {
-                                                                $estimatedRevenue = $data['EstimatedRevenue'];
-                                                        } else {
-                                                                $dollarConvertRatio = array_search($data['Currency'], $currencies);
-                                                                if($exportCurrency == "USD") {
-                                                                     $estimatedRevenue = ($data['EstimatedRevenue'] * $dollarConvertRatio);
-                                                                } else {
-                                                                     $dollarEstRevenue = ($data['EstimatedRevenue'] * $dollarConvertRatio);
-                                                                     $estimatedRevenue = ($dollarEstRevenue / $convertRatio);
-                                                                }
-                                                        }
-                                                }
-                                                if(is_numeric($data['ActualRevenue'])) {
-                                                        if($data['Currency'] == $exportCurrency) {
-                                                                $actualRevenue = $data['ActualRevenue'];
-                                                        } else {
-                                                                $dollarConvertRatio = array_search($data['Currency'], $currencies);
-                                                                if($exportCurrency == "USD") {
-                                                                     $actualRevenue = ($data['ActualRevenue'] * $dollarConvertRatio);
-                                                                } else {
-                                                                     $dollarEstRevenue = ($data['ActualRevenue'] * $dollarConvertRatio);
-                                                                     $actualRevenue = ($dollarEstRevenue / $convertRatio);
-                                                                }
-                                                        }
-                                                }
-                                        }
-
-                                        $row = array($data['Region'], $data['Country'], $data['City'],
-                                            $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
-                                            $data['PitchStage'], $data['Service'],$clientSince, $lostDate, $pitchDate, $data['MarketScope'],
-                                            html_entity_decode($data['ActiveMarkets']), $currency, (($estimatedRevenue == 0) ? '' : $estimatedRevenue),(($actualRevenue == 0) ? '' : $actualRevenue));
-
-                                        if($exportRevenue == "YES") {
-                                                $recordId = $data['RecordId'];
-                                                if(isset($prevRevenue[$recordId])){
-                                                        $prevRevenueByYear = $prevRevenue[$recordId];
-                                                        foreach($noYears as $year)
-                                                        {
-                                                                if(isset($prevRevenueByYear[$year])) {
-                                                                        $row[] = $prevRevenueByYear[$year];
-                                                                } else {
-                                                                        $row[] = '';
-                                                                }
-                                                        }
-                                                } else {
-                                                        foreach($noYears as $year)
-                                                        {
-                                                                $row[] = '';
-                                                        }
-                                                }
-                                        }
-                                        $row[] = ($data['Comments'] == null) ? '' : $data['Comments'];
-                                        $row[] = $createdDate;
-                                        $row[] = $modifiedDate;
-                                        $arrDataExcel[] = $row;
-                                } else {
-                                        $arrDataExcel[] = array($data['Region'], $data['Country'], $data['City'],
-                                            $data['ClientName'], $data['ParentCompany'], $data['ClientCategory'], $data['LeadAgency'],
-                                            $data['PitchStage'], $data['Service'], $clientSince, $lostDate, $pitchDate,
-                                            $data['MarketScope'], html_entity_decode($data['ActiveMarkets']), $data['Comments']);
-                                }
-                                $i++;
-                        }
-                        if(!empty($arrDataExcel)) {
-                                if ($this->Auth->user('role') != 'Viewer') {
-                                        $objPHPExcel->getActiveSheet()->getStyle('A2:'.$colName.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
-                                        $objPHPExcel->getActiveSheet()->getStyle('P2:P'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
-                                        $objPHPExcel->getActiveSheet()->getStyle('Q2:Q'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
-                                        $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
-                                        $objPHPExcel->getActiveSheet()->setAutoFilter('A1:'.$colName.$i);
-                                } else {
-                                        if($exportFormat != 'csv') {
-                                                $objPHPExcel->getActiveSheet()->getStyle('A2:O'.$i)->applyFromArray(array('font' => array('size'  => 11, 'name'  => 'Calibri'), 'alignment' => array('wrap' => true), 'borders' => array('allborders' => array('style' => PHPExcel_Style_Border::BORDER_THIN))));
-                                        }
-                                        $objPHPExcel->getActiveSheet()->fromArray($arrDataExcel, null, 'A2');
-                                        if($exportFormat != 'csv') {
-                                                $objPHPExcel->getActiveSheet()->setAutoFilter('A1:O'.$i);
-                                        }
-                                }
-                        }
-
-                        // Rename sheet
-                        $objPHPExcel->getActiveSheet()->setTitle('Client List');
-                        // Save Excel 2007/CSV file
-                        if($exportFormat == 'csv') {
-                                $fileName = 'Current_Client_Data_' . date('m-d-Y') . '.csv';
-                                $objWriter = new PHPExcel_Writer_CSV($objPHPExcel);
-                        } else {
-                                $fileName = 'Current_Client_Data_' . date('m-d-Y') . '.xlsx';
                                 $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
                         }
                         $objWriter->save('files/' . $fileName);

@@ -143,6 +143,8 @@ $config['rules'] = array(
                 'controllers/help/*' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer, Role/CountryViewer',
                 'controllers/reports/client_report' => 'Role/Viewer, Role/CountryViewer',
                 'controllers/reports/get_client_report_data' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/reports/current_client_report' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/reports/get_currentclient_report_data' => 'Role/Viewer, Role/CountryViewer',
                 'controllers/reports/export_client_data' => 'Role/Viewer, Role/CountryViewer',
                 'controllers/reports/office_report' => 'Role/Viewer, Role/CountryViewer',
                 'controllers/reports/get_office_data' => 'Role/Viewer, Role/CountryViewer',
@@ -151,6 +153,7 @@ $config['rules'] = array(
         'deny' => array(
                 'controllers/users/user_permissions' => 'Role/CountryAdmin, Role/Viewer, Role/CountryViewer',
                 'controllers/reports/client_data' => 'Role/Viewer, Role/CountryViewer',
+                'controllers/reports/current_client_data' => 'Role/Viewer, Role/CountryViewer',
                 'controllers/reports/office_data' => 'Role/Viewer, Role/CountryViewer',
                 'controllers/admin/*' => 'Role/RegionalAdmin, Role/CountryAdmin, Role/Viewer, Role/CountryViewer'
         ),
