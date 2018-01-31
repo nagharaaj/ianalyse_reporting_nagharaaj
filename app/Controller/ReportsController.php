@@ -77,7 +77,6 @@ class ReportsController extends AppController {
                 $this->set('currencies', json_encode($this->Currency->find('list', array('fields' => array('Currency.currency', 'Currency.currency'), 'order' => 'Currency.currency Asc'))));
                 $this->set('agencies', json_encode($this->LeadAgency->find('list', array('fields' => array('LeadAgency.agency', 'LeadAgency.agency'), 'order' => 'LeadAgency.agency Asc'))));
                 $this->set('stages', json_encode($this->PitchStage->find('list', array('conditions' => array('NOT' => array('PitchStage.id' => array(11)))),array('fields' => array('PitchStage.pitch_stage', 'PitchStage.pitch_stage'), 'order' => 'PitchStage.id Asc'))));
-                //$arrMarkets = array('Global' => 'Global');
                 $arrMarkets = array();
                 $arrRegions = array();
                 $arrCities = array();
@@ -438,14 +437,14 @@ class ReportsController extends AppController {
 
                 $clientData = array();
                 $i = 0;
-                $condition = null;
+                $condition = 'ClientRevenueByService.pitch_stage != "Current client"';
                 if ($this->Auth->user('role') == 'Regional') {
                         $regions = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
                         $arrRegions = array();
                         foreach ($regions as $region) {
                                 $arrRegions[] = $region['UserMarket']['market_id'];
                         }
-                        $condition = 'ClientRevenueByService.region_id IN (' . implode(',', $arrRegions) . ')';
+                        $condition = 'ClientRevenueByService.region_id IN (' . implode(',', $arrRegions) . ')' .' AND '. 'ClientRevenueByService.pitch_stage != "Current client"';
                 }
                 if ($this->Auth->user('role') == 'Country') {
                         $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
@@ -453,7 +452,7 @@ class ReportsController extends AppController {
                         foreach ($countries as $country) {
                                 $arrCountries[] = $country['UserMarket']['market_id'];
                         }
-                        $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')';
+                        $condition = 'ClientRevenueByService.country_id IN (' . implode(',', $arrCountries) . ')' .' AND '. 'ClientRevenueByService.pitch_stage != "Current client"';
                 }
                 $clients = $this->ClientRevenueByService->query("CALL allClientsWithFilter('{$condition}');");
             
@@ -608,7 +607,7 @@ class ReportsController extends AppController {
 
                 $clientData = array();
                 $i = 0;
-                $condition = null;
+                $condition = 'ClientRevenueByService.pitch_stage != "Current client"';
                 $revenueCurrency = isset($_GET['revenue_currency']) ? $_GET['revenue_currency'] : 'Actual currencies';
                 $currencies = $this->Currency->find('list', array('fields' => array('Currency.convert_rate', 'Currency.currency'), 'order' => 'Currency.currency Asc'));
                 $convertRatio = array_search($revenueCurrency, $currencies);
@@ -618,6 +617,7 @@ class ReportsController extends AppController {
                         foreach ($regions as $region) {
                                 $arrRegions[] = $region['UserMarket']['market_id'];
                         }
+                   $condition = 'ClientRevenueByService.pitch_stage != "Current client"';
                 }
                 if ($this->Auth->user('role') == 'Country' || $this->Auth->user('role') == 'Country - Viewer') {
                         $countries = $this->UserMarket->find('all', array('conditions' => array('UserMarket.user_id' => $this->Auth->user('id'))));
@@ -625,6 +625,7 @@ class ReportsController extends AppController {
                         foreach ($countries as $country) {
                                 $arrCountries[] = $country['UserMarket']['market_id'];
                         }
+                   $condition = 'ClientRevenueByService.pitch_stage != "Current client"';
                 }
                 $this->ClientRevenueByService->Behaviors->attach('Containable');
                 $clients = $this->ClientRevenueByService->query("CALL allClientsWithFilter('{$condition}');");
