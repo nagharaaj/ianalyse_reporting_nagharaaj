@@ -60,8 +60,6 @@ class DanDailySyncShell extends AppShell {
          "grant_type" => 'client_credentials',
          "resource" =>'00000003-0000-0ff1-ce00-000000000000/globalappsportal.sharepoint.com@6e8992ec-76d5-4ea5-8eae-b0c5e558749a'
 
-
-
      );
          
   $ch = curl_init();
@@ -79,7 +77,6 @@ class DanDailySyncShell extends AppShell {
         return 'An error happened';
     }
 } else {
-
 
    $url = 'https://accounts.accesscontrol.windows.net/6e8992ec-76d5-4ea5-8eae-b0c5e558749a/tokens/OAuth/2/';
 
