@@ -103,7 +103,6 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-
 $auth = curl_exec( $ch );
 
 if ( curl_errno( $ch ) ){
