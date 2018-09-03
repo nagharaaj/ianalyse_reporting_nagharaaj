@@ -50,12 +50,12 @@ class DanDailySyncShell extends AppShell {
 
                 $authurl = "https://login.microsoftonline.com/6e8992ec-76d5-4ea5-8eae-b0c5e558749a/oauth2/token/";
 
-$client_id = "96d6293f-922a-4cb0-bbb1-38e58eb16008@6e8992ec-76d5-4ea5-8eae-b0c5e558749a";
-$client_secret = "FXXI8/bRHbpNKjGSwFMb4kM5sRAJbNKUQ1b90b4nD44=";
+            $client_id = "96d6293f-922a-4cb0-bbb1-38e58eb16008@6e8992ec-76d5-4ea5-8eae-b0c5e558749a";
+              $client_secret = "FXXI8/bRHbpNKjGSwFMb4kM5sRAJbNKUQ1b90b4nD44=";
 
 // Creating base 64 encoded authkey
-$Auth_Key = $client_id.":".$client_secret;
-$encoded_Auth_Key=base64_encode($Auth_Key);
+             $Auth_Key = $client_id.":".$client_secret;
+              $encoded_Auth_Key=base64_encode($Auth_Key);
 
 $headers = array();
 $headers['Authorization'] = "Basic ".$encoded_Auth_Key;
