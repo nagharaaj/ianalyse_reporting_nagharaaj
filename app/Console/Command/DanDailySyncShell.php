@@ -48,52 +48,45 @@ class DanDailySyncShell extends AppShell {
                 //$siteUrl = 'team.dentsuaegis.com/sites/nbr/';
               // $userpwd = 'MEDIA\sysSP-P-NBR:Jfo829/K!';
 
-                
-                
-                if (isset($_GET['code'])) {
-    // try to get an access token
-    $code = $_GET['code'];
-      $url = 'https://accounts.accesscontrol.windows.net/6e8992ec-76d5-4ea5-8eae-b0c5e558749a/tokens/OAuth/2/';
-    $params = array(
-        "code" => $code,
-        "client_id" =>'96d6293f-922a-4cb0-bbb1-38e58eb16008@6e8992ec-76d5-4ea5-8eae-b0c5e558749a' ,
-        "client_secret" => 'FXXI8/bRHbpNKjGSwFMb4kM5sRAJbNKUQ1b90b4nD44=',
-         "redirect_uri" => 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER["PHP_SELF"],
-         "grant_type" => 'client_credentials',
-         "resource" =>'00000003-0000-0ff1-ce00-000000000000/globalappsportal.sharepoint.com@6e8992ec-76d5-4ea5-8eae-b0c5e558749a'
+                $authurl = "https://login.microsoftonline.com/6e8992ec-76d5-4ea5-8eae-b0c5e558749a/oauth2/token/";
 
-     );
-         
-  $ch = curl_init();
-    curl_setopt($ch, constant("CURLOPT_" . 'URL'), $url);
-    curl_setopt($ch, constant("CURLOPT_" . 'POST'), true);
-    curl_setopt($ch, constant("CURLOPT_" . 'POSTFIELDS'), $params);
-   
-    $output = curl_exec($ch);
-    $info = curl_getinfo($ch);
-    curl_close($ch);
-    if ($info['http_code'] === 200) {
-        header('Content-Type: ' . $info['content_type']);
-        return $output;
-    } else {
-        return 'An error happened';
-    }
-} else {
+$client_id = "96d6293f-922a-4cb0-bbb1-38e58eb16008@6e8992ec-76d5-4ea5-8eae-b0c5e558749a";
+$client_secret = "FXXI8/bRHbpNKjGSwFMb4kM5sRAJbNKUQ1b90b4nD44=";
 
-   $url = 'https://accounts.accesscontrol.windows.net/6e8992ec-76d5-4ea5-8eae-b0c5e558749a/tokens/OAuth/2/';
+// Creating base 64 encoded authkey
+$Auth_Key = $client_id.":".$client_secret;
+$encoded_Auth_Key=base64_encode($Auth_Key);
 
-    $params = array(
-        "response_type" => "code",
-        "client_id" => '96d6293f-922a-4cb0-bbb1-38e58eb16008@6e8992ec-76d5-4ea5-8eae-b0c5e558749a',
-        "redirect_uri" => 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER["PHP_SELF"],
-        "scope" => "https://www.googleapis.com/auth/analytics"
-    );
+$headers = array();
+$headers['Authorization'] = "Basic ".$encoded_Auth_Key;
+$headers['Content-Type'] = "application/x-www-form-urlencoded";
 
-    $request_to = $url . '?' . http_build_query($params);
+$data = array(
+    'grant_type' => 'client_credentials',
+    'scope'      => 'read write',
+    'username'   => 'syssp-p-nbrsffeed@dentsuaegis.com',
+    'password'   => 'Password01'
+);
 
-    header("Location: " . $request_to);
-               
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $authurl);
+curl_setopt($ch, CURLOPT_POST, 1 );
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+
+$auth = curl_exec( $ch );
+
+if ( curl_errno( $ch ) ){
+    echo 'Error: ' . curl_error( $ch );
 }
+curl_close($ch);
+
+$secret = json_decode($auth);
+$access_key = $secret->access_token;
+                
+             
                  
 
                 //array of iProspect pitch status mappings with NBR
