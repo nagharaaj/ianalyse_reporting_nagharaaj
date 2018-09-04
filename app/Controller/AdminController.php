@@ -82,9 +82,9 @@ class AdminController extends AppController {
                 $userpwd = 'MEDIA\sysSP-P-NBR:Jfo829/K!';
 
                 // curl object for read requests
-                //$ch = curl_init();
-                //curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
-                //curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookie );
+                $ch = curl_init();
+                curl_setopt( $ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; rv:1.7.3) Gecko/20041001 Firefox/0.10.1" );
+                curl_setopt( $ch, CURLOPT_COOKIEJAR, $cookie );
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 25 );
                 curl_setopt( $ch, CURLOPT_TIMEOUT, 25 );
